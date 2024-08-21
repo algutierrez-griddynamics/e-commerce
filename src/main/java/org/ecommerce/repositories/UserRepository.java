@@ -8,10 +8,18 @@ import java.util.*;
 public class UserRepository extends CrudOperationsImpl<User> {
 
     public String findPasswordById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Optional.ofNullable(getDb().get(id))
+                .map(User::getPassword)
+                .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
     }
 
     public User updatePasswordById(Long id, String newPassword) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        User currentUser = getDb().get(id);
+        currentUser.setPassword(newPassword);
+        return Optional.ofNullable(getDb().get(id))
+                .map(user -> {
+                    user.setPassword(newPassword);
+                    return getDb().get(id);
+                })
+                .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));}
 }
