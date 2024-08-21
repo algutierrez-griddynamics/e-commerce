@@ -1,6 +1,6 @@
 package org.ecommerce.models;
 
-public abstract class User extends Identity{
+public abstract class User extends Identity {
     private String firstName;
     private String LastName;
     private String email;
@@ -49,8 +49,7 @@ public abstract class User extends Identity{
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + getId() + '\'' +
+        return super.toString() +
                 "firstName='" + firstName + '\'' +
                 ", LastName='" + LastName + '\'' +
                 ", email='" + email + '\'' +

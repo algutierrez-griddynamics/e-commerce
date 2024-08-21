@@ -1,22 +1,31 @@
 package org.ecommerce;
 
-import org.ecommerce.controllers.CustomerController;
 import org.ecommerce.controllers.UserController;
-import org.ecommerce.repositories.CustomerRepository;
-import org.ecommerce.services.CustomerService;
-import org.ecommerce.services.PasswordServiceImpl;
+import org.ecommerce.repositories.UserRepository;
+import org.ecommerce.services.EmailService;
+import org.ecommerce.services.PasswordService;
+import org.ecommerce.services.impl.UserServiceImpl;
+import org.ecommerce.services.impl.EmailServiceImpl;
+import org.ecommerce.services.impl.PasswordServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    private static final Map<String, Object> REQUEST = new HashMap<>();
-    private static final CustomerRepository customerRepository = new CustomerRepository();
-    private static final UserController customerController = new CustomerController(new CustomerService(customerRepository), new PasswordServiceImpl(customerRepository));
+    private static final Map<String, String> request = new HashMap<>();
+    private static final UserRepository customerRepository = new UserRepository();
+    private static final PasswordService passwordService = new PasswordServiceImpl(customerRepository);
+    private static final EmailService emailService = new EmailServiceImpl();
+    private static final UserServiceImpl customerService = new UserServiceImpl(customerRepository, passwordService, emailService);
+
+    private static final UserController customerController = new UserController(customerService, passwordService);
+
     public static void main(String[] args) {
-        REQUEST.put("id", 1L);
-        REQUEST.put("passwords", Map.of("oldPassword", "Mario123!", "newPassword", "1357924680mM!"));
-        var response = customerController.changePassword(REQUEST);
+        request.put("id", "1");
+        request.put("oldPassword", "Mario123!");
+        request.put("newPassword", "1357924680mM!");
+
+        var response = customerController.processChangePasswordForm(request);
 
         if(response.containsKey("error")) System.out.println(response.get("error"));
         else System.out.println(response.get("updatedUser"));
