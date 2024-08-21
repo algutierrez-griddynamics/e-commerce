@@ -1,32 +1,11 @@
 package org.ecommerce.repositories;
 
 import org.ecommerce.models.User;
-import org.ecommerce.util.CrudOperations;
+import org.ecommerce.services.impl.CrudOperationsImpl;
 
-import java.util.List;
+import java.util.*;
 
-public class UserRepository implements CrudOperations<User> {
-
-
-    @Override
-    public User save(User entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public User findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<User> findAll() {
-        return List.of();
-    }
+public class UserRepository extends CrudOperationsImpl<User> {
 
     public String findPasswordById(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
