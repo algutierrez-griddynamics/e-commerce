@@ -31,6 +31,7 @@ public class PasswordServiceImpl implements PasswordService {
         return result;
     }
 
+    // TODO: Separate this logic into a Validators class
     // This method returns true if the provided password has at least 1 lower & upper case letter,
     // 1 digit, 1 special symbol and its length is between 8 and 16 characters inclusive.
     @Override
