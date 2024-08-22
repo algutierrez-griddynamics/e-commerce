@@ -27,22 +27,22 @@ public class UserServiceImpl implements UserService<User> {
 
     @Override
     public User save(User entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+       return userRepository.save(entity);
     }
 
     @Override
     public User findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return userRepository.findById(id);
     }
 
     @Override
     public void deleteById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        userRepository.deleteById(id);
     }
 
     @Override
     public List<User> findAll() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return userRepository.findAll();
     }
 
     public Map<String, String> generateCustomer(Customer customer) {
