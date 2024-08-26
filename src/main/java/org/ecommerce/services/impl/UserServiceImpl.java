@@ -11,6 +11,7 @@ import org.ecommerce.services.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService<User> {
 
@@ -24,27 +25,6 @@ public class UserServiceImpl implements UserService<User> {
         this.emailService = emailService;
     }
 
-
-    @Override
-    public User save(User entity) {
-       return userRepository.save(entity);
-    }
-
-    @Override
-    public User findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
     public Map<String, String> generateCustomer(Customer customer) {
         Map<String, String> result = new HashMap<>();
         if (!emailService.isValidInput(customer.getEmail()))
@@ -54,5 +34,30 @@ public class UserServiceImpl implements UserService<User> {
         if (result.isEmpty())
             result.put("generatedCustomer", String.valueOf(save(customer)));
         return result;
+    }
+
+    @Override
+    public User save(User entity) {
+        return null;
+    }
+
+    @Override
+    public Optional<User> findById(Long aLong) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void update(Long aLong, User entity) {
+
+    }
+
+    @Override
+    public void deleteById(Long aLong) {
+
+    }
+
+    @Override
+    public List<User> findAll() {
+        return List.of();
     }
 }
