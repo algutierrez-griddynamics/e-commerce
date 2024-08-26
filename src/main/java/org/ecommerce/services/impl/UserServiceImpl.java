@@ -47,9 +47,9 @@ public class UserServiceImpl implements UserService<User> {
 
     public Map<String, String> generateCustomer(Customer customer) {
         Map<String, String> result = new HashMap<>();
-        if (!emailService.meetsBusinessRules(customer.getEmail()))
+        if (!emailService.isValidInput(customer.getEmail()))
             result.put("error", Error.INVALID_EMAIL.getDescription());
-        if (!passwordService.meetsBusinessRules(customer.getPassword()))
+        if (!passwordService.isValidInput(customer.getPassword()))
             result.put("error", Error.PASSWORD_FORMAT.getDescription());
         if (result.isEmpty())
             result.put("generatedCustomer", String.valueOf(save(customer)));
