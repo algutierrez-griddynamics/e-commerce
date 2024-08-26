@@ -1,7 +1,7 @@
 package org.ecommerce.services;
 
-import org.ecommerce.util.validators.fieldsValidatorService;
+import org.ecommerce.util.validators.FieldsValidatorService;
 
-public interface EmailService extends fieldsValidatorService<String> {
+public interface EmailService extends FieldsValidatorService<String> {
 
 }
