@@ -1,6 +1,6 @@
 package org.ecommerce.services.impl;
 
-import org.ecommerce.util.CrudOperations;
+import org.ecommerce.services.CrudOperations;
 
 import java.util.ArrayList;
 import java.util.HashMap;

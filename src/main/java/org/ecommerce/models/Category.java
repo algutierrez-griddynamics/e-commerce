@@ -1,24 +1,24 @@
 package org.ecommerce.models;
 
-import org.ecommerce.util.CategoryType;
+import org.ecommerce.enums.Error;
 
 public class Category extends Identity {
     private String name;
     private String description;
-    private CategoryType categoryType;
+    private Error categoryType;
 
-    Category(Long id, String name, String description, CategoryType categoryType) {
+    Category(Long id, String name, String description, Error categoryType) {
         super(id);
         this.name = name;
         this.description = description;
         this.categoryType = categoryType;
     }
 
-    public CategoryType getCategoryType() {
+    public Error getCategoryType() {
         return categoryType;
     }
 
-    public void setCategoryType(CategoryType categoryType) {
+    public void setCategoryType(Error categoryType) {
         this.categoryType = categoryType;
     }
 
