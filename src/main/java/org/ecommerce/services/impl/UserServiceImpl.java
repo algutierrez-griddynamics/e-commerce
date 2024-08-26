@@ -38,26 +38,26 @@ public class UserServiceImpl implements UserService<User> {
 
     @Override
     public User save(User entity) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Optional<User> findById(Long aLong) {
-        return Optional.empty();
+    public Optional<User> findById(Long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void update(Long aLong, User entity) {
-
+    public void update(Long id, User entity) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public List<User> findAll() {
-        return List.of();
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
