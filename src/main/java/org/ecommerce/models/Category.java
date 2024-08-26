@@ -1,7 +1,11 @@
 package org.ecommerce.models;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.ecommerce.enums.Error;
 
+@Setter
+@Getter
 public class Category extends Identity {
     private String name;
     private String description;
@@ -14,27 +18,4 @@ public class Category extends Identity {
         this.categoryType = categoryType;
     }
 
-    public Error getCategoryType() {
-        return categoryType;
-    }
-
-    public void setCategoryType(Error categoryType) {
-        this.categoryType = categoryType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
