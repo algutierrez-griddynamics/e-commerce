@@ -1,5 +1,10 @@
 package org.ecommerce.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class AddressInformation extends Identity {
 
     AddressInformation(Long id) {

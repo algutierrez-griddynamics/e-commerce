@@ -1,10 +1,14 @@
 package org.ecommerce.models;
 
-import org.ecommerce.Enums.PaymentMethodType;
+import lombok.Getter;
+import lombok.Setter;
+import org.ecommerce.enums.PaymentMethodType;
 
 import java.util.Currency;
 import java.util.Date;
 
+@Setter
+@Getter
 public class PaymentDetails extends Identity {
     private PaymentMethodType paymentMethodType;
     private String cardNumber;

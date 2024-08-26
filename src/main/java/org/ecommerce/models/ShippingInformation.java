@@ -2,7 +2,7 @@ package org.ecommerce.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.ecommerce.Enums.ShippingStatusType;
+import org.ecommerce.enums.ShippingStatusType;
 
 import java.util.Currency;
 import java.util.Date;

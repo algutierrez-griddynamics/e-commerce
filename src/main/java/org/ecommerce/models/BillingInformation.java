@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 public class BillingInformation extends AddressInformation {
 
+    private Long orderId;
     private Date billingDate;
     private Currency amount;
 
