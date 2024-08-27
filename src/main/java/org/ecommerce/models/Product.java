@@ -1,8 +1,13 @@
 package org.ecommerce.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Currency;
 import java.util.List;
 
+@Setter
+@Getter
 public class Product extends Identity {
     private String name;
     private Currency price;
@@ -19,43 +24,4 @@ public class Product extends Identity {
         this.categories = categories;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Currency getPrice() {
-        return price;
-    }
-
-    public void setPrice(Currency price) {
-        this.price = price;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
 }
