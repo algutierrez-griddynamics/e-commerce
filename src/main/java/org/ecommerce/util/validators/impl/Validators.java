@@ -19,14 +19,16 @@ public class Validators {
         return !password.isEmpty() && password.matches(PASSWORD_REGEX);
     }
 
-
     // This method returns true if the provided name is at least 2 characters
     // and matches with some of the provided characters
     public static boolean isValidName(String name) {
         return !name.isEmpty() && name.matches(NAME_REGEX);
     }
 
-
+    // This method returns true if both of the string values match between them
+    public static boolean stringsMatch(String str1, String str2) {
+        return str1 != null && str1.equals(str2);
+    }
 
 
 
