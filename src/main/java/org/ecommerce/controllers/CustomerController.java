@@ -6,7 +6,7 @@ import org.ecommerce.models.User;
 
 import java.util.Map;
 
-public class CustomerController implements UserControllerI<Customer>{
+public class CustomerController extends AbstractUserController implements UserControllerI<Customer>{
     @Override
     public Response<? super User> createUser(Map<String, String> request) {
         throw new UnsupportedOperationException("Not supported yet.");
