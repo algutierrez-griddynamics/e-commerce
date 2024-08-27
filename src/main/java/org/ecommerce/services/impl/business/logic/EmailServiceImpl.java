@@ -1,4 +1,4 @@
-package org.ecommerce.services.impl;
+package org.ecommerce.services.impl.business.logic;
 
 import org.ecommerce.services.EmailService;
 import org.ecommerce.util.validators.impl.Validators;
