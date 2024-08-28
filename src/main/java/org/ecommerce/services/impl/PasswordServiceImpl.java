@@ -1,6 +1,8 @@
 package org.ecommerce.services.impl;
 
 import org.ecommerce.enums.Error;
+import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.exceptions.InvalidInput;
 import org.ecommerce.repositories.UserRepository;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.util.validators.impl.Validators;
@@ -19,20 +21,24 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public Map<String, String> changePassword(Long id, Map<String, String> passwords) {
         Map<String, String> result = new HashMap<>();
-        String currentPassword = userRepository.findPasswordById(id);
         String oldPassword = passwords.get("oldPassword");
         String newPassword = passwords.get("newPassword");
-        if(!currentPassword.equals(oldPassword))
-            result.put("error", Error.PASSWORD_MISMATCH.getDescription());
-        if(!isValidInput(newPassword))
-            result.put("error", Error.PASSWORD_FORMAT.getDescription());
-        if(result.isEmpty())
-            result.put("updatedUser", String.valueOf(userRepository.updatePasswordById(id, newPassword)));
+
+        String currentPassword = userRepository.findPasswordById(id)
+                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
+
+
+        if(!Validators.stringsMatch(currentPassword, oldPassword)) {
+            throw new InvalidInput(Error.PASSWORD_MISMATCH.getDescription());
+        }
+        if(!Validators.isValidPassword(newPassword)) {
+            throw new InvalidInput(Error.PASSWORD_FORMAT.getDescription());
+        }
+
+        result.put("updatedUser",
+                String.valueOf(userRepository.updatePasswordById(id, newPassword)
+                        .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()))));
         return result;
     }
 
-    @Override
-    public boolean isValidInput(String password) {
-        return Validators.isValidPassword(password);
-    }
 }
