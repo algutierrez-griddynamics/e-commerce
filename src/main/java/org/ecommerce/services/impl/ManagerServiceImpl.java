@@ -1,38 +1,46 @@
 package org.ecommerce.services.impl;
 
+import org.ecommerce.enums.Error;
+import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.models.Manager;
+import org.ecommerce.repositories.ManagerRepository;
 import org.ecommerce.services.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ManagerServiceImpl implements UserService<Manager> {
 
-    public ManagerServiceImpl() {}
+    private final ManagerRepository managerRepository;
 
-    @Override
-    public Manager save(Manager entity) {
-      // TODO: UserValidatorService
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ManagerServiceImpl(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
     }
 
     @Override
-    public Optional<Manager> findById(Long aLong) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Manager create(Manager entity) {
+        return managerRepository.save(entity);
     }
 
     @Override
-    public void update(Long aLong, Manager entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Manager update(Long id, Manager entity) {
+        managerRepository.update(id, entity);
+        return managerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void delete(Long id) {
+        managerRepository.deleteById(id);
     }
 
     @Override
     public List<Manager> findAll() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return managerRepository.findAll();
+    }
+
+    @Override
+    public Manager findById(Long id) {
+        return managerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
 }

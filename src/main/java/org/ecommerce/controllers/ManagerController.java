@@ -22,7 +22,7 @@ public class ManagerController extends AbstractUserController implements UserCon
                 .email(request.get("email"))
                 .employeeNumber(Integer.parseInt(request.get("employeeNumber")))
                 .build();
-        managerService.save(manager);
+        managerService.create(manager);
         return new Response<>(true
         , "Successfully created manager"
         , manager);
@@ -30,7 +30,7 @@ public class ManagerController extends AbstractUserController implements UserCon
 
     @Override
     public Response<Manager> deleteUser(Long id) {
-        managerService.deleteById(id);
+        managerService.delete(id);
         return new Response<>(
                 true,
                 "Successfully deleted manager"
