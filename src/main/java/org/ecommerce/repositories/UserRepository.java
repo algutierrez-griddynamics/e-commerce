@@ -1,7 +1,7 @@
 package org.ecommerce.repositories;
 
 import org.ecommerce.models.User;
-import org.ecommerce.services.impl.CrudOperationsImpl;
+import org.ecommerce.repositories.impl.CrudOperationsImpl;
 
 import java.util.*;
 

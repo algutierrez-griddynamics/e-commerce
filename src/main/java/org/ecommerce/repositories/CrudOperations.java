@@ -1,4 +1,4 @@
-package org.ecommerce.services;
+package org.ecommerce.repositories;
 
 import java.util.List;
 
