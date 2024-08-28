@@ -1,11 +1,9 @@
 package org.ecommerce.controllers;
 
-import org.ecommerce.models.Manager;
-import org.ecommerce.models.Response;
-import org.ecommerce.models.User;
+import org.ecommerce.models.*;
 import org.ecommerce.services.impl.ManagerServiceImpl;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ManagerController extends AbstractUserController implements UserControllerI<Manager> {
@@ -17,31 +15,62 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<? super User> createUser(Map<String, String> request) {
-        Response<Manager> response = new Response<>();
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Response<Manager> createUser(Map<String, String> request) {
+        Manager manager = Manager.builder()
+                .firstName(request.get("firstName"))
+                .lastName(request.get("lastName"))
+                .email(request.get("email"))
+                .employeeNumber(Integer.parseInt(request.get("employeeNumber")))
+                .build();
+        managerService.save(manager);
+        return new Response<>(true
+        , "Successfully created manager"
+        , manager);
     }
 
     @Override
-    public Response<?> deleteUser() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Response<Manager> deleteUser(Long id) {
+        managerService.deleteById(id);
+        return new Response<>(
+                true,
+                "Successfully deleted manager"
+        );
     }
 
     @Override
-    public Response<? super User> updateUser(Map<String, String> request) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Response<Manager> updateUser(Long id, Map<String, String> request) {
+        Manager updatedManager = Manager.builder()
+                .firstName(request.get("firstName"))
+                .lastName(request.get("lastName"))
+                .email(request.get("email"))
+                .employeeNumber(Integer.parseInt(request.get("employeeNumber")))
+                .build();
+
+        managerService.update(id, updatedManager);
+        return new Response<>(
+                true,
+                "Successfully updated manager",
+                updatedManager
+        );
     }
 
     @Override
-    public Response<? super User> getUser() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Response<Manager> getUser(Long id) {
+        Manager retrievedManager = managerService.findById(id);
+        return new Response<>(
+                true
+                , "Successfully retrieved manager"
+                , retrievedManager
+        );
     }
 
-    public Response<User> listUsers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Response<User> getUserById(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public Response<List<Manager>> getAllUsers() {
+        List<Manager> managersList = managerService.findAll();
+        return new Response<List<Manager>>(
+                true
+                , "Successfully retrieved managers list"
+                , managersList
+        );
     }
 }
