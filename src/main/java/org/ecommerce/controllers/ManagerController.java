@@ -22,10 +22,12 @@ public class ManagerController extends AbstractUserController implements UserCon
                 .email(request.get("email"))
                 .employeeNumber(Integer.parseInt(request.get("employeeNumber")))
                 .build();
-        managerService.create(manager);
+
+        Manager createdManager = managerService.create(manager);
+
         return new Response<>(true
         , "Successfully created manager"
-        , manager);
+        , createdManager);
     }
 
     @Override
@@ -45,12 +47,11 @@ public class ManagerController extends AbstractUserController implements UserCon
                 .email(request.get("email"))
                 .employeeNumber(Integer.parseInt(request.get("employeeNumber")))
                 .build();
-
-        managerService.update(id, updatedManager);
+        Manager updatedManagerResponse = managerService.update(id, updatedManager);
         return new Response<>(
                 true,
                 "Successfully updated manager",
-                updatedManager
+                updatedManagerResponse
         );
     }
 
