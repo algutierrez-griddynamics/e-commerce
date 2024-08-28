@@ -30,7 +30,7 @@ public class CustomerController extends AbstractUserController implements UserCo
 
     @Override
     public Response<List<Customer>> getAllUsers() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

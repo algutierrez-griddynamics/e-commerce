@@ -30,7 +30,7 @@ public class AdminController implements UserControllerI<Admin> {
 
     @Override
     public Response<List<Admin>> getAllUsers() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
