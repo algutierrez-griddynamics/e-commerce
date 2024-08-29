@@ -11,7 +11,6 @@ public abstract class User extends Identity {
     private String firstName;
     private String lastName;
     private String email;
-
     private String password;
 
     public User(Long id, String firstName, String lastName, String email, String password) {

@@ -2,10 +2,13 @@ package org.ecommerce.services.impl;
 
 import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.exceptions.InvalidInput;
 import org.ecommerce.models.Manager;
 import org.ecommerce.repositories.ManagerRepository;
 import org.ecommerce.services.UserService;
+import org.ecommerce.util.validators.impl.Validators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManagerServiceImpl implements UserService<Manager> {
@@ -43,4 +46,31 @@ public class ManagerServiceImpl implements UserService<Manager> {
         return managerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
+
+    @Override
+    public Boolean isValidEntity(Manager manager) {
+        List<String> errorMessages = new ArrayList<>();
+
+        if (!Validators.isValidName(manager.getFirstName())) {
+            errorMessages.add(Error.INVALID_NAME.getDescription());
+        }
+        if (!Validators.isValidName(manager.getLastName())) {
+            errorMessages.add(Error.INVALID_NAME.getDescription());
+        }
+
+        if (!Validators.isValidEmail(manager.getEmail())) {
+            errorMessages.add(Error.INVALID_EMAIL.getDescription());
+        }
+
+        if (!Validators.isValidPassword(manager.getPassword())) {
+            errorMessages.add(Error.PASSWORD_FORMAT.getDescription());
+        }
+
+        if (!errorMessages.isEmpty()) {
+            throw new InvalidInput(String.join(", ", errorMessages));
+        }
+
+        return true;
+    }
+
 }

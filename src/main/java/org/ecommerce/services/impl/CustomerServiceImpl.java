@@ -41,4 +41,9 @@ public class CustomerServiceImpl implements UserService<User> {
     public User findById(Long aLong) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public Boolean isValidEntity(User obj) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
