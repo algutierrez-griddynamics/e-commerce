@@ -1,8 +1,8 @@
-package org.ecommerce.services.impl;
+package org.ecommerce.repositories.impl;
 
 import lombok.Getter;
 import org.ecommerce.enums.Error;
-import org.ecommerce.services.CrudOperations;
+import org.ecommerce.repositories.CrudOperations;
 
 import java.util.*;
 
