@@ -35,7 +35,7 @@ public class CustomerController extends AbstractUserController implements Contro
 
     @Override
     public Optional<Customer> parseJson(String json) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
