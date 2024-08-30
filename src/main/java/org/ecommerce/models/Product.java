@@ -9,17 +9,17 @@ import java.util.List;
 @Setter
 @Getter
 public class Product extends Identity {
+    private Long inventoryId;
     private String name;
     private Currency price;
-    private Integer stock;
     private String description;
     private List<Category> categories;
 
-    Product(Long id, String name, Currency price, Integer stock, String description, List<Category> categories) {
+    Product(Long id, Long inventoryId, String name, Currency price, String description, List<Category> categories) {
         super(id);
+        this.inventoryId = inventoryId;
         this.name = name;
         this.price = price;
-        this.stock = stock;
         this.description = description;
         this.categories = categories;
     }
