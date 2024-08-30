@@ -6,7 +6,7 @@ import org.ecommerce.services.impl.ManagerServiceImpl;
 import java.util.List;
 import java.util.Map;
 
-public class ManagerController extends AbstractUserController implements UserControllerI<Manager> {
+public class ManagerController extends AbstractUserController implements ControllerOperations<Manager, Long> {
 
     private final ManagerServiceImpl managerService;
 
@@ -15,7 +15,7 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<Manager> createUser(Map<String, String> request) {
+    public Response<Manager> create(Map<String, String> request) {
         Manager manager = Manager.builder()
                 .firstName(request.get("firstName"))
                 .lastName(request.get("lastName"))
@@ -31,7 +31,7 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<Manager> deleteUser(Long id) {
+    public Response<Manager> delete(Long id) {
         managerService.delete(id);
         return new Response<>(
                 true,
@@ -40,7 +40,7 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<Manager> updateUser(Long id, Map<String, String> request) {
+    public Response<Manager> update(Long id, Map<String, String> request) {
         Manager updatedManager = Manager.builder()
                 .firstName(request.get("firstName"))
                 .lastName(request.get("lastName"))
@@ -56,7 +56,7 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<Manager> getUser(Long id) {
+    public Response<Manager> get(Long id) {
         Manager retrievedManager = managerService.findById(id);
         return new Response<>(
                 true
@@ -66,7 +66,7 @@ public class ManagerController extends AbstractUserController implements UserCon
     }
 
     @Override
-    public Response<List<Manager>> getAllUsers() {
+    public Response<List<Manager>> get() {
         List<Manager> managersList = managerService.findAll();
         return new Response<List<Manager>>(
                 true
