@@ -1,10 +1,12 @@
 package org.ecommerce.controllers;
 
+import org.ecommerce.enums.HttpStatusCode;
 import org.ecommerce.models.*;
 import org.ecommerce.services.impl.ManagerServiceImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ManagerController extends AbstractUserController implements ControllerOperations<Manager, Long> {
 
@@ -27,7 +29,8 @@ public class ManagerController extends AbstractUserController implements Control
 
         return new Response<>(true
         , "Successfully created manager"
-        , createdManager);
+        , createdManager,
+                HttpStatusCode.ACCEPTED);
     }
 
     @Override
@@ -35,7 +38,8 @@ public class ManagerController extends AbstractUserController implements Control
         managerService.delete(id);
         return new Response<>(
                 true,
-                "Successfully deleted manager"
+                "Successfully deleted manager",
+                HttpStatusCode.OK
         );
     }
 
@@ -51,7 +55,8 @@ public class ManagerController extends AbstractUserController implements Control
         return new Response<>(
                 true,
                 "Successfully updated manager",
-                updatedManagerResponse
+                updatedManagerResponse,
+                HttpStatusCode.OK
         );
     }
 
@@ -62,6 +67,7 @@ public class ManagerController extends AbstractUserController implements Control
                 true
                 , "Successfully retrieved manager"
                 , retrievedManager
+                , HttpStatusCode.OK
         );
     }
 
@@ -72,6 +78,7 @@ public class ManagerController extends AbstractUserController implements Control
                 true
                 , "Successfully retrieved managers list"
                 , managersList
+                , HttpStatusCode.OK
         );
     }
 
