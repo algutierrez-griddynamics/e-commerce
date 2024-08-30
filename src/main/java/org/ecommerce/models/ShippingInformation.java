@@ -2,7 +2,7 @@ package org.ecommerce.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.ecommerce.enums.ShippingStatusType;
+import org.ecommerce.enums.OrderStatus;
 
 import java.util.Currency;
 import java.util.Date;
@@ -12,7 +12,7 @@ import java.util.Date;
 public class ShippingInformation extends AddressInformation {
 
     private Long trackingNumber;
-    private ShippingStatusType shippingStatus;
+    private OrderStatus shippingStatus;
     private Currency shippingCost;
     private Date estimatedDeliveryDate;
 
