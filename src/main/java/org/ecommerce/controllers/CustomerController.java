@@ -5,6 +5,7 @@ import org.ecommerce.models.Response;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
     @Override
@@ -30,6 +31,11 @@ public class CustomerController extends AbstractUserController implements Contro
     @Override
     public Response<List<Customer>> get() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Optional<Customer> parseJson(String json) {
+        return null;
     }
 
 }

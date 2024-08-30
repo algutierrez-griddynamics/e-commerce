@@ -31,4 +31,14 @@ public class OrderController implements ControllerOperations<Order, Long> {
     public Response<List<Order>> get() {
         return null;
     }
+
+//    @Override
+    public Optional<Order> parseJson(String json) {
+        try {
+            return Optional.of(JsonParser.parseOrder(json));
+        } catch (JsonProcessingException jsonProcessingException) {
+            Log.error(jsonProcessingException.getMessage());
+            return Optional.empty();
+        }
+    }
 }

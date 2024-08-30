@@ -74,4 +74,9 @@ public class ManagerController extends AbstractUserController implements Control
                 , managersList
         );
     }
+
+    @Override
+    public Optional<Manager> parseJson(String json) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
