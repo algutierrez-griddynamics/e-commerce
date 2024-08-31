@@ -1,35 +1,71 @@
 package org.ecommerce.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.ecommerce.enums.Error;
+import org.ecommerce.enums.HttpStatusCode;
+import org.ecommerce.logs.Log;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.Response;
+import org.ecommerce.services.OrderService;
+import org.ecommerce.util.JsonParser;
 
+import java.sql.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-public class OrderController implements ControllerOperations<Order, Long> {
-    @Override
-    public Response<Order> create(Map<String, String> request) {
-        return null;
+public class OrderController extends Log { // implements ControllerOperations <Order, Long> {
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @Override
-    public Response<Order> delete(Long aLong) {
-        return null;
+//    @Override
+    public Response<Order> create(String jsonRequest) {
+        return parseJson(jsonRequest)
+                .map(res ->
+                        new Response<>(
+                                true,
+                                "Order placed successfully",
+                                orderService.create(res),
+                                HttpStatusCode.CREATED))
+                .orElse(new Response<>(
+                        false,
+                        Error.INVALID_REQUEST_FORMAT.getDescription(),
+                        HttpStatusCode.BAD_REQUEST
+                ));
     }
 
-    @Override
-    public Response<Order> update(Long aLong, Map<String, String> request) {
-        return null;
+//    @Override
+    public Response<Order> delete(Long id) {
+        orderService.delete(id);
+        return new Response<>(true,
+                "Order deleted successfully",
+                HttpStatusCode.OK);
     }
 
-    @Override
-    public Response<Order> get(Long aLong) {
-        return null;
+//    @Override
+    public Response<Order> update(Long id, String jsonRequest) {
+        return new Response<>(false,
+                "Not Supported Operation",
+                HttpStatusCode.SERVICE_UNAVAILABLE);
     }
 
-    @Override
+//    @Override
+    public Response<Order> get(Long id) {
+        return new Response<>(true,
+                "Order retrieved successfully",
+                orderService.findById(id),
+                HttpStatusCode.OK);
+    }
+
+//    @Override
     public Response<List<Order>> get() {
-        return null;
+        return new Response<>(
+                true,
+                "Orders retrieved succesfully",
+                orderService.findAll(),
+                HttpStatusCode.ACCEPTED);
     }
 
 //    @Override
