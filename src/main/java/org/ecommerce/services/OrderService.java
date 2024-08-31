@@ -2,5 +2,5 @@ package org.ecommerce.services;
 
 import org.ecommerce.models.Order;
 
-public interface OrderService <T extends Order> {
+public interface OrderService extends OperationsService<Order, Long> {
 }
