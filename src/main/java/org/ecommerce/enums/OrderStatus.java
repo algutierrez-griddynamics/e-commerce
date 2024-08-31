@@ -1,6 +1,7 @@
 package org.ecommerce.enums;
 
 public enum OrderStatus {
+    REQUESTED,
     PLACED,
     CONFIRMED,
     CANCELLED,
