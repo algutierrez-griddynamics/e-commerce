@@ -7,6 +7,7 @@ import org.ecommerce.logs.Log;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.Response;
 import org.ecommerce.services.OrderService;
+import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
 
 import java.sql.Date;
@@ -76,5 +77,10 @@ public class OrderController extends Log { // implements ControllerOperations <O
             Log.error(jsonProcessingException.getMessage());
             return Optional.empty();
         }
+    }
+
+    public void consumeOrders(){
+        OrderServiceImpl orderServiceImpl = (OrderServiceImpl) orderService;
+        orderServiceImpl.startOrderProcessing();
     }
 }
