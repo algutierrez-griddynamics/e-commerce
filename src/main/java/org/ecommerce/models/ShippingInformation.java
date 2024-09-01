@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.ecommerce.enums.OrderStatus;
 
-import java.util.Currency;
 import java.util.Date;
 
 @Getter
@@ -13,8 +12,10 @@ public class ShippingInformation extends AddressInformation {
 
     private Long trackingNumber;
     private OrderStatus shippingStatus;
-    private Currency shippingCost;
+    private Price shippingCost;
     private Date estimatedDeliveryDate;
+
+    ShippingInformation() {}
 
     ShippingInformation(Long id) {
         super(id);

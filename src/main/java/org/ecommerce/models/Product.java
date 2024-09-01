@@ -3,7 +3,6 @@ package org.ecommerce.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Currency;
 import java.util.List;
 
 @Setter
@@ -11,11 +10,14 @@ import java.util.List;
 public class Product extends Identity {
     private Long inventoryId;
     private String name;
-    private Currency price;
+    private Price price;
     private String description;
     private List<Category> categories;
 
-    Product(Long id, Long inventoryId, String name, Currency price, String description, List<Category> categories) {
+    Product() {
+    }
+
+    Product(Long id, Long inventoryId, String name, Price price, String description, List<Category> categories) {
         super(id);
         this.inventoryId = inventoryId;
         this.name = name;

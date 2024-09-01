@@ -3,17 +3,16 @@ package org.ecommerce.models;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
 @Getter
+@SuperBuilder
 public class Identity {
-    private final Long id;
+    private Long id;
+
+    protected Identity() {
+    }
 
     protected Identity(Long id) {
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override

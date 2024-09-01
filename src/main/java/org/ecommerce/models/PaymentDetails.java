@@ -18,6 +18,8 @@ public class PaymentDetails extends Identity {
     private Currency billingAmount;
     private Date billingDate;
 
+    PaymentDetails() {}
+
 
     PaymentDetails(Long id, PaymentMethodType paymentMethodType, String cardNumber, Date cardExpirationDate, String cardCVV
             , String cardHolderName, Currency billingAmount, Date billingDate) {
