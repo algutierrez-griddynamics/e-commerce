@@ -1,9 +1,14 @@
 package org.ecommerce.models;
 
-public abstract class Identity {
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@Getter
+public class Identity {
     private final Long id;
 
-    Identity(Long id) {
+    protected Identity(Long id) {
         this.id = id;
     }
 
