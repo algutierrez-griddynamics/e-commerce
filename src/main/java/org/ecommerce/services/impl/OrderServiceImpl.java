@@ -27,14 +27,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order create(Order entity) {
-        orderRepository.findById(entity.getId())
-                .map(result -> {
-                    produceOrder(result);
-                    orderRepository.updateStatus(result, OrderStatus.REQUESTED);
-                    return result;
-                }).orElseThrow(() -> new EntityNotFound("Order not found"));
-        return entity;
+    public Order create(Order order) {
+        orderRepository.save(order);
+        produceOrder(order);
+        //orderRepository.updateStatus(order, OrderStatus.REQUESTED);
+        updateOrderStatus(order.getId(), OrderStatus.REQUESTED);
+        return order;
     }
 
     @Override
@@ -81,13 +79,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // Shipping Management connects to this service to update the status
-    public OrderStatus updateOrderStatus(Long id, OrderStatus status) {
-
+    public void updateOrderStatus(Long id, OrderStatus status) {
         orderRepository.findById(id)
                 .map(result -> {
                     orderRepository.updateStatus(result, status);
                     return result;
                 }).orElseThrow(() -> new EntityNotFound("Order not found"));
-        return status;
     }
 }
