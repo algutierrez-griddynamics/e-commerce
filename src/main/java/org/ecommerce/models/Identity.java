@@ -1,17 +1,20 @@
 package org.ecommerce.models;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
 @SuperBuilder
-public abstract class Identity {
-    private final Long id;
+public class Identity {
+    private Long id;
 
-    Identity(Long id) {
-        this.id = id;
+    protected Identity() {
     }
 
-    public Long getId() {
-        return id;
+    protected Identity(Long id) {
+        this.id = id;
     }
 
     @Override

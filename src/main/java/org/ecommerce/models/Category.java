@@ -10,6 +10,8 @@ public class Category extends Identity {
     private String description;
     private Category categoryType;
 
+    Category() {}
+
     Category(Long id, String name, String description, Category categoryType) {
         super(id);
         this.name = name;

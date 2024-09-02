@@ -3,7 +3,6 @@ package org.ecommerce.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Currency;
 import java.util.Date;
 
 @Getter
@@ -12,7 +11,9 @@ public class BillingInformation extends AddressInformation {
 
     private Long orderId;
     private Date billingDate;
-    private Currency amount;
+    private Price amount;
+
+    BillingInformation() {}
 
     BillingInformation(Long id) {
         super(id);
