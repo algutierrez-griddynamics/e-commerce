@@ -1,5 +1,6 @@
 package org.ecommerce.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,11 +11,5 @@ public class Category extends Identity {
     private String description;
     private Category categoryType;
 
-    Category(Long id, String name, String description, Category categoryType) {
-        super(id);
-        this.name = name;
-        this.description = description;
-        this.categoryType = categoryType;
-    }
 
 }

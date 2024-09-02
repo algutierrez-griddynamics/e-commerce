@@ -20,14 +20,4 @@ public class Order extends Identity {
     private BillingInformation billingInformation;
     private PaymentDetails paymentDetails;
 
-    Order(Long id, Long customerId, Date orderDate,  List<Product> products, OrderStatus status, ShippingInformation shippingInformation, BillingInformation billingInformation, PaymentDetails paymentDetails) {
-        super(id);
-        this.customerId = customerId;
-        this.orderDate = orderDate;
-        this.products = products;
-        this.status = status;
-        this.shippingInformation = shippingInformation;
-        this.billingInformation = billingInformation;
-        this.paymentDetails = paymentDetails;
-    }
 }

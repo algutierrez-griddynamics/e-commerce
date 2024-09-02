@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+
 public class ShippingInformation extends AddressInformation {
 
     private Long trackingNumber;
@@ -16,7 +17,4 @@ public class ShippingInformation extends AddressInformation {
     private Currency shippingCost;
     private Date estimatedDeliveryDate;
 
-    ShippingInformation(Long id) {
-        super(id);
-    }
 }
