@@ -1,5 +1,8 @@
 package org.ecommerce.models;
 
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
 public abstract class Identity {
     private final Long id;
 
