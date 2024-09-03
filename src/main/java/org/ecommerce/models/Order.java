@@ -1,7 +1,6 @@
 package org.ecommerce.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ecommerce.enums.OrderStatus;
 
@@ -11,6 +10,9 @@ import java.util.List;
 @SuperBuilder
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Order extends Identity {
     private Long customerId;
     private Date orderDate;
@@ -19,5 +21,4 @@ public class Order extends Identity {
     private ShippingInformation shippingInformation;
     private BillingInformation billingInformation;
     private PaymentDetails paymentDetails;
-
 }

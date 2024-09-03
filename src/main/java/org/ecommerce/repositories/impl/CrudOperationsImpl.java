@@ -2,12 +2,13 @@ package org.ecommerce.repositories.impl;
 
 import lombok.Getter;
 import org.ecommerce.enums.Error;
+import org.ecommerce.models.Identity;
 import org.ecommerce.repositories.CrudOperations;
 
 import java.util.*;
 
 @Getter
-public abstract class CrudOperationsImpl <T> implements CrudOperations<T, Long> {
+public abstract class CrudOperationsImpl <T extends Identity> implements CrudOperations<T, Long> {
 
     static Long id = 0L;
     Map<Long, T> db = new HashMap<>();
@@ -15,6 +16,7 @@ public abstract class CrudOperationsImpl <T> implements CrudOperations<T, Long> 
     @Override
     public T save(T entity) {
         Long id = generateId();
+        entity.setId(id);
         db.put(id, entity);
         return db.get(id);
     }

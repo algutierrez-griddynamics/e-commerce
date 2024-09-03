@@ -4,7 +4,7 @@ import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.ShippingInformation;
 
-public class ShippingService extends Log {
+public class ShippingService {
 
     public static OrderStatus processShipment(ShippingInformation shippingInformation) {
         Log.info("Processing shipping information: " + shippingInformation);

@@ -3,11 +3,13 @@ package org.ecommerce.models;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.ecommerce.enums.HttpStatusCode;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class Response <T> {
     private boolean success;
     private String message;
@@ -20,15 +22,5 @@ public class Response <T> {
         this.success = success;
         this.message = message;
         this.statusCode = statusCode;
-    }
-
-    @Override
-    public String toString() {
-        return "ApiResponse{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                " statusCode=" + statusCode +
-                '}';
     }
 }
