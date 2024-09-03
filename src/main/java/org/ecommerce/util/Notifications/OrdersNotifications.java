@@ -6,6 +6,6 @@ import org.ecommerce.models.Order;
 public class OrdersNotifications extends Log {
 
     public static void notify(Order order) {
-        Log.info("Sending notification for order: " + order);
+        Log.info("Sending notification for order: " + order.getId());
     }
 }

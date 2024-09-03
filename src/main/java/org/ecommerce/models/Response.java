@@ -24,11 +24,11 @@ public class Response <T> {
 
     @Override
     public String toString() {
-        return "ApiResponse{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                " statusCode=" + statusCode +
-                '}';
+        return "ApiResponse {" +
+                "\n\t\tsuccess=" + success +
+                ",\n\t\tmessage='" + message + '\'' +
+                ",\n\t\tdata=" + data +
+                ",\n\t\tstatusCode=" + statusCode +
+                "\n\t"+'}';
     }
 }

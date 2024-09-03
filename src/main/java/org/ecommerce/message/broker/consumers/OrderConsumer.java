@@ -16,7 +16,7 @@ public class OrderConsumer extends Consumer <Order> {
     @Override
     void processOrder(Order order) {
         Log.info("Processing order: " + order);
-        List<Product> availableProducts = order.getProducts(); // Iterate all products to check availability
+        List<Product> availableProducts = order.getProducts(); // TODO: Iterate all products to check availability
 
 
         chargeCustomer(order);
@@ -30,12 +30,12 @@ public class OrderConsumer extends Consumer <Order> {
 
     @Override
     void updateInventory(Product order) {
-        Log.info("Updating inventory for order: " + order);
+        Log.info("Updating inventory for order: " + order.getId());
     }
 
     @Override
     void chargeCustomer(Order order) {
-        Log.info("Charging customer for order: " + order);
+        Log.info("Charging customer for order: " + order.getId());
     }
 
     @Override

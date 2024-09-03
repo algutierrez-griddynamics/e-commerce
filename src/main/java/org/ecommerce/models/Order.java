@@ -24,4 +24,16 @@ public class Order extends Identity {
     private BillingInformation billingInformation;
     private PaymentDetails paymentDetails;
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customerId=" + customerId +
+                ", orderDate=" + orderDate +
+                ", products=" + products +
+                ", status=" + status +
+                ", shippingInformation=" + shippingInformation +
+                ", billingInformation=" + billingInformation +
+                ", paymentDetails=" + paymentDetails +
+                '}';
+    }
 }

@@ -6,7 +6,7 @@ import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main (String[] args) {
             // TODO: Create a parser (Strings -> Objects/Maps) class for test Controllers
         OrderController orderController = new OrderController(
                 new OrderServiceImpl(new OrderRepository()
@@ -96,11 +96,12 @@ public class Main {
                 "    \"cardHolderName\": \"John Doe\"\n" +
                 "  }\n" +
                 "}\n";
-
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-
         orderController.consumeOrders();
+
+        System.out.println(orderController.create(request));
+        System.out.println(orderController.create(request));
+        System.out.println(orderController.create(request));
+
+
     }
 }
