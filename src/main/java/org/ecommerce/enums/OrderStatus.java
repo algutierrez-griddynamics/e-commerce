@@ -1,6 +1,7 @@
 package org.ecommerce.enums;
 
-public enum ShippingStatusType {
+public enum OrderStatus {
+    REQUESTED,
     PLACED,
     CONFIRMED,
     CANCELLED,

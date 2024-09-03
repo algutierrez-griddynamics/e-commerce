@@ -2,34 +2,39 @@ package org.ecommerce.controllers;
 
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Response;
-import org.ecommerce.models.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class CustomerController extends AbstractUserController implements UserControllerI<Customer>{
+public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
     @Override
-    public Response<Customer> createUser(Map<String, String> request) {
+    public Response<Customer> create(Map<String, String> request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> deleteUser(Long id) {
+    public Response<Customer> delete(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> updateUser(Long id, Map<String, String> request) {
+    public Response<Customer> update(Long id, Map<String, String> request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> getUser(Long id) {
+    public Response<Customer> get(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<List<Customer>> getAllUsers() {
+    public Response<List<Customer>> get() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Optional<Customer> parseJson(String json) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
