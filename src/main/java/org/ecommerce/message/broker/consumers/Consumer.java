@@ -4,7 +4,7 @@ import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.models.Product;
 
-public abstract class Consumer<T> extends Log implements Runnable {
+public abstract class Consumer<T> implements Runnable {
     private final MessageQueue<T> queue;
     private volatile boolean running = true;
 

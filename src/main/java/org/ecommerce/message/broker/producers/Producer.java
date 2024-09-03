@@ -4,7 +4,7 @@ import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.models.Identity;
 
-public class Producer <T extends Identity> extends Log implements Runnable {
+public class Producer <T extends Identity> implements Runnable {
     private final MessageQueue<T> queue;
     private final T t;
 

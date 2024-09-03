@@ -10,12 +10,11 @@ import org.ecommerce.services.OrderService;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
 // TODO: Refactor ControllerOperations for receive a StringJsonRequest, instead of a Map request. Then refactor this class to implement ControllerOperations
-public class OrderController extends Log { // implements ControllerOperations <Order, Long> {
+public class OrderController { // implements ControllerOperations <Order, Long> {
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
