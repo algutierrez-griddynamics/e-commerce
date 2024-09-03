@@ -1,9 +1,6 @@
 package org.ecommerce.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ecommerce.enums.OrderStatus;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Order extends Identity {
     private Long customerId;
     private Date orderDate;
@@ -23,17 +21,4 @@ public class Order extends Identity {
     private ShippingInformation shippingInformation;
     private BillingInformation billingInformation;
     private PaymentDetails paymentDetails;
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "customerId=" + customerId +
-                ", orderDate=" + orderDate +
-                ", products=" + products +
-                ", status=" + status +
-                ", shippingInformation=" + shippingInformation +
-                ", billingInformation=" + billingInformation +
-                ", paymentDetails=" + paymentDetails +
-                '}';
-    }
 }
