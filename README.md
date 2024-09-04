@@ -38,3 +38,8 @@ Run Docker Compose to start the database container:
 **Persistent Data**  
 The database data is persisted using Docker volumes, so it remains intact even if the container is recreated.  
 You can find the volume named db_data which is used to store the database files.
+
+**Tables creation**  
+The ```init_db.sql``` file located in the ```./db``` directory is mounted to ```/docker-entrypoint-initdb.d``` 
+in the container. This setup ensures that tables are created and any previous data is reloaded when the container is initialized.
+![img.png](https://github.com/user-attachments/assets/461f4cdb-e507-465e-b355-c2721095fae2)
