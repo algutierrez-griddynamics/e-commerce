@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ecommerce.enums.PaymentMethodType;
 
-import java.util.Currency;
 import java.util.Date;
 
 @Setter
@@ -19,6 +18,6 @@ public class PaymentDetails extends Identity {
     private Date cardExpirationDate;
     private String cardHolderName;
     private String cardCVV;
-    private Currency billingAmount;
+    private Price billingAmount;
     private Date billingDate;
 }

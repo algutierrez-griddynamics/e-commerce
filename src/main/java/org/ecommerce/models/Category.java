@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.ecommerce.enums.CategoryType;
 
 @Setter
 @Getter
@@ -12,7 +13,6 @@ import lombok.Setter;
 public class Category extends Identity {
     private String name;
     private String description;
-    private Category categoryType;
-
+    private CategoryType categoryType;
 
 }

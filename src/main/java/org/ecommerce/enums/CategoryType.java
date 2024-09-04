@@ -1,5 +1,5 @@
 package org.ecommerce.enums;
 
-public enum Category {
+public enum CategoryType {
     PARENT, CHILDREN
 }
