@@ -1,4 +1,4 @@
-package org.ecommerce.util.Notifications;
+package org.ecommerce.util.notifications;
 
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.Order;
