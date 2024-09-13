@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+@ToString(callSuper = true)
 public abstract class User extends Identity {
     private String firstName;
     private String lastName;

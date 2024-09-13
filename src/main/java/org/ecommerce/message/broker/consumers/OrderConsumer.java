@@ -4,7 +4,7 @@ import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.Product;
-import org.ecommerce.util.Notifications.OrdersNotifications;
+import org.ecommerce.util.notifications.OrdersNotifications;
 
 import java.util.List;
 

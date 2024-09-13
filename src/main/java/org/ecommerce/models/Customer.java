@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @SuperBuilder
-@ToString
+@ToString(callSuper = true)
 public class Customer extends User {
     private String phoneNumber;
     private String address;
