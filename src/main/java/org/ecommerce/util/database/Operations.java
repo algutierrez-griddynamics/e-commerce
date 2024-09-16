@@ -11,33 +11,16 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 
-// TODO: Future project improvements based on the tasks requirements is to implement a pool of connections
 @Getter
 public class Operations <T> {
 
     private final Connection connection;
 
     public Operations() {
-        Dotenv dotenv = Dotenv.load();
-
-        String url = String.format("%s://%s:%s/%s",
-                dotenv.get("DB_URL"),
-                dotenv.get("HOST"),
-                dotenv.get("DB_PORT"),
-                dotenv.get("DB_NAME"));
-
-        Connection tempConnection = null;
         try {
-            tempConnection = DriverManager.getConnection(
-                    url,
-                    dotenv.get("DB_USER"),
-                    dotenv.get("DB_PASSWORD")
-            );
+            this.connection = DataSource.getConnection();
         } catch (SQLException e) {
-            System.err.println("Failed to establish database connection: " + e.getMessage());
-            throw new RuntimeException("Database connection initialization failed", e);
-        } finally {
-            connection = tempConnection;
+            throw new RuntimeException(e);
         }
     }
 
