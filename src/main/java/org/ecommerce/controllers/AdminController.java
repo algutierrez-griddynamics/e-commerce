@@ -2,10 +2,12 @@ package org.ecommerce.controllers;
 
 import org.ecommerce.models.Admin;
 import org.ecommerce.models.Response;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Optional;
 
+@Controller
 public class AdminController implements ControllerOperations<Admin, Long> {
     @Override
     public Response<Admin> create(String jsonRequest) {

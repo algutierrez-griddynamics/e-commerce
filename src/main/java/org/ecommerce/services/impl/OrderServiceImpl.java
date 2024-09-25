@@ -9,11 +9,13 @@ import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.OrderService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;

@@ -6,10 +6,12 @@ import org.ecommerce.exceptions.InvalidInput;
 import org.ecommerce.repositories.UserRepository;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.util.validators.impl.Validators;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class PasswordServiceImpl implements PasswordService {
 
     private final UserRepository userRepository;

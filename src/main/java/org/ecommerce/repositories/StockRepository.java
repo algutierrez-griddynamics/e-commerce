@@ -1,11 +1,13 @@
 package org.ecommerce.repositories;
 
 import org.ecommerce.models.StockEntry;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class StockRepository {
     private final Map<Long, Map<Long, StockEntry<Long, Long>>> stockStore = new HashMap<>();
 

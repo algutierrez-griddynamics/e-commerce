@@ -9,10 +9,12 @@ import org.ecommerce.models.Response;
 import org.ecommerce.services.OrderService;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Optional;
 
+@Controller
 public class OrderController implements ControllerOperations <Order, Long> {
     private final OrderService orderService;
 

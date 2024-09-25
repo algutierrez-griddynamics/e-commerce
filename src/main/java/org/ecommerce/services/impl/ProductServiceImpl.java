@@ -2,9 +2,11 @@ package org.ecommerce.services.impl;
 
 import org.ecommerce.models.Product;
 import org.ecommerce.services.ProductService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
     @Override

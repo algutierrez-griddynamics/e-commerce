@@ -2,9 +2,11 @@ package org.ecommerce.repositories;
 
 import org.ecommerce.models.User;
 import org.ecommerce.repositories.impl.CrudOperationsImpl;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class UserRepository extends CrudOperationsImpl<User> {
 
     public Optional<String> findPasswordById(Long id) {

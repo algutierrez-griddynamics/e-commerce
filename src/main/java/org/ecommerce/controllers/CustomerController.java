@@ -2,10 +2,12 @@ package org.ecommerce.controllers;
 
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Response;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Optional;
 
+@Controller
 public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
     @Override
     public Response<Customer> create(String jsonRequest) {
