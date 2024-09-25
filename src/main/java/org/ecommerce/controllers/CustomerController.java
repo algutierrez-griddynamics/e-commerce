@@ -4,12 +4,11 @@ import org.ecommerce.models.Customer;
 import org.ecommerce.models.Response;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
     @Override
-    public Response<Customer> create(Map<String, String> request) {
+    public Response<Customer> create(String jsonRequest) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -19,7 +18,7 @@ public class CustomerController extends AbstractUserController implements Contro
     }
 
     @Override
-    public Response<Customer> update(Long id, Map<String, String> request) {
+    public Response<Customer> update(String request, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -29,7 +28,7 @@ public class CustomerController extends AbstractUserController implements Contro
     }
 
     @Override
-    public Response<List<Customer>> get() {
+    public Response<List<Customer>> getAll() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
