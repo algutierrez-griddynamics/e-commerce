@@ -7,6 +7,11 @@ import org.ecommerce.services.impl.OrderServiceImpl;
 
 public class Main {
     public static void main (String[] args) {
+//        placeOrders();
+//        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+    }
+
+    private static void placeOrders() {
         OrderController orderController = new OrderController(
                 new OrderServiceImpl(new OrderRepository()
                         , new MessageQueue<>()));
@@ -100,7 +105,6 @@ public class Main {
         System.out.println(orderController.create(request));
         System.out.println(orderController.create(request));
         System.out.println(orderController.create(request));
-
 
     }
 }
