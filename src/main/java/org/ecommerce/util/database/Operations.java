@@ -1,6 +1,5 @@
 package org.ecommerce.util.database;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 import org.ecommerce.exceptions.EntityNotFound;
 

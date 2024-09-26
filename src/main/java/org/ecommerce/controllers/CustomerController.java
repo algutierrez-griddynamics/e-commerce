@@ -2,6 +2,7 @@ package org.ecommerce.controllers;
 
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Response;
+import org.ecommerce.services.PasswordService;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -9,6 +10,10 @@ import java.util.Optional;
 
 @Controller
 public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
+    public CustomerController(PasswordService passwordService) {
+        super(passwordService);
+    }
+
     @Override
     public Response<Customer> create(String jsonRequest) {
         throw new UnsupportedOperationException("Not supported yet.");
