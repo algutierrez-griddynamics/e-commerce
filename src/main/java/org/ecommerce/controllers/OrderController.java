@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
 public class OrderController implements ControllerOperations <Order, Long> {
     private final OrderService orderService;
 

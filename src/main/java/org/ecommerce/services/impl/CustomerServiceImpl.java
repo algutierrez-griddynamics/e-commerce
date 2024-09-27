@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class CustomerServiceImpl implements UserService<User> {
 
     private final UserRepository userRepository;

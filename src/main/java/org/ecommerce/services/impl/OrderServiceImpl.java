@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;

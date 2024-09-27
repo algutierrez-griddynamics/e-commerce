@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
 public class UserRepository extends CrudOperationsImpl<User> {
 
     public Optional<String> findPasswordById(Long id) {

@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
 public class StockRepository {
     private final Map<Long, Map<Long, StockEntry<Long, Long>>> stockStore = new HashMap<>();
 

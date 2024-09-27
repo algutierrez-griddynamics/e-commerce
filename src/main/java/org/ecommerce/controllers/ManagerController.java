@@ -6,19 +6,18 @@ import org.ecommerce.enums.HttpStatusCode;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.*;
 import org.ecommerce.services.PasswordService;
-import org.ecommerce.services.impl.ManagerServiceImpl;
+import org.ecommerce.services.UserService;
 import org.ecommerce.util.JsonParser;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Optional;
 
-@Controller
 public class ManagerController extends AbstractUserController implements ControllerOperations<Manager, Long> {
 
-    private final ManagerServiceImpl managerService;
+    private final UserService<Manager> managerService;
 
-    public ManagerController(ManagerServiceImpl managerService, PasswordService passwordService) {
+    public ManagerController(UserService<Manager> managerService, PasswordService passwordService) {
         super(passwordService);
         this.managerService = managerService;
     }
