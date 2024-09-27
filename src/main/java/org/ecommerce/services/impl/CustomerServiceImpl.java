@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements UserService<User> {
     }
 
     @Override
-    public User update(Long aLong, User entity) {
+    public User update(User entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

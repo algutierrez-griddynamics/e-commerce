@@ -1,15 +1,14 @@
 package org.ecommerce.controllers;
 
 import org.ecommerce.models.Response;
+import org.ecommerce.models.requests.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ControllerOperations<T, ID> {
-   Response<T> create(String jsonRequest);
-   Response<T> delete(ID id);
-   Response<T> update(String request, ID id);
-   Response<T> get(ID id);
-   Response<List<T>> getAll();
-   Optional<T> parseJson(String json);
+   Response<T> create(CreateRequest<T> request);
+   Response<T> delete(DeleteRequest<ID> request);
+   Response<T> update(UpdateRequest<T, ID> request);
+   Response<T> get(GetRequest<ID> request);
+   Response<List<T>> getAll(GetAllRequest request);
 }

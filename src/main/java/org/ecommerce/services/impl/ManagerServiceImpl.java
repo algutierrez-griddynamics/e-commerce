@@ -7,7 +7,6 @@ import org.ecommerce.models.Manager;
 import org.ecommerce.repositories.ManagerRepository;
 import org.ecommerce.services.UserService;
 import org.ecommerce.util.validators.impl.Validators;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ManagerServiceImpl implements UserService<Manager> {
     }
 
     @Override
-    public Manager update(Long id, Manager entity) {
+    public Manager update(Manager entity, Long id) {
         managerRepository.update(id, entity);
         return managerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));

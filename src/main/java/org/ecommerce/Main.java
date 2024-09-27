@@ -1,13 +1,17 @@
 package org.ecommerce;
 
 import org.ecommerce.controllers.OrderController;
+import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
+import org.ecommerce.models.Order;
+import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
+import org.ecommerce.util.JsonParser;
 
 public class Main {
     public static void main (String[] args) {
-//        placeOrders();
+        placeOrders();
 //        DataSourceConfig dataSourceConfig = new DataSourceConfig();
     }
 
@@ -101,10 +105,13 @@ public class Main {
                 "  }\n" +
                 "}\n";
         orderController.consumeOrders();
-
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-
+        try {
+            Order order = JsonParser.parseOrder(request);
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
