@@ -3,6 +3,7 @@ package org.ecommerce.util.database;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.logs.Log;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class Operations <T> {
             setParameters(stmt, args);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    System.out.println(rs.getString(1));
+                    Log.info(rs.getString(1));
                     results.add(mapper.apply(rs));
                 }
             }

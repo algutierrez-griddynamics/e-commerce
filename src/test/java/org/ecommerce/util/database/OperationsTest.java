@@ -1,6 +1,7 @@
 package org.ecommerce.util.database;
 
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.logs.Log;
 import org.ecommerce.models.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,7 +104,7 @@ class OperationsTest {
                 }
             }, idToFindCorrect);
 
-            System.out.println(customer);
+            Log.info(customer.toString());
 
             assertNotNull(customer);
             assertEquals(idToFindCorrect, customer.getId());

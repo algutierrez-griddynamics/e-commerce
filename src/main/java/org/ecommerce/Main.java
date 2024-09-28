@@ -1,6 +1,7 @@
 package org.ecommerce;
 
 import org.ecommerce.controllers.OrderController;
+import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
@@ -102,9 +103,9 @@ public class Main {
                 "}\n";
         orderController.consumeOrders();
 
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
+        Log.info(orderController.create(request).toString());
+        Log.info(orderController.create(request).toString());
+        Log.info(orderController.create(request).toString());
 
     }
 }
