@@ -87,7 +87,7 @@ public class ManagerController extends AbstractUserController implements Control
     @Override
     public Optional<Manager> parseJson(String json) {
         try {
-            return Optional.of(JsonParser.parseManager(json));
+            return Optional.of(JsonParser.parseJson(json, Manager.class));
         } catch (JsonProcessingException jsonProcessingException) {
             Log.error(jsonProcessingException.getMessage());
             return Optional.empty();
