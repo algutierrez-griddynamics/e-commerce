@@ -4,12 +4,11 @@ import org.ecommerce.models.Admin;
 import org.ecommerce.models.Response;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class AdminController implements ControllerOperations<Admin, Long> {
     @Override
-    public Response<Admin> create(Map<String, String> request) {
+    public Response<Admin> create(String jsonRequest) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -19,7 +18,7 @@ public class AdminController implements ControllerOperations<Admin, Long> {
     }
 
     @Override
-    public Response<Admin> update(Long id, Map<String, String> request) {
+    public Response<Admin> update(String request, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -29,7 +28,7 @@ public class AdminController implements ControllerOperations<Admin, Long> {
     }
 
     @Override
-    public Response<List<Admin>> get() {
+    public Response<List<Admin>> getAll() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

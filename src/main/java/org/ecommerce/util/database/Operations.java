@@ -1,8 +1,9 @@
 package org.ecommerce.util.database;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.logs.Log;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,20 +15,21 @@ import java.util.function.Function;
 @Getter
 public class Operations <T> {
 
-    private final Connection connection;
+    private final HikariDataSource hikariDataSource;
 
-    public Operations() {
-        try {
-            this.connection = DataSource.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public Operations(HikariDataSource hikariDataSource) {
+        this.hikariDataSource = hikariDataSource;
+    }
+
+    Connection getConnection() throws SQLException {
+        return hikariDataSource.getConnection();
     }
 
 
     // Run queries that should not have any result, such table creation or a plain insert
     public void execute(String query, Object... args) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = getConnection(); // TODO: Is it ok that each method gets a connection from the pool every time it is requested?
+             PreparedStatement statement = connection.prepareStatement(query)) {
             setParameters(statement, args);
             statement.executeUpdate();
         }
@@ -37,7 +39,8 @@ public class Operations <T> {
     //    Now takes Consumer instead of Object... and exposes internal state (PreparedStatement) to the caller,
     //    which is not always good, but in this case can give more flexibility to the caller
     public void execute(String query, Consumer<PreparedStatement> consumer) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             consumer.accept(stmt);
             stmt.executeUpdate();
         }
@@ -46,7 +49,8 @@ public class Operations <T> {
     // Runs a query and returns the result. Handle the case, when the function can return 0 results.
     // If the number of results is greater than 1, throw an exception
     T findOne(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             setParameters(stmt, args);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (isOneResult(rs))
@@ -59,11 +63,12 @@ public class Operations <T> {
     // Runs a query and returns many results (greater than or equal to 0) as a list.
     List<T> findMany(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
         List<T> results = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             setParameters(stmt, args);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    System.out.println(rs.getString(1));
+                    Log.info(rs.getString(1));
                     results.add(mapper.apply(rs));
                 }
             }

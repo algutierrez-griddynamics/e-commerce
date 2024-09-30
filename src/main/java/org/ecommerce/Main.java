@@ -1,13 +1,18 @@
 package org.ecommerce;
 
 import org.ecommerce.controllers.OrderController;
+import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 
 public class Main {
     public static void main (String[] args) {
-            // TODO: Create a parser (Strings -> Objects/Maps) class for test Controllers
+//        placeOrders();
+//        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+    }
+
+    private static void placeOrders() {
         OrderController orderController = new OrderController(
                 new OrderServiceImpl(new OrderRepository()
                         , new MessageQueue<>()));
@@ -98,10 +103,9 @@ public class Main {
                 "}\n";
         orderController.consumeOrders();
 
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
-
+        Log.info(orderController.create(request).toString());
+        Log.info(orderController.create(request).toString());
+        Log.info(orderController.create(request).toString());
 
     }
 }

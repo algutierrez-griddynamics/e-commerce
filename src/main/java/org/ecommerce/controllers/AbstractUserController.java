@@ -8,7 +8,7 @@ import java.util.Map;
 public abstract class AbstractUserController {
     private PasswordService passwordService;
 
-    public void UserController(PasswordService passwordService) {
+    public AbstractUserController(PasswordService passwordService) {
         this.passwordService = passwordService;
     }
 
