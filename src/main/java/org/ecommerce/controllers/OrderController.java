@@ -70,7 +70,7 @@ public class OrderController implements ControllerOperations <Order, Long> {
 
     private Optional<Order> parseJson(String json) {
         try {
-            return Optional.of(JsonParser.parseOrder(json));
+            return Optional.of(JsonParser.parseJson(json, Order.class));
         } catch (JsonProcessingException jsonProcessingException) {
             Log.error(jsonProcessingException.getMessage());
             return Optional.empty();
