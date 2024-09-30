@@ -4,6 +4,7 @@ import org.ecommerce.models.User;
 import org.ecommerce.repositories.UserRepository;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.services.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class CustomerServiceImpl implements UserService<User> {
     }
 
     @Override
-    public User update(Long aLong, User entity) {
+    public User update(User entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

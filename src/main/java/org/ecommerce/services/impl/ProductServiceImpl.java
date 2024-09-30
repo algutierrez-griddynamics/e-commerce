@@ -2,6 +2,7 @@ package org.ecommerce.services.impl;
 
 import org.ecommerce.models.Product;
 import org.ecommerce.services.ProductService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(Long id, Product entity) {
+    public Product update(Product entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

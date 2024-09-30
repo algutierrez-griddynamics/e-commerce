@@ -25,7 +25,7 @@ public class ManagerServiceImpl implements UserService<Manager> {
     }
 
     @Override
-    public Manager update(Long id, Manager entity) {
+    public Manager update(Manager entity, Long id) {
         managerRepository.update(id, entity);
         return managerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));

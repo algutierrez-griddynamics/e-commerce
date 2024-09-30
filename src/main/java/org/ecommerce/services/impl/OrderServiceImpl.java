@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order update(Long id, Order entity) {
+    public Order update(Order entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
