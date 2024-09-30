@@ -1,15 +1,14 @@
 package org.ecommerce.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.ecommerce.enums.Error;
 import org.ecommerce.enums.HttpStatusCode;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.Response;
+import org.ecommerce.models.requests.*;
 import org.ecommerce.services.OrderService;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,38 +21,38 @@ public class OrderController implements ControllerOperations <Order, Long> {
     }
 
     @Override
-    public Response<Order> create(String jsonRequest) {
-        return parseJson(jsonRequest)
-                .map(res ->
-                        new Response<>(
-                                true,
-                                "Order placed successfully",
-                                orderService.create(res),
-                                HttpStatusCode.CREATED))
-                .orElse(new Response<>(
-                        false,
-                        Error.INVALID_REQUEST_FORMAT.getDescription(),
-                        HttpStatusCode.BAD_REQUEST
-                ));
+    public Response<Order> create(CreateRequest<Order> request) {
+        Order order = request.getData();
+
+        return new Response<>(
+                true,
+                "Order placed successfully",
+                orderService.create(order),
+                HttpStatusCode.CREATED);
     }
 
     @Override
-    public Response<Order> delete(Long id) {
+    public Response<Order> delete(DeleteRequest<Long> request) {
+        Long id = request.getId();
+
         orderService.delete(id);
+
         return new Response<>(true,
                 "Order deleted successfully",
                 HttpStatusCode.OK);
     }
 
     @Override
-    public Response<Order> update(String jsonRequest, Long id) {
+    public Response<Order> update(UpdateRequest<Order, Long> request) {
         return new Response<>(false,
                 "Not Supported Operation",
                 HttpStatusCode.SERVICE_UNAVAILABLE);
     }
 
     @Override
-    public Response<Order> get(Long id) {
+    public Response<Order> get(GetRequest<Long> request) {
+        Long id = request.getId();
+
         return new Response<>(true,
                 "Order retrieved successfully",
                 orderService.findById(id),
@@ -61,7 +60,7 @@ public class OrderController implements ControllerOperations <Order, Long> {
     }
 
     @Override
-    public Response<List<Order>> getAll() {
+    public Response<List<Order>> getAll(GetAllRequest getAllRequest) {
         return new Response<>(
                 true,
                 "Orders retrieved succesfully",
@@ -69,10 +68,9 @@ public class OrderController implements ControllerOperations <Order, Long> {
                 HttpStatusCode.ACCEPTED);
     }
 
-    @Override
-    public Optional<Order> parseJson(String json) {
+    private Optional<Order> parseJson(String json) {
         try {
-            return Optional.of(JsonParser.parseOrder(json));
+            return Optional.of(JsonParser.parseJson(json, Order.class));
         } catch (JsonProcessingException jsonProcessingException) {
             Log.error(jsonProcessingException.getMessage());
             return Optional.empty();

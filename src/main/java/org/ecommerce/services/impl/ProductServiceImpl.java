@@ -14,7 +14,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(Long id, Product entity) {
+    public Product update(Product entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -2,11 +2,10 @@ package org.ecommerce.controllers;
 
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Response;
+import org.ecommerce.models.requests.*;
 import org.ecommerce.services.PasswordService;
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 public class CustomerController extends AbstractUserController implements ControllerOperations<Customer, Long> {
     public CustomerController(PasswordService passwordService) {
@@ -14,32 +13,27 @@ public class CustomerController extends AbstractUserController implements Contro
     }
 
     @Override
-    public Response<Customer> create(String jsonRequest) {
+    public Response<Customer> create(CreateRequest<Customer> request ) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> delete(Long id) {
+    public Response<Customer> delete(DeleteRequest<Long> request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> update(String request, Long id) {
+    public Response<Customer> update(UpdateRequest<Customer, Long> request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<Customer> get(Long id) {
+    public Response<Customer> get(GetRequest<Long> request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Response<List<Customer>> getAll() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Optional<Customer> parseJson(String json) {
+    public Response<List<Customer>> getAll(GetAllRequest request) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

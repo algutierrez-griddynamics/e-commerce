@@ -9,7 +9,6 @@ import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.OrderService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -37,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order update(Long id, Order entity) {
+    public Order update(Order entity, Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
