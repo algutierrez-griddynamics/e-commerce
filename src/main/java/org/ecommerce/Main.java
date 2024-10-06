@@ -8,10 +8,12 @@ import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class Main {
     public static void main (String[] args) {
-        placeOrders();
+//        placeOrders();
 //        DataSourceConfig dataSourceConfig = new DataSourceConfig();
     }
 
@@ -20,7 +22,20 @@ public class Main {
                 new OrderServiceImpl(new OrderRepository()
                         , new MessageQueue<>()));
 
-        String request = "{\n" +
+        String request = getRequest();
+        orderController.consumeOrders();
+        try {
+            Order order = JsonParser.parseJson(request, Order.class);
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getRequest() {
+        return "{\n" +
                 "  \"id\": 1,\n" +
                 "  \"customerId\": 12345,\n" +
                 "  \"orderDate\": \"2024-09-01\",\n" +
@@ -104,14 +119,5 @@ public class Main {
                 "    \"cardHolderName\": \"John Doe\"\n" +
                 "  }\n" +
                 "}\n";
-        orderController.consumeOrders();
-        try {
-            Order order = JsonParser.parseOrder(request);
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

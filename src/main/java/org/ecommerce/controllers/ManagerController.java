@@ -1,12 +1,16 @@
 package org.ecommerce.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ecommerce.enums.HttpStatusCode;
+import org.ecommerce.logs.Log;
 import org.ecommerce.models.*;
 import org.ecommerce.models.requests.*;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.services.UserService;
+import org.ecommerce.util.JsonParser;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ManagerController extends AbstractUserController implements ControllerOperations<Manager, Long> {
 
@@ -82,7 +86,6 @@ public class ManagerController extends AbstractUserController implements Control
         );
     }
 
-    @Override
     public Optional<Manager> parseJson(String json) {
         try {
             return Optional.of(JsonParser.parseJson(json, Manager.class));
