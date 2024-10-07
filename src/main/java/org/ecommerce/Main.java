@@ -1,8 +1,5 @@
 package org.ecommerce;
 
-import org.ecommerce.config.ApplicationControllersConfig;
-import org.ecommerce.config.ApplicationRepositoriesConfig;
-import org.ecommerce.config.ApplicationServicesConfig;
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
@@ -16,10 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 @SpringBootApplication//(exclude = {ApplicationControllersConfig.class, ApplicationServicesConfig.class, ApplicationRepositoriesConfig.class})
 @EnableConfigurationProperties(DataSourceProperties.class)
