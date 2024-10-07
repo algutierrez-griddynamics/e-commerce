@@ -1,5 +1,8 @@
 package org.ecommerce;
 
+import org.ecommerce.config.ApplicationControllersConfig;
+import org.ecommerce.config.ApplicationRepositoriesConfig;
+import org.ecommerce.config.ApplicationServicesConfig;
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
@@ -8,13 +11,23 @@ import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.ecommerce.util.database.DataSourceProperties;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+@SpringBootApplication//(exclude = {ApplicationControllersConfig.class, ApplicationServicesConfig.class, ApplicationRepositoriesConfig.class})
+@EnableConfigurationProperties(DataSourceProperties.class)
 public class Main {
     public static void main (String[] args) {
-//        placeOrders();
-//        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        ApplicationContext applicationContext = SpringApplication.run(Main.class, args);
+        var res = applicationContext.getBean(DataSourceProperties.class);
+        Log.info(res.toString());
     }
 
     private static void placeOrders() {
