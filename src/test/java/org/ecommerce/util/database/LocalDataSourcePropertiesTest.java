@@ -12,11 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Data Source properties for local h2 database")
 @ActiveProfiles("local")
 @SpringBootTest
-class LocalDataSourceConfigTest {
+class LocalDataSourcePropertiesTest {
 
     @Autowired
     private DataSourceProperties dataSourceProperties;
 
+    @DisplayName("Successful h2 connection")
     @Test
     void getLocalDataSource() {
         String url = dataSourceProperties.getUrl();
