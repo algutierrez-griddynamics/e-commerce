@@ -8,11 +8,19 @@ import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.ecommerce.util.database.DataSourceProperties;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 
+@SpringBootApplication//(exclude = {ApplicationControllersConfig.class, ApplicationServicesConfig.class, ApplicationRepositoriesConfig.class})
+@EnableConfigurationProperties(DataSourceProperties.class)
 public class Main {
     public static void main (String[] args) {
-        placeOrders();
-//        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        ApplicationContext applicationContext = SpringApplication.run(Main.class, args);
+        var res = applicationContext.getBean(DataSourceProperties.class);
+        Log.info(res.toString());
     }
 
     private static void placeOrders() {
@@ -20,7 +28,20 @@ public class Main {
                 new OrderServiceImpl(new OrderRepository()
                         , new MessageQueue<>()));
 
-        String request = "{\n" +
+        String request = getRequest();
+        orderController.consumeOrders();
+        try {
+            Order order = JsonParser.parseJson(request, Order.class);
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getRequest() {
+        return "{\n" +
                 "  \"id\": 1,\n" +
                 "  \"customerId\": 12345,\n" +
                 "  \"orderDate\": \"2024-09-01\",\n" +
@@ -104,14 +125,5 @@ public class Main {
                 "    \"cardHolderName\": \"John Doe\"\n" +
                 "  }\n" +
                 "}\n";
-        orderController.consumeOrders();
-        try {
-            Order order = JsonParser.parseOrder(request);
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-            Log.info(orderController.create(new CreateRequest<Order>(order)).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

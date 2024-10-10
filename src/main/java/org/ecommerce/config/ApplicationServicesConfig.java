@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(ApplicationServicesConfig.class)
+@Import(ApplicationRepositoriesConfig.class)
 public class ApplicationServicesConfig {
 
     @Bean

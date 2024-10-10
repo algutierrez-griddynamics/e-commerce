@@ -4,8 +4,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
@@ -19,6 +19,7 @@ public class DataSourceConfig {
     }
 
     @Profile("local")
+    @Primary
     @Bean
         public HikariDataSource getLocalDataSource() {
         return buildDataSource();

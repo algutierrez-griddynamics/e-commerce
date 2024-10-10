@@ -19,10 +19,11 @@ This task involves creating a Docker Compose manifest to set up a database conta
 Create a .env file in the root directory with the following content:
   
     ```bash
-    DB_USER=<Database User>
-    DB_PASSWORD=<Database password>
-    DB_NAME=<Database name>
-    DB_PORT=5432
+   DB_URL=<Database URL>
+   DB_USER=<Database user>
+   DB_PASSWORD=<Database password>
+   DB_NAME=<Database name>
+   DB_PORT=5432
     ```
 3. **Start the Database Container**  
 Run Docker Compose to start the database container:
