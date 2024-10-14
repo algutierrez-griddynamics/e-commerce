@@ -48,7 +48,7 @@ public class Operations <T> {
 
     // Runs a query and returns the result. Handle the case, when the function can return 0 results.
     // If the number of results is greater than 1, throw an exception
-    T findOne(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
+    public T findOne(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             setParameters(stmt, args);
@@ -61,7 +61,7 @@ public class Operations <T> {
     }
 
     // Runs a query and returns many results (greater than or equal to 0) as a list.
-    List<T> findMany(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
+    public List<T> findMany(String query, Function<ResultSet, T> mapper, Object... args) throws SQLException {
         List<T> results = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
