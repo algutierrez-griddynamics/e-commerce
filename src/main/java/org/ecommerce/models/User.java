@@ -1,5 +1,6 @@
 package org.ecommerce.models;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -9,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Getter
 @ToString(callSuper = true)
+@MappedSuperclass
 public abstract class User extends Identity {
     private String firstName;
     private String lastName;
