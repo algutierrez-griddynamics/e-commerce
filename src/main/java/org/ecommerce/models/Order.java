@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ecommerce.enums.OrderStatus;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @SuperBuilder
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class Order extends Identity {
-    private Long customerId;
+    private Customer customer;
     private Date orderDate;
     private List<Product> products;
     private OrderStatus status;
