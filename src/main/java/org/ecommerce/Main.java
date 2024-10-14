@@ -1,14 +1,16 @@
 package org.ecommerce;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
-import org.ecommerce.repositories.OrderRepository;
+import org.ecommerce.repositories.inmemory.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
 import org.ecommerce.util.database.DataSourceProperties;
+import org.ecommerce.util.database.Operations;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,7 +27,7 @@ public class Main {
 
     private static void placeOrders() {
         OrderController orderController = new OrderController(
-                new OrderServiceImpl(new OrderRepository()
+                new OrderServiceImpl(new OrderRepository(new Operations<>(new HikariDataSource()))
                         , new MessageQueue<>()));
 
         String request = getRequest();
