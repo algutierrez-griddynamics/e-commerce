@@ -1,13 +1,11 @@
 package org.ecommerce.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
 @ToString(callSuper = true)

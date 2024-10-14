@@ -1,8 +1,6 @@
 package org.ecommerce.models;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.List;
 @Getter
 @SuperBuilder
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class Customer extends User {
     private String phoneNumber;
     private String address;

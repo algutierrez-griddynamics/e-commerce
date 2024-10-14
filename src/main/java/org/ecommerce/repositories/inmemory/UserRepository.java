@@ -6,7 +6,11 @@ import org.ecommerce.util.database.Operations;
 
 import java.util.*;
 
-public class UserRepository extends CrudOperationsImpl<User> {
+public class UserRepository extends CrudInMemoryOperationsImpl<User> {
+
+    public UserRepository(Operations<User> operations) {
+        super(operations);
+    }
 
     public Optional<String> findPasswordById(Long id) {
         return Optional.ofNullable(getDb().get(id))
