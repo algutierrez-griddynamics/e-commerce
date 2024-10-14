@@ -13,17 +13,17 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void addStockEntry(StockEntry<Long, Long> stockEntry) {
+    public void addStockEntry(StockEntry stockEntry) {
         stockRepository.addStockEntry(stockEntry);
     }
 
     @Override
-    public StockEntry<Long, Long> getStockEntry(Long productId, Long locationId) {
+    public StockEntry getStockEntry(Long productId, Long locationId) {
         return stockRepository.getStockEntry(productId, locationId);
     }
 
     @Override
-    public void updateStockEntry(StockEntry<Long, Long> stockEntry) {
+    public void updateStockEntry(StockEntry stockEntry) {
         stockRepository.updateStockEntry(stockEntry);
     }
 }

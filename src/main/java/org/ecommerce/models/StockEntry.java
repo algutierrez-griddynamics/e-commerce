@@ -1,5 +1,8 @@
 package org.ecommerce.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +12,15 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockEntry <ProductID, LocationID> {
-    private ProductID productId;
-    private LocationID locationId;
+@Entity
+@Table(name = "stock_entry")
+public class StockEntry extends Identity {
+    @ManyToOne
+    private Product product;
+
+    @ManyToOne
+    private Location location;
+
     private int stock;
+    private String measurement_unit;
 }
