@@ -1,9 +1,10 @@
-package org.ecommerce.repositories.impl;
+package org.ecommerce.repositories.inmemory.impl;
 
 import lombok.Getter;
 import org.ecommerce.enums.Error;
 import org.ecommerce.models.Identity;
-import org.ecommerce.repositories.CrudOperations;
+import org.ecommerce.repositories.inmemory.CrudOperations;
+import org.ecommerce.util.database.Operations;
 
 import java.util.*;
 

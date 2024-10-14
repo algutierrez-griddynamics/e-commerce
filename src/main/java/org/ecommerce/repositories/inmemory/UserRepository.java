@@ -1,8 +1,8 @@
-package org.ecommerce.repositories;
+package org.ecommerce.repositories.inmemory;
 
 import org.ecommerce.models.User;
-import org.ecommerce.repositories.impl.CrudOperationsImpl;
-import org.springframework.stereotype.Repository;
+import org.ecommerce.repositories.inmemory.impl.CrudInMemoryOperationsImpl;
+import org.ecommerce.util.database.Operations;
 
 import java.util.*;
 

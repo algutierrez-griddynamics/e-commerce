@@ -1,7 +1,6 @@
-package org.ecommerce.repositories;
+package org.ecommerce.repositories.inmemory;
 
 import org.ecommerce.models.StockEntry;
-import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.HashMap;
