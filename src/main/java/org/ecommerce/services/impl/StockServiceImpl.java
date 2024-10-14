@@ -1,7 +1,7 @@
 package org.ecommerce.services.impl;
 
 import org.ecommerce.models.StockEntry;
-import org.ecommerce.repositories.StockRepository;
+import org.ecommerce.repositories.inmemory.StockRepository;
 import org.ecommerce.services.StockService;
 
 public class StockServiceImpl implements StockService {
