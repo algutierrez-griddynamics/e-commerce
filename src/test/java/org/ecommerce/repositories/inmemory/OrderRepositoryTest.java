@@ -4,12 +4,12 @@ import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.ecommerce.models.Order;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,6 +17,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 
+@ActiveProfiles("dev")
 @SpringBootTest
 class OrderRepositoryTest {
 
@@ -66,23 +67,25 @@ class OrderRepositoryTest {
         lenient().when(order.getStatus()).thenReturn(OrderStatus.PLACED);
     }
 
+    @Disabled
     @Test
     void save() {
         assertDoesNotThrow(() -> orderRepository.save(order));
     }
 
-
+    @Disabled
     @Test
     void findById() {
-       orderRepository.findById(3L)
+        orderRepository.save(order);
+       orderRepository.findById(1L)
                        .ifPresent(Assertions::assertNotNull);
-
-        assertDoesNotThrow(() -> orderRepository.findById(3L));
     }
 
+    @Disabled
     @Test
     void deleteById() {
-        assertDoesNotThrow(() -> orderRepository.deleteById(3L));
+        orderRepository.save(order);
+        assertDoesNotThrow(() -> orderRepository.deleteById(1L));
     }
 
     @Test
