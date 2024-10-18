@@ -37,7 +37,7 @@ public class OrderRepository extends CrudInMemoryOperationsImpl<Order> {
 
     @Override
     public Optional<Order> findById(Long id) {
-        String sqlQuery = "SELECT * FROM orders WHERE pk_order_id = ?"; // TODO: Check: Should i join all tables in here?
+        String sqlQuery = "SELECT * FROM orders WHERE pk_order_id = ?";
         try {
             return Optional.of(
                     operations.findOne(sqlQuery, resultSet -> {

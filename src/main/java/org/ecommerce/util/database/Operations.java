@@ -28,7 +28,7 @@ public class Operations <T> {
 
     // Run queries that should not have any result, such table creation or a plain insert
     public void execute(String query, Object... args) throws SQLException {
-        try (Connection connection = getConnection(); // TODO: Is it ok that each method gets a connection from the pool every time it is requested?
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             setParameters(statement, args);
             statement.executeUpdate();
