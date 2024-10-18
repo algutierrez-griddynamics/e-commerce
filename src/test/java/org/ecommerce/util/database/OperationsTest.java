@@ -1,13 +1,15 @@
 package org.ecommerce.util.database;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.Customer;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,12 +20,22 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@DisplayName("Tests for Operations class")
+//@Import("some.other.config.bean.files")
 class OperationsTest {
+    @TestConfiguration
+    static class operationsConfig {
+        @Bean
+        Operations<Customer> operations(HikariDataSource hikariDataSource) {
+            return new Operations<>(hikariDataSource);
+        }
+    }
 
-    @InjectMocks
+    @Autowired
     private Operations<Customer> operations;
 
+    @DisplayName("Checking database connection")
     @Test
     void getConnection() {
         try (Connection connection = operations.getConnection()) {
@@ -33,6 +45,7 @@ class OperationsTest {
         }
     }
 
+    @DisplayName("Inserting with execute method")
     @Test
     void execute() {
         String email = "foo@bar.com";
@@ -45,6 +58,7 @@ class OperationsTest {
         assertDoesNotThrow( () -> operations.execute(deleteQuery, email));
     }
 
+    @DisplayName("Execute method but setting up a consumer")
     @Test
     void executeWithConsumer() {
         String email = "foo@bar.com";
@@ -75,6 +89,7 @@ class OperationsTest {
 
     }
 
+    @DisplayName("Select with findOne method, setting up a mapper")
     @Test
     void findOneRecordFound() {
         String query = "SELECT * FROM customers WHERE pk_customer_id = ?";
@@ -114,6 +129,7 @@ class OperationsTest {
         }
     }
 
+    @DisplayName("Looking dor a not found exception")
     @Test
     void findOneRecordNotFound() {
         String query = "SELECT * FROM customers WHERE pk_customer_id = ?";
@@ -125,6 +141,7 @@ class OperationsTest {
 
     }
 
+    @DisplayName("Select with findMany method, setting up a mapper")
     @Test
     void findMany() {
         String query = "SELECT * FROM customers";
