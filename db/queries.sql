@@ -4,16 +4,16 @@ BEGIN;
 
 -- Insert into `orders`
 INSERT INTO orders (fk_shipping_information_id, fk_billing_information_id, fk_payment_details_id, fk_customer_id, date, status, total_usd) VALUES
-                                                                                                                                               (1, 1, 1, 1, '2024-09-01', 'Completed', 19.99),
-                                                                                                                                               (2, 2, 2, 2, '2024-09-02', 'Pending', 29.99),
-                                                                                                                                               (3, 3, 3, 3, '2024-09-03', 'Shipped', 49.99),
+                                                                                                                                               (1, 1, 1, 1, '2024-09-01', 'IN_TRANSIT', 19.99),
+                                                                                                                                               (2, 2, 2, 2, '2024-09-02', 'PLACED', 29.99),
+                                                                                                                                               (3, 3, 3, 3, '2024-09-03', 'PLACED', 49.99),
                                                                                                                                                (4, 4, 4, 4, '2024-09-04', 'Delivered', 99.99),
                                                                                                                                                (5, 5, 5, 5, '2024-09-05', 'Cancelled', 9.99),
-                                                                                                                                               (6, 6, 6, 6, '2024-09-06', 'Completed', 15.99),
-                                                                                                                                               (7, 7, 7, 7, '2024-09-07', 'Pending', 39.99),
+                                                                                                                                               (6, 6, 6, 6, '2024-09-06', 'IN_TRANSIT', 15.99),
+                                                                                                                                               (7, 7, 7, 7, '2024-09-07', 'PLACED', 39.99),
                                                                                                                                                (8, 8, 8, 8, '2024-09-08', 'Shipped', 59.99),
                                                                                                                                                (9, 9, 9, 9, '2024-09-09', 'Delivered', 14.99),
-                                                                                                                                               (10, 10, 10, 10, '2024-09-10', 'Completed', 24.99);
+                                                                                                                                               (10, 10, 10, 10, '2024-09-10', 'IN_TRANSIT', 24.99);
 
 -- Insert into `products_orders`
 INSERT INTO products_orders (fk_product_id, fk_order_id) VALUES
