@@ -1,7 +1,7 @@
 package org.ecommerce.services.impl;
 
 import org.ecommerce.models.StockEntry;
-import org.ecommerce.repositories.StockRepository;
+import org.ecommerce.repositories.inmemory.StockRepository;
 import org.ecommerce.services.StockService;
 
 public class StockServiceImpl implements StockService {
@@ -13,17 +13,17 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void addStockEntry(StockEntry<Long, Long> stockEntry) {
+    public void addStockEntry(StockEntry stockEntry) {
         stockRepository.addStockEntry(stockEntry);
     }
 
     @Override
-    public StockEntry<Long, Long> getStockEntry(Long productId, Long locationId) {
+    public StockEntry getStockEntry(Long productId, Long locationId) {
         return stockRepository.getStockEntry(productId, locationId);
     }
 
     @Override
-    public void updateStockEntry(StockEntry<Long, Long> stockEntry) {
+    public void updateStockEntry(StockEntry stockEntry) {
         stockRepository.updateStockEntry(stockEntry);
     }
 }
