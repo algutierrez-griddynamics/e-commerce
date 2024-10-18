@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS locations (
 );
 
 CREATE TABLE IF NOT EXISTS stock_entry (
-    pk_stock_entry BIGSERIAL PRIMARY KEY,
+    pk_stock_entry_id BIGSERIAL PRIMARY KEY,
     fk_location_id BIGINT,
     fk_inventory_id BIGINT,
     measurement_unit VARCHAR(50) NOT NULL,
