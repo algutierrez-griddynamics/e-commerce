@@ -73,4 +73,8 @@ public class ManagerServiceImpl implements UserService<Manager> {
         return true;
     }
 
+    @Override
+    public void deleteAll() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -8,4 +8,5 @@ public interface OperationsService<T, ID> {
     void delete(ID id);
     List<T> findAll();
     T findById(ID id);
+    void deleteAll();
 }

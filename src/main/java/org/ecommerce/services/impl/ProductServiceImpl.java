@@ -32,4 +32,9 @@ public class ProductServiceImpl implements ProductService {
     public Product findById(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void deleteAll() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

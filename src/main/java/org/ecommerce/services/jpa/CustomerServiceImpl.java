@@ -52,4 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Boolean isValidEntity(Customer obj) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void deleteAll() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

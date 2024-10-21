@@ -46,4 +46,7 @@ public class CustomerServiceImpl implements UserService<User> {
     public Boolean isValidEntity(User obj) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void deleteAll() {throw new UnsupportedOperationException("Not supported yet.");}
 }
