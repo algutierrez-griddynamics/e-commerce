@@ -50,8 +50,8 @@ class OrderJpaRepositoryTest {
     @DisplayName("This BeforeAll method creates a web server in the 8082 port so we can connect to the h2 database")
     @BeforeAll
     public static void initTest() throws SQLException {
-        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
-                .start();
+//        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+//                .start();
     }
 
     @BeforeEach
@@ -124,7 +124,7 @@ class OrderJpaRepositoryTest {
 
 
     @Test
-//    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
+    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
     public void infiniteLoop() {
         while (true) {
             try {

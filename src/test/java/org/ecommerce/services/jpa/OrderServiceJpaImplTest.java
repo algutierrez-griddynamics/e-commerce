@@ -116,7 +116,7 @@ class OrderServiceJpaImplTest {
     }
 
     @Test
-    @Disabled("This test prevent tests to finish, used for debug purposes")
+//    @Disabled("This test prevent tests to finish, used for debug purposes")
     void infiniteLoop() {
         while (true) {
             try {

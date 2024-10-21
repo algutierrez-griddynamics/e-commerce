@@ -1,10 +1,8 @@
 package org.ecommerce.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.ecommerce.enums.CategoryType;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity
 @Table(name = "categories")
+@SuperBuilder
 @AttributeOverride(name="id", column=@Column(name="pk_category_id"))
 public class Category extends Identity {
     @NotNull @Column(nullable = false)

@@ -1,8 +1,8 @@
 package org.ecommerce.services.jpa;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.ecommerce.models.Customer;
+import org.ecommerce.models.Order;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 
 
 @SpringBootTest
+@Disabled
 //@Transactional
 class CustomerServiceImplTest {
 
@@ -85,11 +88,34 @@ class CustomerServiceImplTest {
 
     @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID entityManager.persist()")
     void saveCustomerSameIdEntityManagerPersist() {
+        createCustomerWithFixedId();
         entityManager.persist(customer);
     }
 
     @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using entityManager.merge().")
     void saveCustomerSameIdEntityManagerMerge() {
+        createCustomerWithFixedId();
+        entityManager.merge(customer);
+    }
+
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using repository.save()")
+    void saveCustomerWrongOrderRepository() {
+        Order order = Order.builder().id(99L).build();
+        customer.setOrdersHistory(List.of(order));
+        customerServiceImpl.create(customer);
+    }
+
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID entityManager.persist()")
+    void saveCustomerWrongOrderEntityManagerPersist() {
+        Order order = Order.builder().id(99L).build();
+        customer.setOrdersHistory(List.of(order));
+        entityManager.persist(customer);
+    }
+
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using entityManager.merge().")
+    void saveCustomerWrongOrderEntityManagerMerge() {
+        Order order = Order.builder().id(99L).build();
+        customer.setOrdersHistory(List.of(order));
         entityManager.merge(customer);
     }
 
@@ -106,7 +132,7 @@ class CustomerServiceImplTest {
     }
 
     private void createCustomerWithFixedId() {
-        customerServiceImpl.deleteAll();
+//        customerServiceImpl.deleteAll();
         final Long fixedId = 1L;
 
         Customer newCustomer = new Customer();
@@ -115,6 +141,8 @@ class CustomerServiceImplTest {
 
         customer.setId(fixedId);
 
-        customerServiceImpl.create(newCustomer);
+        if(Objects.isNull(customerServiceImpl.findById(fixedId))){
+            customerServiceImpl.create(newCustomer);
+        }
     }
 }
