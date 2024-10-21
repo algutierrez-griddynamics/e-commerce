@@ -86,4 +86,9 @@ public class OrderServiceImpl implements OrderService {
                     return result;
                 }).orElseThrow(() -> new EntityNotFound("Order not found"));
     }
+
+    @Override
+    public void deleteAll() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

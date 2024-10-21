@@ -52,4 +52,9 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
+
+    @Override
+    public void deleteAll() {
+        orderRepository.deleteAll();
+    }
 }
