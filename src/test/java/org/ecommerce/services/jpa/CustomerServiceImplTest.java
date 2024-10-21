@@ -62,6 +62,21 @@ class CustomerServiceImplTest {
         entityManager.merge(customer);
     }
 
+    @Test @DisplayName("Save Parent without an initialized ID using repository.save()")
+    void saveCustomerRepositoryWithoutId() {
+        customerServiceImpl.create(customer);
+    }
+
+    @Test @DisplayName("Save Parent without an initialized ID using entityManager.persist()")
+    void saveCustomerEntityManagerWithoutId() {
+        entityManager.persist(customer);
+    }
+
+    @Test @DisplayName("Save Parent without an initialized ID using entityManager.merge()")
+    void saveCustomerMergeWithoutId() {
+        entityManager.merge(customer);
+    }
+
 
     @Test
     @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
