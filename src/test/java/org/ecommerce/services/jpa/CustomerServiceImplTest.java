@@ -77,6 +77,21 @@ class CustomerServiceImplTest {
         entityManager.merge(customer);
     }
 
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using repository.save()")
+    void saveCustomerSameIdRepository() {
+        createCustomerWithFixedId();
+        customerServiceImpl.create(customer);
+    }
+
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID entityManager.persist()")
+    void saveCustomerSameIdEntityManagerPersist() {
+        entityManager.persist(customer);
+    }
+
+    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using entityManager.merge().")
+    void saveCustomerSameIdEntityManagerMerge() {
+        entityManager.merge(customer);
+    }
 
     @Test
     @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
@@ -88,5 +103,18 @@ class CustomerServiceImplTest {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void createCustomerWithFixedId() {
+        customerServiceImpl.deleteAll();
+        final Long fixedId = 1L;
+
+        Customer newCustomer = new Customer();
+        newCustomer.setPhoneNumber("1234567890");
+        newCustomer.setId(fixedId);
+
+        customer.setId(fixedId);
+
+        customerServiceImpl.create(newCustomer);
     }
 }

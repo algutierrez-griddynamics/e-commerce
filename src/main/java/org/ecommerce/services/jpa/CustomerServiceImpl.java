@@ -50,11 +50,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Boolean isValidEntity(Customer obj) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void deleteAll() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        customerJpaRepository.deleteAll();
     }
 }

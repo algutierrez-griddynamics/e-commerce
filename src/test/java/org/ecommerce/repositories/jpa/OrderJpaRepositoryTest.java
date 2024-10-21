@@ -106,6 +106,23 @@ class OrderJpaRepositoryTest {
         entityManager.merge(order);
     }
 
+    // I got wrong in here, this can wait
+    @Test @DisplayName("Save Parent without an initialized ID using repository.save()")
+    void saveOrderRepositoryWithoutId() {
+        orderService.create(order);
+    }
+
+    @Test @DisplayName("Save Parent without an initialized ID using entityManager.persist()")
+    void saveOrderEntityManagerWithoutId() {
+        entityManager.persist(order);
+    }
+
+    @Test @DisplayName("Save Parent without an initialized ID using entityManager.merge()")
+    void saveOrderMergeWithoutId() {
+        entityManager.merge(order);
+    }
+
+
     @Test
 //    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
     public void infiniteLoop() {
