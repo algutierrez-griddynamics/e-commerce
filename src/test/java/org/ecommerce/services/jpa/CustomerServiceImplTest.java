@@ -240,6 +240,42 @@ class CustomerServiceImplTest {
         assertNotNull(order.getId());
     }
 
+    @Test @DisplayName("Save Child with Parent initialized, but detached from entity session  -  using repository.save()")
+    void saveOrderWithDetachedCustomerRepository() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(1L).build());
+
+        orderServiceImpl.create(order);
+
+        assertDoesNotThrow(() -> customerServiceImpl.create(customer));
+        assertNotNull(order.getId());
+    }
+
+    @Test @DisplayName("Save Child with Parent initialized, but detached from entity session - using entityManager.persist()")
+//    @Transactional
+    void saveOrderWithDetachedCustomerEntityManagerPersist() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(1L).build());
+
+        entityManager.persist(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
+        assertNotNull(order.getId());
+    }
+
+    @Test @DisplayName("Save Child with Parent initialized, but detached from entity session  - using entityManager.merge().")
+//    @Transactional
+    void saveOrderWithDetachedCustomerEntityManagerMerge() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(1L).build());
+
+        entityManager.merge(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
+        assertNotNull(order.getId());
+    }
+
+
     @Test
 //    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
     public void infiniteLoop() {
