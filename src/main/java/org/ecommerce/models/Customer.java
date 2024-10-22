@@ -22,6 +22,6 @@ public class Customer extends User {
     private String address;
     @Column(name = "categories_preferences", columnDefinition = "VARCHAR(100) ARRAY")
     private List<String> categoriesPreferences = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "customer")
     private List<Order> ordersHistory = new ArrayList<>();
 }

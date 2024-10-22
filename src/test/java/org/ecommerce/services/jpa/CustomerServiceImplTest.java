@@ -1,6 +1,7 @@
 package org.ecommerce.services.jpa;
 
 import jakarta.persistence.EntityManager;
+import org.ecommerce.logs.Log;
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Order;
 import org.h2.tools.Server;
@@ -13,15 +14,19 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-@Disabled
+//@Disabled
 //@Transactional
 class CustomerServiceImplTest {
 
     @Autowired
     private CustomerServiceImpl customerServiceImpl;
+
+    @Autowired
+    private OrderServiceImpl orderServiceImpl;
 
     @Autowired
     private EntityManager entityManager;
@@ -45,10 +50,9 @@ class CustomerServiceImplTest {
 
     @Test @DisplayName("Save Parent with an initialized ID using repository.save()")
     void saveCustomerRepository() {
-        customer.setId(1L);
+        customer.setId(10L);
 
         customerServiceImpl.create(customer);
-
     }
 
     @Test @DisplayName("Save Parent with an initialized ID using entityManager.persist()")
@@ -98,29 +102,67 @@ class CustomerServiceImplTest {
         entityManager.merge(customer);
     }
 
-    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using repository.save()")
+    @Test @DisplayName("Save Parent with Children, which are not present in the database - using repository.save()")
     void saveCustomerWrongOrderRepository() {
         Order order = Order.builder().id(99L).build();
         customer.setOrdersHistory(List.of(order));
         customerServiceImpl.create(customer);
     }
 
-    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID entityManager.persist()")
+    @Test @DisplayName("Save Parent with Children, which are not present in the database - using entityManager.persist()")
     void saveCustomerWrongOrderEntityManagerPersist() {
         Order order = Order.builder().id(99L).build();
         customer.setOrdersHistory(List.of(order));
         entityManager.persist(customer);
     }
 
-    @Test @DisplayName("Insert Parent with some ID to the database. Save another Parent with the same ID using entityManager.merge().")
+    @Test @DisplayName("Save Parent with Children, which are not present in the database - using entityManager.merge().")
     void saveCustomerWrongOrderEntityManagerMerge() {
         Order order = Order.builder().id(99L).build();
         customer.setOrdersHistory(List.of(order));
         entityManager.merge(customer);
     }
 
+    @Test @DisplayName("Save Parent with Children, which ARE present in the database - using repository.save()")
+    void saveCustomerRightOrderRepository() {
+        //Attach entity
+        List<Order> orders = orderServiceImpl.findAll();
+        Order order = orders.get(0);
+
+        Log.info(order.toString());
+        customer.setOrdersHistory(List.of(order));
+        customerServiceImpl.create(customer);
+        assertNotNull(customer.getId());
+    }
+
+    @Test @DisplayName("Save Parent with Children, which ARE present in the database - using entityManager.persist()")
+//    @Transactional
+    void saveCustomerWrongRightEntityManagerPersist() {
+        //Attach entity
+        List<Order> orders = orderServiceImpl.findAll();
+        Order order = orders.get(0);
+
+        customer.setOrdersHistory(List.of(order));
+        entityManager.persist(customer);
+
+        assertNotNull(customer.getId());
+    }
+
+    @Test @DisplayName("Save Parent with Children, which ARE present in the database - using entityManager.merge().")
+//    @Transactional
+    void saveCustomerRightOrderEntityManagerMerge() {
+        //Attach entity
+        List<Order> orders = orderServiceImpl.findAll();
+        Order order = orders.get(0);
+
+        customer.setOrdersHistory(List.of(order));
+        entityManager.merge(customer);
+
+        assertNotNull(customer.getId());
+    }
+
     @Test
-    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
+//    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
     public void infiniteLoop() {
         while (true) {
             try {

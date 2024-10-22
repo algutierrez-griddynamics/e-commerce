@@ -54,11 +54,11 @@ VALUES
     (1, 'Electronics', 'Gadgets', 'CHILDREN'),
     (2, 'Clothing', 'Apparel', 'PARENT');
 
--- Insert into CUSTOMERS
-INSERT INTO CUSTOMERS (ADDRESS, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, PHONE_NUMBER, CATEGORIES_PREFERENCES)
-VALUES
-    ('10 Main St', 'customer1@example.com', 'John', 'Doe', 'pass123', '123-456-7890', '{Electronics, Fashion}'),
-    ('20 Market St', 'customer2@example.com', 'Jane', 'Smith', 'pass456', '987-654-3210', '{Books, Home Decor}');
+-- -- Insert into CUSTOMERS
+-- INSERT INTO CUSTOMERS (ADDRESS, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, PHONE_NUMBER, CATEGORIES_PREFERENCES)
+-- VALUES
+--     ('10 Main St', 'customer1@example.com', 'John', 'Doe', 'pass123', '123-456-7890', '{Electronics, Fashion}'),
+--     ('20 Market St', 'customer2@example.com', 'Jane', 'Smith', 'pass456', '987-654-3210', '{Books, Home Decor}');
 
 -- Insert into BILLING_INFORMATION
 INSERT INTO BILLING_INFORMATION (PK_BILLING_INFORMATION_ID, BILLING_DATE, ORDER_ID, FK_PRICE_ID, CITY, COUNTRY, STATE, STREET, ZIP_CODE)
@@ -67,7 +67,7 @@ VALUES
     (2, '2024-10-16 09:00:00', 2, 1002, 'Los Angeles', 'USA', 'CA', '456 Sunset Blvd', '90001');
 
 -- Insert into ORDERS
-INSERT INTO ORDERS (TOTAL_USD, DATE, FK_BILLING_INFORMATION_ID, FK_CUSTOMER_ID, FK_PAYMENT_DETAILS_ID, FK_SHIPPING_INFORMATION_ID, STATUS)
+INSERT INTO ORDERS (TOTAL_USD, DATE, FK_BILLING_INFORMATION_ID, FK_PAYMENT_DETAILS_ID, FK_SHIPPING_INFORMATION_ID, STATUS)
 VALUES
-    (79.98, '2024-10-15 10:00:00', 1, 1, 1, 1, 'CONFIRMED'),
-    (49.99, '2024-10-16 09:00:00', 2, 2, 2, 2, 'SHIPPED');
+    (79.98, '2024-10-15 10:00:00', 1, 1, 1, 'CONFIRMED'),
+    (49.99, '2024-10-16 09:00:00', 2, 2, 2, 'SHIPPED');
