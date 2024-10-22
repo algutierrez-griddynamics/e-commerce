@@ -12,7 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
@@ -67,37 +69,53 @@ class OrderRepositoryTest {
         lenient().when(order.getStatus()).thenReturn(OrderStatus.PLACED);
     }
 
-    @Disabled
     @Test
+    @org.junit.jupiter.api.Order(1)
     void save() {
+        Long lastIdBefore = getLastId();
+
         assertDoesNotThrow(() -> orderRepository.save(order));
+
+        Long lastIdAfter = getLastId();
+        assert(lastIdAfter - lastIdBefore == 1);
     }
 
-    @Disabled
     @Test
+    @org.junit.jupiter.api.Order(2)
     void findById() {
-        orderRepository.save(order);
-       orderRepository.findById(1L)
+        assertDoesNotThrow(() -> orderRepository.save(order));
+
+        Long lastIdAfter = getLastId();
+        orderRepository.findById(lastIdAfter)
                        .ifPresent(Assertions::assertNotNull);
     }
 
-    @Disabled
     @Test
+    @org.junit.jupiter.api.Order(3)
     void deleteById() {
         orderRepository.save(order);
-        assertDoesNotThrow(() -> orderRepository.deleteById(1L));
+        Long lastId = getLastId();
+        assertDoesNotThrow(() -> orderRepository.deleteById(lastId));
     }
 
     @Test
+    @org.junit.jupiter.api.Order(4)
     void deleteByIdThrowException() {
         assertThrows(EntityNotFound.class, () -> orderRepository.deleteById(99L));
     }
 
     @Test
+    @org.junit.jupiter.api.Order(5)
     void findAll() {
         var orders = orderRepository.findAll();
         assertNotNull(orders);
         assertDoesNotThrow(() -> orderRepository.findAll());
         orders.forEach(order -> Log.info(order.getId().toString()));
+    }
+
+    private Long getLastId() {
+        List<Order> orders = orderRepository.findAll();
+        orders.sort(Comparator.comparing(Order::getId));
+        return orders.get(orders.size() - 1).getId();
     }
 }
