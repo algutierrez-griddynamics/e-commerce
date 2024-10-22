@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +95,7 @@ class OrderServiceJpaImplTest {
         Long id = getSomeId();
         orderService.delete(id);
         assertThrows(EntityNotFound.class, ()
-                -> orderService.findById(order.getId()));
+                -> orderService.findById(id));
     }
 
     @Test
@@ -130,7 +131,9 @@ class OrderServiceJpaImplTest {
 
     private Long getSomeId() {
         orderService.create(order);
-        return orderService.findAll().stream().findFirst().get().getId();
+        List<Order> allOrders = orderService.findAll();
+        allOrders.sort(Comparator.comparing(Order::getId));
+        return allOrders.get(allOrders.size() - 1).getId();
     }
 }
 
