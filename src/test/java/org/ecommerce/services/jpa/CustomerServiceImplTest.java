@@ -1,6 +1,7 @@
 package org.ecommerce.services.jpa;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.transaction.Transactional;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.Customer;
@@ -41,6 +42,9 @@ class CustomerServiceImplTest {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
     @MockBean
     private Customer customer;
@@ -290,6 +294,24 @@ class CustomerServiceImplTest {
         });
     }
 
+    @Test @DisplayName("Start the transaction, fetch the Parent with JpaRepository, try changing it and don’t save it explicitly. Flush the session and check whether the changes were propagated to the database")
+    void fetchingParentManualTransaction() {
+        entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+
+        Customer fetchedCustomer = customerServiceImpl.findById(1L);
+        fetchedCustomer.setFirstName("First Name changed");
+        fetchedCustomer.setLastName("Last Name changed");
+
+        entityManager.flush();
+        entityManager.getTransaction().commit();
+
+        Customer savedCustomer = customerServiceImpl.findById(fetchedCustomer.getId());
+        assertAll(() -> {
+            savedCustomer.getFirstName().equals("First Name changed");
+            savedCustomer.getLastName().equals("Last Name changed");
+        });
+    }
 
     @Test
 //    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
