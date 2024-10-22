@@ -15,8 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -273,6 +272,22 @@ class CustomerServiceImplTest {
 
         assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
         assertNotNull(order.getId());
+    }
+
+    @Test @DisplayName("Fetch the Parent with JpaRepository, try changing it and don’t save it explicitly. Flush the session and check whether the changes were propagated to the database")
+    @Transactional
+    void fetchingParent() {
+        Customer fetchedCustomer = customerServiceImpl.findById(1L);
+        fetchedCustomer.setFirstName("First Name changed");
+        fetchedCustomer.setLastName("Last Name changed");
+
+        entityManager.flush();
+
+        Customer savedCustomer = customerServiceImpl.findById(fetchedCustomer.getId());
+        assertAll(() -> {
+            savedCustomer.getFirstName().equals("First Name changed");
+            savedCustomer.getLastName().equals("Last Name changed");
+        });
     }
 
 
