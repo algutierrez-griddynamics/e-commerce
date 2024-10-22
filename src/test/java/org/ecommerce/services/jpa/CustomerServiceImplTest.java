@@ -1,6 +1,7 @@
 package org.ecommerce.services.jpa;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.ecommerce.logs.Log;
 import org.ecommerce.models.Customer;
 import org.ecommerce.models.Order;
@@ -14,9 +15,20 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
+/**
+ * Calculate period between versions
+ * @deprecated
+ * This method is no longer acceptable to compute time between versions.
+ * <p> Use {@link Utils#calculatePeriod(Machine)} instead.
+ *
+ * @param machine instance
+ * @return computed time
+ */
+@Deprecated
 @SpringBootTest
 //@Disabled
 //@Transactional
@@ -159,6 +171,37 @@ class CustomerServiceImplTest {
         entityManager.merge(customer);
 
         assertNotNull(customer.getId());
+    }
+
+
+    @Test @DisplayName("Save child without parent -  using repository.save()")
+    void saveOrderWithoutCustomerRepository() {
+        Order order = Order.builder().id(1L).build();
+
+        orderServiceImpl.create(order);
+
+        assertDoesNotThrow(() -> customerServiceImpl.create(customer));
+    }
+
+    @Test @DisplayName("Save child without parent - using entityManager.persist()")
+    @Transactional
+    void saveOrderWithoutCustomerManagerPersist() {
+        //Attach entity
+        Order order = Order.builder().id(1L).build();
+
+        entityManager.persist(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
+    }
+
+    @Test @DisplayName("Save child without parent - using entityManager.merge().")
+//    @Transactional
+    void saveOrderWithoutCustomerManagerMerge() {
+        Order order = Order.builder().id(1L).build();
+
+        entityManager.merge(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
     }
 
     @Test
