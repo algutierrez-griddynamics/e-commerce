@@ -221,8 +221,6 @@ class OperationsTest {
                     "TRUNCATE TABLE CUSTOMERS;" +
                     "TRUNCATE TABLE PRODUCTS_ORDERS;"+
                     "SET REFERENTIAL_INTEGRITY TRUE;");
-        } else if (activeProfile.equals("dev")) {
-            query.append("TRUNCATE orders,customers,products_orders;");
         }
 
         try {
