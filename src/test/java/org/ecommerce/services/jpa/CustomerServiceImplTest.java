@@ -204,6 +204,42 @@ class CustomerServiceImplTest {
         assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
     }
 
+
+    @Test @DisplayName("Save Child with Parent initialized, but not present in the database  -  using repository.save()")
+    void saveOrderWithNonExistentCustomerRepository() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(99L).build());
+
+        orderServiceImpl.create(order);
+
+        assertDoesNotThrow(() -> customerServiceImpl.create(customer));
+        assertNotNull(order.getId());
+    }
+
+    @Test @DisplayName("Save Child with Parent initialized, but not present in the database  - using entityManager.persist()")
+    @Transactional
+    void saveOrderWithNonExistentCustomerEntityManagerPersist() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(99L).build());
+
+        entityManager.persist(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
+        assertNotNull(order.getId());
+    }
+
+    @Test @DisplayName("Save Child with Parent initialized, but not present in the database  - using entityManager.merge().")
+    @Transactional
+    void saveOrderWithNonExistentCustomerEntityManagerMerge() {
+        Order order = Order.builder().build();
+        order.setCustomer(Customer.builder().id(99L).build());
+
+        entityManager.merge(order);
+
+        assertDoesNotThrow(() -> orderServiceImpl.findById(order.getId()));
+        assertNotNull(order.getId());
+    }
+
     @Test
 //    @Disabled("This 'test' helps us to lock the current thread, allowing us to connect to the h2 instance while running the tests")
     public void infiniteLoop() {
