@@ -46,17 +46,17 @@ public class Order extends Identity {
     private OrderStatus status;
 
     @JoinColumn(name = "fk_shipping_information_id", nullable = true)
-    @OneToOne
+    @ManyToOne
     @NotNull
     private ShippingInformation shippingInformation;
 
     @JoinColumn(name = "fk_billing_information_id", nullable = true)
-    @OneToOne
+    @ManyToOne
     @NotNull
     private BillingInformation billingInformation;
 
     @JoinColumn(name = "fk_payment_details_id", nullable = true)
-    @OneToOne
+    @ManyToOne
     @NotNull
     private PaymentDetails paymentDetails;
 }
