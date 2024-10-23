@@ -1,31 +1,43 @@
 package org.ecommerce;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.logs.Log;
 import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
-import org.ecommerce.repositories.OrderRepository;
+import org.ecommerce.repositories.inmemory.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
 import org.ecommerce.util.database.DataSourceProperties;
+import org.ecommerce.util.database.Operations;
+import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 
+import java.sql.SQLException;
+
 @SpringBootApplication//(exclude = {ApplicationControllersConfig.class, ApplicationServicesConfig.class, ApplicationRepositoriesConfig.class})
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class Main {
-    public static void main (String[] args) {
+    public static void main (String[] args) throws SQLException, InterruptedException {
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+
         ApplicationContext applicationContext = SpringApplication.run(Main.class, args);
         var res = applicationContext.getBean(DataSourceProperties.class);
         Log.info(res.toString());
+
+        // Keep the application running
+        while (true) {
+            Thread.sleep(1000);
+        }
     }
 
     private static void placeOrders() {
         OrderController orderController = new OrderController(
-                new OrderServiceImpl(new OrderRepository()
+                new OrderServiceImpl(new OrderRepository(new Operations<>(new HikariDataSource()))
                         , new MessageQueue<>()));
 
         String request = getRequest();

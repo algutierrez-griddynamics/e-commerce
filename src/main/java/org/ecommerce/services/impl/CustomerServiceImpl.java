@@ -1,10 +1,9 @@
 package org.ecommerce.services.impl;
 
 import org.ecommerce.models.User;
-import org.ecommerce.repositories.UserRepository;
+import org.ecommerce.repositories.inmemory.UserRepository;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.services.UserService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

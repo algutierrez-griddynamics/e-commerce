@@ -7,7 +7,7 @@ import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.message.broker.consumers.OrderConsumer;
 import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
-import org.ecommerce.repositories.OrderRepository;
+import org.ecommerce.repositories.inmemory.OrderRepository;
 import org.ecommerce.services.OrderService;
 
 import java.util.List;

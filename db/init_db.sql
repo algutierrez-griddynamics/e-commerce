@@ -16,13 +16,6 @@ CREATE TABLE IF NOT EXISTS prices (
     description TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS shipping_fee (
-    pk_shipping_fee_id BIGSERIAL PRIMARY KEY,
-    currency_code CHAR(3) NOT NULL,
-    amount NUMERIC(10, 2) NOT NULL,
-    description TEXT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS categories (
     pk_category_id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -53,14 +46,6 @@ CREATE TABLE IF NOT EXISTS products_categories (
     FOREIGN KEY (fk_category_id) REFERENCES categories(pk_category_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS storage_centers (
-    pk_storage_center BIGSERIAL PRIMARY KEY,
-    fk_inventory_id BIGINT UNIQUE,
-    measurement_unit VARCHAR(50) NOT NULL,
-    quantity BIGINT NOT NULL,
-    FOREIGN KEY (fk_inventory_id) REFERENCES inventories(pk_inventory_id) ON DELETE SET NULL
-);
-
 CREATE TABLE IF NOT EXISTS address_information (
     pk_address_information_id BIGSERIAL PRIMARY KEY,
     street VARCHAR(50) NOT NULL,
@@ -70,15 +55,34 @@ CREATE TABLE IF NOT EXISTS address_information (
     country VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS locations (
+    pk_location_id BIGSERIAL PRIMARY KEY,
+    fk_address_id BIGINT,
+    width_cm INTEGER,
+    height_cm INTEGER,
+    depth_cm INTEGER,
+    FOREIGN KEY (fk_address_id) REFERENCES address_information(pk_address_information_id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS stock_entry (
+    pk_stock_entry_id BIGSERIAL PRIMARY KEY,
+    fk_location_id BIGINT,
+    fk_inventory_id BIGINT,
+    measurement_unit VARCHAR(50) NOT NULL,
+    quantity BIGINT NOT NULL,
+    FOREIGN KEY (fk_location_id) REFERENCES locations(pk_location_id) ON DELETE SET NULL,
+    FOREIGN KEY (fk_inventory_id) REFERENCES inventories(pk_inventory_id) ON DELETE SET NULL
+);
+
 CREATE TABLE IF NOT EXISTS shipping_information (
     pk_shipping_information_id BIGSERIAL PRIMARY KEY,
     fk_address_information_id BIGINT,
-    fk_shipping_fee_id BIGINT,
+    fk_price_id BIGINT,
     tracking_number VARCHAR(100) NOT NULL,
     date DATE NOT NULL,
     status VARCHAR(25) NOT NULL,
     FOREIGN KEY (fk_address_information_id) REFERENCES address_information(pk_address_information_id) ON DELETE SET NULL,
-    FOREIGN KEY (fk_shipping_fee_id) REFERENCES shipping_fee(pk_shipping_fee_id) ON DELETE SET NULL
+    FOREIGN KEY (fk_price_id) REFERENCES prices(pk_price_id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS billing_information (

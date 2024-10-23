@@ -4,7 +4,7 @@ import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.exceptions.InvalidInput;
 import org.ecommerce.models.Manager;
-import org.ecommerce.repositories.ManagerRepository;
+import org.ecommerce.repositories.inmemory.ManagerRepository;
 import org.ecommerce.services.UserService;
 import org.ecommerce.util.validators.impl.Validators;
 
