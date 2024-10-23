@@ -1,10 +1,8 @@
 package org.ecommerce.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.ecommerce.enums.OrderStatus;
 
 import javax.validation.constraints.NotNull;

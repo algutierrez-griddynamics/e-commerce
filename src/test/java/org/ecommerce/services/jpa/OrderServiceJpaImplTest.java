@@ -2,9 +2,9 @@ package org.ecommerce.services.jpa;
 
 import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.exceptions.EntityNotFound;
-import org.ecommerce.logs.Log;
 import org.ecommerce.models.*;
 import org.ecommerce.models.Order;
+import org.h2.tools.Server;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
