@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,13 @@ class OrderServiceJpaImplTest {
     @Mock
     private PaymentDetails paymentDetails;
 
+    @DisplayName("This BeforeAll method creates a web server in the 8082 port so we can connect to the h2 database")
+    @BeforeAll
+    public static void initTest() throws SQLException {
+//        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+//                .start();
+    }
+
     @BeforeEach
     void setUp() {
         BigDecimal amount = new BigDecimal("100.00");
@@ -74,9 +82,20 @@ class OrderServiceJpaImplTest {
 
     @Test
     void create() {
-        orderService.create(order);
-        Log.info(order.getTotalUsd().toString());
-        assertNotNull(order.getId());
+        Order expectedOrder = buildOrder();
+
+        Order orderCreated = orderService.create(expectedOrder);
+
+        assertAll(() -> {
+            assertNotNull(orderCreated.getId());
+            assertEquals(expectedOrder.getOrderDate().toString(), orderCreated.getOrderDate().toString());
+            assertEquals(expectedOrder.getTotalUsd(), orderCreated.getTotalUsd());
+            assertEquals(expectedOrder.getStatus(), orderCreated.getStatus());
+            assertEquals(expectedOrder.getCustomer().getId(), orderCreated.getCustomer().getId());
+            assertEquals(expectedOrder.getShippingInformation().getId(), orderCreated.getShippingInformation().getId());
+            assertEquals(expectedOrder.getBillingInformation().getId(), orderCreated.getBillingInformation().getId());
+            assertEquals(expectedOrder.getPaymentDetails().getId(), orderCreated.getPaymentDetails().getId());
+        });
     }
 
     @Test
@@ -129,11 +148,40 @@ class OrderServiceJpaImplTest {
 
     }
 
+
     private Long getSomeId() {
         orderService.create(order);
         List<Order> allOrders = orderService.findAll();
         allOrders.sort(Comparator.comparing(Order::getId));
         return allOrders.get(allOrders.size() - 1).getId();
+    }
+
+    private Order buildOrder() {
+        return Order.builder()
+                .orderDate(new Date())
+                .status(OrderStatus.PLACED)
+                .totalUsd(new BigDecimal("999999"))
+                .customer(buildCustomer())
+                .shippingInformation(buildShippingInformation())
+                .billingInformation(buildBillingInformation())
+                .paymentDetails(buildPaymentDetails())
+                .build();
+    }
+
+    private PaymentDetails buildPaymentDetails() {
+        return PaymentDetails.builder().id(1L).build();
+    }
+
+    private BillingInformation buildBillingInformation() {
+        return BillingInformation.builder().id(1L).build();
+    }
+
+    private ShippingInformation buildShippingInformation() {
+        return ShippingInformation.builder().id(1L).build();
+    }
+
+    private Customer buildCustomer() {
+        return Customer.builder().id(1L).build();
     }
 }
 

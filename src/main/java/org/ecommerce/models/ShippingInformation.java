@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SuperBuilder
 @Table(name = "shipping_information")
 @AttributeOverride(name="id", column=@Column(name="pk_shipping_information_id"))
 public class ShippingInformation extends AddressInformation {
