@@ -181,18 +181,26 @@ class OperationsTest {
         try {
             customers = operations.findMany(query, resultSet -> {
                 try {
-                    String[] preferencesArray = (String[]) resultSet.getArray(8).getArray();
-                    List<String> preferencesList = Stream.of(preferencesArray)
-                            .collect(Collectors.toList());
+                    Array preferencesArray = resultSet.getArray("categories_preferences");
+                    List<String> preferencesList = new ArrayList<>();
+
+                    if (preferencesArray != null) {
+                        Object[] arrayData = (Object[]) preferencesArray.getArray();
+                        for (Object item : arrayData) {
+                            if (item instanceof String) {
+                                preferencesList.add((String) item);
+                            }
+                        }
+                    }
 
                     return Customer.builder()
-                            .id(Long.valueOf(resultSet.getString(1)))
-                            .firstName(resultSet.getString(2))
-                            .lastName(resultSet.getString(3))
-                            .email(resultSet.getString(4))
-                            .password(resultSet.getString(5))
-                            .phoneNumber(resultSet.getString(6))
-                            .address(resultSet.getString(7))
+                            .id(Long.valueOf(resultSet.getString("pk_customer_id")))
+                            .firstName(resultSet.getString("first_name"))
+                            .lastName(resultSet.getString("last_name"))
+                            .email(resultSet.getString("email"))
+                            .password(resultSet.getString("password"))
+                            .phoneNumber(resultSet.getString("phone_number"))
+                            .address(resultSet.getString("address"))
                             .categoriesPreferences(preferencesList)
                             .build();
                 } catch (SQLException e) {
@@ -207,7 +215,6 @@ class OperationsTest {
         assertThat(customers).isNotNull();
     }
 
-    @AfterEach
     @Disabled("This 'test helps us to clean all the database tables based on the profile settled")
     @DisplayName("Cleaning database tables")
     void tearDown() {
