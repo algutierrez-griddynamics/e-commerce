@@ -55,10 +55,10 @@ VALUES
     (2, 'Clothing', 'Apparel', 'PARENT');
 
 -- Insert into CUSTOMERS
-INSERT INTO CUSTOMERS (PK_CUSTOMER_ID, ADDRESS, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, PHONE_NUMBER, CATEGORIES_PREFERENCES)
+INSERT INTO CUSTOMERS (ADDRESS, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, PHONE_NUMBER, CATEGORIES_PREFERENCES)
 VALUES
-    (1, '10 Main St', 'customer1@example.com', 'John', 'Doe', 'pass123', '123-456-7890', '{Electronics, Fashion}'),
-    (2, '20 Market St', 'customer2@example.com', 'Jane', 'Smith', 'pass456', '987-654-3210', '{Books, Home Decor}');
+    ('10 Main St', 'customer1@example.com', 'John', 'Doe', 'pass123', '123-456-7890', '{Electronics, Fashion}'),
+    ('20 Market St', 'customer2@example.com', 'Jane', 'Smith', 'pass456', '987-654-3210', '{Books, Home Decor}');
 
 -- Insert into BILLING_INFORMATION
 INSERT INTO BILLING_INFORMATION (PK_BILLING_INFORMATION_ID, BILLING_DATE, ORDER_ID, FK_PRICE_ID, CITY, COUNTRY, STATE, STREET, ZIP_CODE)
