@@ -118,6 +118,51 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+<!--        WEB -->
+<!--        Tomcat Server-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+<!--        Monitor and manage the application-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!--		Accesible via localhost:8080 -->
+<!--        explore HAL and HAL-FORMS based HTTP responses-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-hal-explorer</artifactId>
+        </dependency>
+<!--        ease building hypermedia driven REST APIs with Spring MVC in general.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
+<!--        authentication and access-control framework-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+<!--        automatic restart functionality-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+<!--         provides a web-based interface that makes it easy to test the following: HTTP methods such as GET, POST, PUT and PATH.-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <!--&lt;!&ndash;		Now we can add a header in our request with for example: Accept:application/xml and the api will response in xml format&ndash;&gt;-->
+        <!--		<dependency>-->
+        <!--			<groupId>com.fasterxml.jackson.dataformat</groupId>-->
+        <!--			<artifactId>jackson-dataformat-xml</artifactId>-->
+        <!--		</dependency>-->
     </dependencies>
 
     <build>
