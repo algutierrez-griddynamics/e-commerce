@@ -24,8 +24,8 @@ INSERT INTO prices (currency_code, amount, description) VALUES
                                                             ('USD', 14.99, 'Simple Gadget'),
                                                             ('USD', 24.99, 'Complex Gadget');
 
--- Insert data into `shipping_fee`
-INSERT INTO shipping_fee (currency_code, amount, description) VALUES
+-- Insert data into `prices`
+INSERT INTO prices (currency_code, amount, description) VALUES
                                                                   ('USD', 5.99, 'Standard Shipping'),
                                                                   ('USD', 9.99, 'Expedited Shipping'),
                                                                   ('USD', 15.99, 'Two-Day Shipping'),
@@ -89,19 +89,6 @@ INSERT INTO products_categories (fk_product_id, fk_category_id) VALUES
                                                                     (9, 3),
                                                                     (10, 3);
 
--- Insert data into `storage_centers`
-INSERT INTO storage_centers (fk_inventory_id, measurement_unit, quantity) VALUES
-                                                                              (1, 'pieces', 100),
-                                                                              (2, 'pieces', 150),
-                                                                              (3, 'pieces', 200),
-                                                                              (4, 'pieces', 250),
-                                                                              (5, 'pieces', 300),
-                                                                              (6, 'pieces', 350),
-                                                                              (7, 'pieces', 400),
-                                                                              (8, 'pieces', 450),
-                                                                              (9, 'pieces', 500),
-                                                                              (10, 'pieces', 550);
-
 -- Insert data into `address_information`
 INSERT INTO address_information (street, city, state, zip_code, country) VALUES
                                                                              ('123 Elm St', 'Springfield', 'IL', '62701', 'USA'),
@@ -115,8 +102,26 @@ INSERT INTO address_information (street, city, state, zip_code, country) VALUES
                                                                              ('606 Elm St', 'Springfield', 'IL', '62709', 'USA'),
                                                                              ('707 Oak St', 'Springfield', 'IL', '62710', 'USA');
 
+INSERT INTO locations (fk_address_id, width_cm, height_cm, depth_cm) VALUES
+                                                                         (9, 100000, 8, 500),
+                                                                         (10, 5000, 10, 8000);
+
+-- Insert data into `storage_centers`
+INSERT INTO stock_entry (fk_location_id, fk_inventory_id, measurement_unit, quantity) VALUES
+                                                                              (1, 1, 'pieces', 100),
+                                                                              (2, 2, 'pieces', 150),
+                                                                              (1, 3, 'pieces', 200),
+                                                                              (1, 4, 'pieces', 250),
+                                                                              (2, 5, 'pieces', 300),
+                                                                              (2, 6, 'pieces', 350),
+                                                                              (2, 7, 'pieces', 400),
+                                                                              (2, 8, 'pieces', 450),
+                                                                              (1, 9, 'pieces', 500),
+                                                                              (1, 10, 'pieces', 550);
+
+
 -- Insert data into `shipping_information`
-INSERT INTO shipping_information (fk_address_information_id, fk_shipping_fee_id, tracking_number, date, status) VALUES
+INSERT INTO shipping_information (fk_address_information_id, fk_price_id, tracking_number, date, status) VALUES
                                                                                                                     (1, 1, 'TRACK1234567890', '2024-09-01', 'Shipped'),
                                                                                                                     (2, 2, 'TRACK1234567891', '2024-09-02', 'In Transit'),
                                                                                                                     (3, 3, 'TRACK1234567892', '2024-09-03', 'Delivered'),

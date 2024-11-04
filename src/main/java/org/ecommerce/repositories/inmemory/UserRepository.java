@@ -1,12 +1,16 @@
-package org.ecommerce.repositories;
+package org.ecommerce.repositories.inmemory;
 
 import org.ecommerce.models.User;
-import org.ecommerce.repositories.impl.CrudOperationsImpl;
-import org.springframework.stereotype.Repository;
+import org.ecommerce.repositories.inmemory.impl.CrudInMemoryOperationsImpl;
+import org.ecommerce.util.database.Operations;
 
 import java.util.*;
 
-public class UserRepository extends CrudOperationsImpl<User> {
+public class UserRepository extends CrudInMemoryOperationsImpl<User> {
+
+    public UserRepository(Operations<User> operations) {
+        super(operations);
+    }
 
     public Optional<String> findPasswordById(Long id) {
         return Optional.ofNullable(getDb().get(id))

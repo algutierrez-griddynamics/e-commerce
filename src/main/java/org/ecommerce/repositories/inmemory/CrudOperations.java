@@ -1,4 +1,4 @@
-package org.ecommerce.repositories;
+package org.ecommerce.repositories.inmemory;
 
 import java.util.List;
 

@@ -1,17 +1,23 @@
-package org.ecommerce.repositories.impl;
+package org.ecommerce.repositories.inmemory.impl;
 
 import lombok.Getter;
 import org.ecommerce.enums.Error;
 import org.ecommerce.models.Identity;
-import org.ecommerce.repositories.CrudOperations;
+import org.ecommerce.repositories.inmemory.CrudOperations;
+import org.ecommerce.util.database.Operations;
 
 import java.util.*;
 
 @Getter
-public abstract class CrudOperationsImpl <T extends Identity> implements CrudOperations<T, Long> {
+public abstract class CrudInMemoryOperationsImpl<T extends Identity> implements CrudOperations<T, Long> {
 
     static Long id = 0L;
     Map<Long, T> db = new HashMap<>();
+    protected final Operations<T> operations;
+
+    protected CrudInMemoryOperationsImpl(Operations<T> operations) {
+        this.operations = operations;
+    }
 
     @Override
     public T save(T entity) {

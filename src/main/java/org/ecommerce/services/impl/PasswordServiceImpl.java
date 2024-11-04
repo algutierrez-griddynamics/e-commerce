@@ -3,10 +3,9 @@ package org.ecommerce.services.impl;
 import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.exceptions.InvalidInput;
-import org.ecommerce.repositories.UserRepository;
+import org.ecommerce.repositories.inmemory.UserRepository;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.util.validators.impl.Validators;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
