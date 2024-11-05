@@ -1,10 +1,8 @@
-package org.ecommerce.services.jpa;
+package org.ecommerce.repositories.jpa;
 
 import org.ecommerce.enums.OrderStatus;
-import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.models.*;
 import org.ecommerce.models.Order;
-import org.h2.tools.Server;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +14,17 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 
 @ActiveProfiles("local")
 @SpringBootTest
-class OrderServiceJpaImplTest {
+class OrderRepositoryJpaImplTest {
 
     @Autowired
-    private OrderServiceImpl orderService;
+    private OrderJpaRepository orderJpaRepository;
 
     @Mock
     private Order order;
@@ -84,7 +83,7 @@ class OrderServiceJpaImplTest {
     void create() {
         Order expectedOrder = buildOrder();
 
-        Order orderCreated = orderService.create(expectedOrder);
+        Order orderCreated = orderJpaRepository.save(expectedOrder);
 
         assertAll(() -> {
             assertNotNull(orderCreated.getId());
@@ -101,38 +100,39 @@ class OrderServiceJpaImplTest {
     @Test
     void update() {
         Long id = getSomeId();
-        Order newOrder = new Order();
+        Order newOrder = orderJpaRepository.findById(id).get();
 
         newOrder.setStatus(OrderStatus.PLACED);
 
-        Order updatedOrder =  orderService.update(newOrder, id);
+        Order updatedOrder =  orderJpaRepository.save(newOrder);
+
         assertEquals(OrderStatus.PLACED, updatedOrder.getStatus());
     }
 
     @Test
     void delete() {
         Long id = getSomeId();
-        orderService.delete(id);
-        assertThrows(EntityNotFound.class, ()
-                -> orderService.findById(id));
+        orderJpaRepository.deleteById(id);
+        assertThrows(NoSuchElementException.class, ()
+                -> orderJpaRepository.findById(id).get());
     }
 
     @Test
     void findAll() {
-        List<Order> allOrders = orderService.findAll();
+        List<Order> allOrders = orderJpaRepository.findAll();
         assertNotNull(allOrders);
     }
 
     @Test
     void findById() {
         Long id = getSomeId();
-        Order orderFound = orderService.findById(id);
+        Order orderFound = orderJpaRepository.findById(id).get();
         assertEquals(orderFound.getId(), id);
     }
 
     @Test
     void findByIdNotFoundException() {
-        assertThrows(EntityNotFound.class, () -> orderService.findById(999L));
+        assertThrows(NoSuchElementException.class, () -> orderJpaRepository.findById(999L).get());
     }
 
     @Test
@@ -150,8 +150,8 @@ class OrderServiceJpaImplTest {
 
 
     private Long getSomeId() {
-        orderService.create(order);
-        List<Order> allOrders = orderService.findAll();
+        orderJpaRepository.save(order);
+        List<Order> allOrders = orderJpaRepository.findAll();
         allOrders.sort(Comparator.comparing(Order::getId));
         return allOrders.get(allOrders.size() - 1).getId();
     }
