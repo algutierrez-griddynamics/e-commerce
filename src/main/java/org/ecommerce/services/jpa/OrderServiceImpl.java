@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl {//implements OrderService {
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
