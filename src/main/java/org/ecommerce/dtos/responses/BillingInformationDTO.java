@@ -1,4 +1,4 @@
-package org.ecommerce.dtos;
+package org.ecommerce.dtos.responses;
 
 import org.ecommerce.models.Price;
 

@@ -1,4 +1,4 @@
-package org.ecommerce.dtos;
+package org.ecommerce.dtos.responses;
 
 public record ProductDTO (
         String name,
