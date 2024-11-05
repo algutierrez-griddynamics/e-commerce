@@ -1,6 +1,8 @@
 package org.ecommerce.mappers;
 
 import org.ecommerce.dtos.responses.OrderDTO;
+import org.ecommerce.enums.Error;
+import org.ecommerce.exceptions.MappingException;
 import org.ecommerce.models.Order;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +42,7 @@ public class OrderDTOMapper implements Function<Order, OrderDTO> {
                         billingInformationDtoMapper.apply(o.getBillingInformation()),
                         paymentDetailsDTOMapper.apply(o.getPaymentDetails())
                 )).orElseThrow(
-                        // TODO : THROW
+                        () -> new MappingException(Error.MAPPING_EXCEPTION.getDescription())
                 );
     }
 }
