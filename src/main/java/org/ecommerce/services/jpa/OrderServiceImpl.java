@@ -1,5 +1,7 @@
 package org.ecommerce.services.jpa;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
@@ -12,7 +14,6 @@ import org.ecommerce.models.services.responses.*;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,27 +22,25 @@ public class OrderServiceImpl {//implements OrderService {
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
+    private final EntityManager entityManager;
 
-    public OrderServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper) {
+    public OrderServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, EntityManager entityManager) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
+        this.entityManager = entityManager;
     }
 
 //    @Override
+    @Transactional
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
-
         Order newOrder = buildOrderFromDTO(order);
 
+
         Order savedOrder = orderRepository.save(newOrder);
+        entityManager.clear();
 
-        System.out.println("####");
-        System.out.println(savedOrder);
-
-        // The code breaks in here for some reason
-        System.out.println("@@@" + findById(savedOrder.getId()));
-
-        return new CreateOrderResponse(orderDTOMapper.apply(savedOrder));
+        return new CreateOrderResponse((findById(savedOrder.getId())).getOrderDTO());
     }
 
 
