@@ -36,9 +36,8 @@ public class OrderJpaController { //implements ControllerOperations<OrderRequest
 //    @Override
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/orders/{orderId}")
-    public ResponseEntity<OrderDTO> delete(@PathVariable Long orderId) {
+    public void delete(@PathVariable Long orderId) {
         orderService.delete(orderId);
-        return new ResponseEntity<OrderDTO>(HttpStatus.OK);
     }
 
 //    @Override
