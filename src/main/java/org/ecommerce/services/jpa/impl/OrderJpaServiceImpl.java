@@ -1,4 +1,4 @@
-package org.ecommerce.services.jpa;
+package org.ecommerce.services.jpa.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderJpaServiceImpl {//implements OrderService {
+public class OrderJpaServiceImpl implements OrderJpaService<OrderRequestDTO, Long> {
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
@@ -30,7 +30,7 @@ public class OrderJpaServiceImpl {//implements OrderService {
         this.entityManager = entityManager;
     }
 
-//    @Override
+    @Override
     @Transactional
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
@@ -44,7 +44,7 @@ public class OrderJpaServiceImpl {//implements OrderService {
     }
 
 
-    //    @Override
+    @Override
     @Transactional
     public UpdateOrderResponse update(UpdateRequest<OrderRequestDTO, Long> entity) {
         Long id = entity.getId();
@@ -63,7 +63,7 @@ public class OrderJpaServiceImpl {//implements OrderService {
         return new UpdateOrderResponse(findById(updatedOrder.getId()).getOrderDTO());
     }
 
-//    @Override
+    @Override
     public void delete(Long id) {
         if (Objects.nonNull(findById(id))) {
             orderRepository.deleteById(id);
@@ -72,7 +72,7 @@ public class OrderJpaServiceImpl {//implements OrderService {
         }
     }
 
-//    @Override
+    @Override
     public GetAllOrdersResponse findAll() {
         return new GetAllOrdersResponse(
                 orderRepository.findAll().stream()
@@ -83,7 +83,7 @@ public class OrderJpaServiceImpl {//implements OrderService {
         );
     }
 
-//    @Override
+    @Override
     public GetOrderResponse findById(Long id) {
         return new GetOrderResponse(
                 orderRepository.findById(id).map(orderDTOMapper)
