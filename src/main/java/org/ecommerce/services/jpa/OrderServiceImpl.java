@@ -45,6 +45,7 @@ public class OrderServiceImpl {//implements OrderService {
 
 
     //    @Override
+    @Transactional
     public UpdateOrderResponse update(UpdateRequest<OrderRequestDTO, Long> entity) {
         Long id = entity.getId();
         OrderDTO existingOrder = findById(id).getOrderDTO();
@@ -56,7 +57,10 @@ public class OrderServiceImpl {//implements OrderService {
         Order updatedOrder = buildOrderFromDTO(entity.getData());
         updatedOrder.setId(id);
 
-        return new UpdateOrderResponse(orderDTOMapper.apply(orderRepository.save(updatedOrder)));
+        orderRepository.saveAndFlush(updatedOrder);
+        entityManager.clear();
+
+        return new UpdateOrderResponse(findById(updatedOrder.getId()).getOrderDTO());
     }
 
 //    @Override

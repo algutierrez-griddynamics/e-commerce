@@ -6,4 +6,8 @@ public class UpdateOrderResponse extends OrderResponseBase{
     public UpdateOrderResponse(OrderDTO orderDTO) {
         super(orderDTO);
     }
+
+    public OrderDTO getOrderDTO() {
+        return super.orderDTO;
+    }
 }
