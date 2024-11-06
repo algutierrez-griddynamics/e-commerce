@@ -141,10 +141,10 @@
             <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 <!--        authentication and access-control framework-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
 <!--        automatic restart functionality-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
