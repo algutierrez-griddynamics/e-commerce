@@ -3,13 +3,13 @@ package org.ecommerce.services.jpa;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
-import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.*;
 import org.ecommerce.models.requests.CreateRequest;
+import org.ecommerce.models.requests.UpdateRequest;
+import org.ecommerce.models.services.responses.*;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
-import org.ecommerce.services.OrderService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,18 +28,27 @@ public class OrderServiceImpl {//implements OrderService {
     }
 
 //    @Override
-    public OrderDTO create(CreateRequest<OrderRequestDTO> entity) {
+    public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
 
         Order newOrder = buildOrderFromDTO(order);
 
-        return orderDTOMapper.apply(orderRepository.save(newOrder));
+        Order savedOrder = orderRepository.save(newOrder);
+
+        System.out.println("####");
+        System.out.println(savedOrder);
+
+        // The code breaks in here for some reason
+        System.out.println("@@@" + findById(savedOrder.getId()));
+
+        return new CreateOrderResponse(orderDTOMapper.apply(savedOrder));
     }
 
 
     //    @Override
-    public OrderDTO update(CreateRequest<OrderRequestDTO> entity, Long id) {
-        OrderDTO existingOrder = findById(id);
+    public UpdateOrderResponse update(UpdateRequest<OrderRequestDTO, Long> entity) {
+        Long id = entity.getId();
+        OrderDTO existingOrder = findById(id).getOrderDTO();
 
         if (existingOrder == null) {
             throw new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription());
@@ -48,7 +57,7 @@ public class OrderServiceImpl {//implements OrderService {
         Order updatedOrder = buildOrderFromDTO(entity.getData());
         updatedOrder.setId(id);
 
-        return orderDTOMapper.apply(orderRepository.save(updatedOrder));
+        return new UpdateOrderResponse(orderDTOMapper.apply(orderRepository.save(updatedOrder)));
     }
 
 //    @Override
@@ -61,18 +70,22 @@ public class OrderServiceImpl {//implements OrderService {
     }
 
 //    @Override
-    public List<OrderDTO> findAll() {
-       return orderRepository.findAll().stream()
-               .map(order -> {
-                   orderDTOMapper.apply(order);
-                   return orderDTOMapper.apply(order);
-               }).collect(Collectors.toList());
+    public GetAllOrdersResponse findAll() {
+        return new GetAllOrdersResponse(
+                orderRepository.findAll().stream()
+                        .map(order -> {
+                            orderDTOMapper.apply(order);
+                            return orderDTOMapper.apply(order);
+                        }).collect(Collectors.toList())
+        );
     }
 
 //    @Override
-    public OrderDTO findById(Long id) {
-        return orderRepository.findById(id).map(orderDTOMapper)
-                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
+    public GetOrderResponse findById(Long id) {
+        return new GetOrderResponse(
+                orderRepository.findById(id).map(orderDTOMapper)
+                        .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()))
+        );
     }
 
     private Order buildOrderFromDTO(OrderRequestDTO order) {
