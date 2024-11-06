@@ -18,13 +18,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl {//implements OrderService {
+public class OrderJpaServiceImpl {//implements OrderService {
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
     private final EntityManager entityManager;
 
-    public OrderServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, EntityManager entityManager) {
+    public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, EntityManager entityManager) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.entityManager = entityManager;

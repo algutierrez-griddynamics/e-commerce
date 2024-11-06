@@ -6,7 +6,7 @@ import org.ecommerce.models.requests.*;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
-import org.ecommerce.services.jpa.OrderServiceImpl;
+import org.ecommerce.services.jpa.OrderJpaServiceImpl;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderJpaController implements ControllerJpaOperations <OrderRequestDTO, Long> {
 
-    private final OrderServiceImpl orderService;
+    private final OrderJpaServiceImpl orderService;
 
-    public OrderJpaController(OrderServiceImpl orderService) {
+    public OrderJpaController(OrderJpaServiceImpl orderService) {
         this.orderService = orderService;
     }
 
