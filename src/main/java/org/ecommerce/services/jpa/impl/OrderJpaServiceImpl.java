@@ -6,6 +6,7 @@ import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.*;
 import org.ecommerce.models.requests.CreateRequest;
@@ -22,11 +23,13 @@ public class OrderJpaServiceImpl implements OrderJpaService<OrderRequestDTO, Lon
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
+    private final BuildOrderFromDTORequest buildOrderFromDTORequest;
     private final EntityManager entityManager;
 
-    public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, EntityManager entityManager) {
+    public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, BuildOrderFromDTORequest buildOrderFromDTORequest,  EntityManager entityManager) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
+        this.buildOrderFromDTORequest = buildOrderFromDTORequest;
         this.entityManager = entityManager;
     }
 
@@ -34,7 +37,7 @@ public class OrderJpaServiceImpl implements OrderJpaService<OrderRequestDTO, Lon
     @Transactional
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
-        Order newOrder = buildOrderFromDTO(order);
+        Order newOrder = buildOrderFromDTORequest.apply(order);
 
 
         Order savedOrder = orderRepository.save(newOrder);
@@ -54,7 +57,7 @@ public class OrderJpaServiceImpl implements OrderJpaService<OrderRequestDTO, Lon
             throw new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription());
         }
 
-        Order updatedOrder = buildOrderFromDTO(entity.getData());
+        Order updatedOrder = buildOrderFromDTORequest.apply(entity.getData());
         updatedOrder.setId(id);
 
         orderRepository.saveAndFlush(updatedOrder);
@@ -89,21 +92,5 @@ public class OrderJpaServiceImpl implements OrderJpaService<OrderRequestDTO, Lon
                 orderRepository.findById(id).map(orderDTOMapper)
                         .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()))
         );
-    }
-
-    private Order buildOrderFromDTO(OrderRequestDTO order) {
-        return Order.builder()
-                .status(order.status())
-                .orderDate(order.date())
-                .totalUsd(order.totalUsd())
-                .customer(Customer.builder()
-                        .id(order.fk_customer_id()).build())
-                .billingInformation(BillingInformation.builder()
-                        .id(order.fk_billing_information_id()).build())
-                .shippingInformation(ShippingInformation.builder()
-                        .id(order.fk_shipping_information_id()).build())
-                .paymentDetails(PaymentDetails.builder()
-                        .id(order.fk_shipping_information_id()).build()
-                ).build();
     }
 }
