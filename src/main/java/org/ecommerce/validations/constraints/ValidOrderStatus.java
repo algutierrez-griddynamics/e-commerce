@@ -15,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = OrderStatusValidator.class)
 @Documented
-public @interface OrderStatus {
+public @interface ValidOrderStatus {
     String message() default "The status of the order should be part of the available registered orderStatus";
 
     Class<?>[] groups() default { };
