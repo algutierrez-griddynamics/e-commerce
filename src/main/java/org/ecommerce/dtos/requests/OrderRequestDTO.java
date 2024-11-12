@@ -9,7 +9,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public record OrderRequestDTO (
+
+        @org.ecommerce.validations.constraints.OrderStatus
         OrderStatus status,
+
         @CurrentDay
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
         @NotNull
