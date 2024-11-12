@@ -1,5 +1,6 @@
 package org.ecommerce.controllers;
 
+import jakarta.validation.Valid;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.requests.*;
@@ -26,7 +27,7 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/orders")
-    public ResponseEntity<CreateOrderResponse> create(@RequestBody CreateRequest<OrderRequestDTO> request) {
+    public ResponseEntity<CreateOrderResponse> create(@RequestBody @Valid CreateRequest<OrderRequestDTO> request) {
         CreateOrderResponse response = orderService.create(request);
 
         return new ResponseEntity<CreateOrderResponse>(response, HttpStatus.CREATED);
