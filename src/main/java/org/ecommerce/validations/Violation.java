@@ -13,4 +13,8 @@ public class Violation {
         this.field = field;
         this.message = message;
     }
+    public Violation (String message) {
+        this.field = "Unresolved";
+        this.message = message;
+    }
 }

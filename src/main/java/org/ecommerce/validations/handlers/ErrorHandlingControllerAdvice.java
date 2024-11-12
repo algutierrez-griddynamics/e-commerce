@@ -6,6 +6,7 @@ import javax.validation.ConstraintViolationException;
 import org.ecommerce.validations.ValidationErrorResponse;
 import org.ecommerce.validations.Violation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -46,6 +47,16 @@ class ErrorHandlingControllerAdvice {
                             , fieldError.getDefaultMessage()
                     ));
         }
+        return error;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ValidationErrorResponse onHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+        error.getViolations()
+                .add(new Violation(e.getCause().getMessage()));
         return error;
     }
 }
