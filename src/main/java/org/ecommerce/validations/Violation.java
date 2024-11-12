@@ -6,15 +6,15 @@ import lombok.Getter;
 @JsonSerialize
 @Getter
 public class Violation {
-    private String field;
+    private String cause;
     private String message;
 
-    public Violation(String field, String message) {
-        this.field = field;
+    public Violation(String cause, String message) {
+        this.cause = cause;
         this.message = message;
     }
     public Violation (String message) {
-        this.field = "Unresolved";
+        this.cause = "Unresolved";
         this.message = message;
     }
 }
