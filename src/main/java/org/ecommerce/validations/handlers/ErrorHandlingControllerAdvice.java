@@ -54,9 +54,11 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        final String CLIENT_WRONG_REQUEST = "The client request is invalid";
+
         ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations()
-                .add(new Violation(e.getCause().getMessage()));
+                .add(new Violation(CLIENT_WRONG_REQUEST, e.getCause().getMessage()));
         return error;
     }
 }
