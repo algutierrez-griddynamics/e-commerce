@@ -3,6 +3,7 @@ package org.ecommerce.repositories.jpa;
 import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.models.*;
 import org.ecommerce.models.Order;
+import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ class OrderJpaRepositoryTest {
 
     @Test
     void create() {
-        Order expectedOrder = buildOrder();
+        Order expectedOrder = OrderUtils.buildOrder();
 
         Order orderCreated = orderJpaRepository.save(expectedOrder);
 
@@ -154,34 +155,6 @@ class OrderJpaRepositoryTest {
         List<Order> allOrders = orderJpaRepository.findAll();
         allOrders.sort(Comparator.comparing(Order::getId));
         return allOrders.get(allOrders.size() - 1).getId();
-    }
-
-    private Order buildOrder() {
-        return Order.builder()
-                .orderDate(new Date())
-                .status(OrderStatus.PLACED)
-                .totalUsd(new BigDecimal("999999"))
-                .customer(buildCustomer())
-                .shippingInformation(buildShippingInformation())
-                .billingInformation(buildBillingInformation())
-                .paymentDetails(buildPaymentDetails())
-                .build();
-    }
-
-    private PaymentDetails buildPaymentDetails() {
-        return PaymentDetails.builder().id(1L).build();
-    }
-
-    private BillingInformation buildBillingInformation() {
-        return BillingInformation.builder().id(1L).build();
-    }
-
-    private ShippingInformation buildShippingInformation() {
-        return ShippingInformation.builder().id(1L).build();
-    }
-
-    private Customer buildCustomer() {
-        return Customer.builder().id(1L).build();
     }
 }
 
