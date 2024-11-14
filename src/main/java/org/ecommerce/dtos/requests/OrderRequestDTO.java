@@ -1,5 +1,6 @@
 package org.ecommerce.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.validations.constraints.CurrentDay;
 import org.ecommerce.validations.constraints.ValidOrderStatus;
@@ -11,6 +12,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record OrderRequestDTO (
 
         @NotNull
