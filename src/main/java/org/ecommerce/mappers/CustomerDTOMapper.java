@@ -21,7 +21,7 @@ public class CustomerDTOMapper implements Function<Customer, CustomerDTO> {
                         c.getPhoneNumber()
                 ))
                 .orElseThrow(
-                        () ->  new MappingException(Error.MAPPING_EXCEPTION.getDescription())
+                        () ->  new MappingException(getClass().getSimpleName(), Error.MAPPING_EXCEPTION.getDescription())
                 );
     }
 }

@@ -3,6 +3,7 @@ package org.ecommerce.validations.handlers;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.ecommerce.exceptions.MappingException;
 import org.ecommerce.validations.ValidationErrorResponse;
 import org.ecommerce.validations.Violation;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ import java.util.Objects;
 
 @ControllerAdvice
 class ErrorHandlingControllerAdvice {
+
+    final String CLIENT_WRONG_REQUEST = "The client request is invalid";
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -54,11 +58,23 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        final String CLIENT_WRONG_REQUEST = "The client request is invalid";
 
         ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations()
-                .add(new Violation(CLIENT_WRONG_REQUEST, e.getCause().getMessage()));
+                .add(new Violation(CLIENT_WRONG_REQUEST, e.getCause() != null ?
+                        e.getCause().getMessage() : "" ));
+        return error;
+    }
+
+    @ExceptionHandler(MappingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ValidationErrorResponse onConstraintViolation(MappingException mpe) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+        error.getViolations().add(
+                new Violation(mpe.getMapperClass(), mpe.getMessage())
+        );
         return error;
     }
 }
+

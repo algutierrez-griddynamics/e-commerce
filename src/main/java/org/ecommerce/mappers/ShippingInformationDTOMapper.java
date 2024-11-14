@@ -26,7 +26,7 @@ public class ShippingInformationDTOMapper implements Function<ShippingInformatio
                         si.getEstimatedDeliveryDate()
                 ))
                 .orElseThrow(
-                        () -> new MappingException(Error.MAPPING_EXCEPTION.getDescription())
+                        () -> new MappingException(getClass().getSimpleName() , Error.MAPPING_EXCEPTION.getDescription())
                 );
     }
 }
