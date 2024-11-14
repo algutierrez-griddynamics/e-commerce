@@ -11,6 +11,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record OrderRequestDTO (
@@ -28,6 +29,9 @@ public record OrderRequestDTO (
         @PositiveOrZero
         @NotNull
         BigDecimal totalUsd,
+
+        @NotNull
+        List<Long> productsIds,
 
         @NotNull
         @Positive
