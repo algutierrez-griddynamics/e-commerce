@@ -23,16 +23,16 @@ import java.sql.SQLException;
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class Main {
     public static void main (String[] args) throws SQLException, InterruptedException {
-        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+//        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
 
         ApplicationContext applicationContext = SpringApplication.run(Main.class, args);
         var res = applicationContext.getBean(DataSourceProperties.class);
         Log.info(res.toString());
 
-        // Keep the application running
-        while (true) {
-            Thread.sleep(1000);
-        }
+//        // Keep the application running
+//        while (true) {
+//            Thread.sleep(1000);
+//        }
     }
 
     private static void placeOrders() {

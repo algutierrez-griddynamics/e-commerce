@@ -10,7 +10,9 @@ package org.ecommerce.enums;
         INSERT_EXCEPTION("An error happen when inserting data into the database."),
         SELECT_EXCEPTION("An error happen when getting data from the database"),
         UPDATE_EXCEPTION("An error happen when updating data from the database"),
-        DELETE_EXCEPTION("An error happen when deleting data from the database");
+        DELETE_EXCEPTION("An error happen when deleting data from the database"),
+        MAPPING_EXCEPTION("An error happen when mapping data from the database");
+
         private final String description;
 
         Error(String description) {

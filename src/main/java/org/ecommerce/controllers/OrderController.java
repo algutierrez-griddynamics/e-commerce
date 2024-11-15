@@ -9,10 +9,13 @@ import org.ecommerce.models.requests.*;
 import org.ecommerce.services.OrderService;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 import java.util.Optional;
 
+// This controller works with JDBC, hence is annotated with dev
+@Profile("dev")
 public class OrderController implements ControllerOperations <Order, Long> {
     private final OrderService orderService;
 
