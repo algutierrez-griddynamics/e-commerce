@@ -7,9 +7,11 @@ import org.ecommerce.models.User;
 import org.ecommerce.repositories.inmemory.*;
 import org.ecommerce.services.*;
 import org.ecommerce.services.impl.*;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Import(ApplicationRepositoriesConfig.class)
@@ -43,6 +45,11 @@ public class ApplicationServicesConfig {
     @Bean
     StockService stockService(StockRepository stockRepository) {
         return new StockServiceImpl(stockRepository);
+    }
+
+    @Bean
+    RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 
 }
