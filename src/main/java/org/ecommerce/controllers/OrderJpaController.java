@@ -7,7 +7,7 @@ import org.ecommerce.models.requests.*;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
-import org.ecommerce.services.jpa.impl.OrderJpaService;
+import org.ecommerce.services.jpa.OrderJpaService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

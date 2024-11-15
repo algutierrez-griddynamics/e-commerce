@@ -9,7 +9,7 @@ import org.ecommerce.mappers.*;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
-import org.ecommerce.services.jpa.impl.OrderJpaService;
+import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ public class OrderJpaControllerWebLayerTest {
     private Order order;
 
     @MockBean
-    private OrderJpaService<OrderRequestDTO, Long> orderJpaService;
+    private OrderJpaService orderJpaService;
 
     @Autowired
     private MockMvc mockMvc;
