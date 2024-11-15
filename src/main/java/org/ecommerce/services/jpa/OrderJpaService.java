@@ -1,11 +1,12 @@
-package org.ecommerce.services.jpa.impl;
+package org.ecommerce.services.jpa;
 
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.requests.UpdateRequest;
-import org.ecommerce.models.services.responses.*;
-import org.springframework.stereotype.Service;
+import org.ecommerce.models.services.responses.CreateOrderResponse;
+import org.ecommerce.models.services.responses.GetAllOrdersResponse;
+import org.ecommerce.models.services.responses.GetOrderResponse;
+import org.ecommerce.models.services.responses.UpdateOrderResponse;
 
-@Service
 public interface OrderJpaService <REQUEST, ID> {
 
     CreateOrderResponse create(CreateRequest<REQUEST> entity);
