@@ -13,10 +13,6 @@ public class ApiCurrencyConverterService {
 
     private RestTemplate restTemplate;
 
-    public void ApiService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
     @Value("${api.currency.converter.url}")
     private String API_URL;
 
