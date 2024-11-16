@@ -32,7 +32,7 @@ class OrderJpaServiceImplTest {
 
         List<Long> productIds = Arrays.asList(2001L, 2002L, 2001L, 2001L, 2001L, 2001L, 2002L);
 
-        Method method = OrderJpaServiceImpl.class.getDeclaredMethod("getTotalOfEachProduct", List.class);
+        Method method = OrderJpaServiceImpl.class.getDeclaredMethod("getTotalQuantityOfEachProduct", List.class);
         method.setAccessible(true);
 
         @SuppressWarnings("unchecked")
