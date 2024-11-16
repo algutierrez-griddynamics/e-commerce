@@ -5,11 +5,13 @@ import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.models.Product;
 import org.ecommerce.repositories.jpa.ProductJpaRepository;
 import org.ecommerce.services.OperationsService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Primary
 public class ProductJpaServiceImpl implements OperationsService <Product, Long> {
 
     private final ProductJpaRepository productJpaRepository;
@@ -35,7 +37,7 @@ public class ProductJpaServiceImpl implements OperationsService <Product, Long> 
 
     @Override
     public List<Product> findAll() {
-        throw new UnsupportedOperationException("Not Supported yet");
+        return productJpaRepository.findAll();
     }
 
     @Override
