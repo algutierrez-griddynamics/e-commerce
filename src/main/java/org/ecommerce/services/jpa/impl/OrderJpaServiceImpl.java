@@ -2,11 +2,12 @@ package org.ecommerce.services.jpa.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import jdk.dynalink.Operation;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.exceptions.OutOfStockException;
+import org.ecommerce.exceptions.PaymentDetailsException;
 import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.*;
@@ -16,10 +17,13 @@ import org.ecommerce.models.services.responses.*;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.OperationsService;
 import org.ecommerce.services.jpa.OrderJpaService;
+import org.ecommerce.services.jpa.PaymentDetailsI;
+import org.ecommerce.services.jpa.StockServiceI;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -34,14 +38,23 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     // Micro-services
     private final OperationsService<Product, Long> productService;
     private final OperationsService<ShippingInformation, Long> shippingInformationService;
+    private final PaymentDetailsI paymentDetailsService;
+    private final StockServiceI stockService;
 
-    public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper, BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager, OperationsService<Product, Long> productService, OperationsService<ShippingInformation, Long> shippingInformationService) {
+    public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
+                               BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
+                               OperationsService<Product, Long> productService, OperationsService<ShippingInformation, Long> shippingInformationService,
+                               PaymentDetailsI paymentDetailsService, StockServiceI stockService) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
         this.entityManager = entityManager;
+
+
         this.productService = productService;
         this.shippingInformationService = shippingInformationService;
+        this.paymentDetailsService = paymentDetailsService;
+        this.stockService = stockService;
     }
 
     @Override
@@ -49,9 +62,14 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
 
-        // Check payment process
+        if (!validatePaymentDetails(order.fk_payment_details_id()))
+            throw new PaymentDetailsException(Error.PAYMENT_DECLINED.getDescription()); // TODO: Handle exception to client
 
-        // Check stock
+        if(checkStock(order.productsIds())) {
+            // buy
+        } else {
+            throw new OutOfStockException(Error.OUT_OF_STOCK.getDescription());
+        }
 
         // Check shipping
 
@@ -131,6 +149,41 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     private BigDecimal getTotalOfShipment(Long shipmentId) {
         return shippingInformationService.findById(shipmentId).getShippingCost().getAmount();
     }
+
+    private boolean validatePaymentDetails(Long paymentDetailsId) {
+        PaymentDetails paymentDetails = paymentDetailsService.findById(paymentDetailsId);
+
+        if (Objects.nonNull(paymentDetails)) {
+            return paymentDetailsService.validateData(paymentDetails);
+        }
+
+        return false;
+    }
+
+    private boolean checkStock(List<Long> productsIds) {
+
+        Map<Long, Long> quantityOfEachProductForId = getTotalQuantityOfEachProduct(productsIds);
+
+        for (Long productId : productsIds) {
+            Product product = productService.findById(productId);
+            if (Objects.nonNull(product)) {
+                int stockOfProduct = stockService.getStockOfProduct(product);
+                if (stockOfProduct < quantityOfEachProductForId.get(productId))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Map<Long, Long> getTotalQuantityOfEachProduct(List<Long> productsIds) {
+        return productsIds.stream()
+                .map(productService::findById)
+                .filter(Objects::nonNull)
+                .collect(Collectors.groupingBy(Identity::getId
+                        , Collectors.counting()));
+    }
+
 
 
 }
