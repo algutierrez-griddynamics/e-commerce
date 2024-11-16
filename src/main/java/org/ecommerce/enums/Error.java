@@ -11,7 +11,9 @@ package org.ecommerce.enums;
         SELECT_EXCEPTION("An error happen when getting data from the database"),
         UPDATE_EXCEPTION("An error happen when updating data from the database"),
         DELETE_EXCEPTION("An error happen when deleting data from the database"),
-        MAPPING_EXCEPTION("An error happen when mapping data from the database");
+        MAPPING_EXCEPTION("An error happen when mapping data from the database"),
+        PAYMENT_DECLINED("The payment was declined."),
+        OUT_OF_STOCK("The requested quantity is above the number available");
 
         private final String description;
 
