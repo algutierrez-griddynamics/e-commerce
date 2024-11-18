@@ -5,9 +5,7 @@ import jakarta.transaction.Transactional;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
-import org.ecommerce.exceptions.EntityNotFound;
-import org.ecommerce.exceptions.OutOfStockException;
-import org.ecommerce.exceptions.PaymentDetailsException;
+import org.ecommerce.exceptions.*;
 import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.*;
@@ -18,6 +16,7 @@ import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.OperationsService;
 import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.PaymentDetailsI;
+import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +36,15 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
     // Micro-services
     private final OperationsService<Product, Long> productService;
-    private final OperationsService<ShippingInformation, Long> shippingInformationService;
+    private final ShippingInformationI shippingInformationService;
     private final PaymentDetailsI paymentDetailsService;
     private final StockServiceI stockService;
+    private final BillingInformationI billingInformationService;
 
     public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
-                               OperationsService<Product, Long> productService, OperationsService<ShippingInformation, Long> shippingInformationService,
-                               PaymentDetailsI paymentDetailsService, StockServiceI stockService) {
+                               OperationsService<Product, Long> productService, ShippingInformationI shippingInformationService,
+                               PaymentDetailsI paymentDetailsService, StockServiceI stockService, BillingInformationI billingInformationService) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
@@ -55,6 +55,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         this.shippingInformationService = shippingInformationService;
         this.paymentDetailsService = paymentDetailsService;
         this.stockService = stockService;
+        this.billingInformationService = billingInformationService;
     }
 
     @Override
@@ -62,32 +63,34 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
 
-        if (!validatePaymentDetails(order.fk_payment_details_id()))
-            throw new PaymentDetailsException(Error.PAYMENT_DECLINED.getDescription()); // TODO: Handle exception to client
+        if (!validateBillingInformation(order.fk_billing_information_id())) {
+            throw new BillingInformationException(Error.INVALID_BILLING_INFORMATION.getDescription());
+        }
 
-        if(checkStock(order.productsIds())) {
-            // buy
-        } else {
+        if (!validatePaymentDetails(order.fk_payment_details_id())) {
+            throw new PaymentDetailsException(Error.PAYMENT_DECLINED.getDescription());
+        }
+
+        if (!checkStock(order.productsIds())) {
             throw new OutOfStockException(Error.OUT_OF_STOCK.getDescription());
         }
 
-        // Check shipping
-
-        // Check billing
+        if (!validateShippingInformation(order.fk_shipping_information_id())) {
+            throw new ShippingInformationException(Error.INVALID_SHIPPING_INFORMATION.getDescription());
+        }
 
         Order newOrder = buildOrderFromDTORequest.apply(order);
 
         BigDecimal shippingFee = getTotalOfShipment(order.fk_shipping_information_id());
-
         BigDecimal totalFromProducts = getTotalOfProducts(order.productsIds());
-
         newOrder.setTotalUsd(shippingFee.add(totalFromProducts));
 
         Order savedOrder = orderRepository.save(newOrder);
         entityManager.clear();
 
-        return new CreateOrderResponse((findById(savedOrder.getId())).getOrderDTO());
+        return new CreateOrderResponse(findById(savedOrder.getId()).getOrderDTO());
     }
+
 
 
     @Override
@@ -154,11 +157,32 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         PaymentDetails paymentDetails = paymentDetailsService.findById(paymentDetailsId);
 
         if (Objects.nonNull(paymentDetails)) {
-            return paymentDetailsService.validateData(paymentDetails);
+            return paymentDetailsService.validatePaymentDetails(paymentDetails);
         }
 
         return false;
     }
+
+    private boolean validateBillingInformation(Long billingInformationId) {
+        BillingInformation billingInformation = billingInformationService.findById(billingInformationId);
+
+        if (Objects.nonNull(billingInformation)) {
+            return billingInformationService.validateBillingInformation();
+        }
+
+        return false;
+    }
+
+    private boolean validateShippingInformation (Long shippingInformationId) {
+        ShippingInformation shippingInformation = shippingInformationService.findById(shippingInformationId);
+
+        if (Objects.nonNull(shippingInformation)) {
+            return shippingInformationService.validateShippingInformation(shippingInformation);
+        }
+
+        return false;
+    }
+
 
     private boolean checkStock(List<Long> productsIds) {
 
