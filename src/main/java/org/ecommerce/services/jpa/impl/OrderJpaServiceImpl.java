@@ -62,6 +62,8 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     @Transactional
     public CreateOrderResponse create(CreateRequest<OrderRequestDTO> entity) {
         OrderRequestDTO order = entity.getData();
+        Map<Long, Long> quantityOfEachProductForId = getTotalQuantityOfEachProduct(order.productsIds());
+
 
         if (!validateBillingInformation(order.fk_billing_information_id())) {
             throw new BillingInformationException(Error.INVALID_BILLING_INFORMATION.getDescription());
@@ -71,7 +73,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
             throw new PaymentDetailsException(Error.PAYMENT_DECLINED.getDescription());
         }
 
-        if (!checkStock(order.productsIds())) {
+        if (!checkStock(order.productsIds(), quantityOfEachProductForId)) {
             throw new OutOfStockException(Error.OUT_OF_STOCK.getDescription());
         }
 
@@ -85,6 +87,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         BigDecimal totalFromProducts = getTotalOfProducts(order.productsIds());
         newOrder.setTotalUsd(shippingFee.add(totalFromProducts));
 
+        reduceStock(order.productsIds(), quantityOfEachProductForId);
         Order savedOrder = orderRepository.save(newOrder);
         entityManager.clear();
 
@@ -184,10 +187,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     }
 
 
-    private boolean checkStock(List<Long> productsIds) {
-
-        Map<Long, Long> quantityOfEachProductForId = getTotalQuantityOfEachProduct(productsIds);
-
+    private boolean checkStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {
         for (Long productId : productsIds) {
             Product product = productService.findById(productId);
             if (Objects.nonNull(product)) {
@@ -198,6 +198,14 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         }
 
         return true;
+    }
+
+    private void reduceStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {
+        for(Long productId : productsIds) {
+            Product product = productService.findById(productId);
+            stockService.setStockOfProduct(product,
+                    (int) (stockService.getStockOfProduct(product) - quantityOfEachProductForId.get(productId)));
+        }
     }
 
     private Map<Long, Long> getTotalQuantityOfEachProduct(List<Long> productsIds) {

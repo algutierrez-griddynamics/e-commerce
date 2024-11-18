@@ -6,4 +6,5 @@ import org.ecommerce.services.OperationsService;
 
 public interface StockServiceI extends OperationsService<StockEntry, Long> {
     int getStockOfProduct(Product product);
+    void setStockOfProduct(Product product, int stock);
 }

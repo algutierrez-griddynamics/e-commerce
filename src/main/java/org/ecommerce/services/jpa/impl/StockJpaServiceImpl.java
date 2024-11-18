@@ -47,4 +47,12 @@ public class StockJpaServiceImpl implements StockServiceI {
     public int getStockOfProduct(Product product) {
         return 10;
     }
+
+    @Override
+    public void setStockOfProduct(Product product, int stock) {
+        StockEntry stockEntry = new StockEntry();
+        stockEntry.setProduct(product);
+        stockEntry.setStock(stock);
+        stockJpaRepository.save(stockEntry);
+    }
 }
