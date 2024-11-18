@@ -13,11 +13,11 @@ import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.*;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
-import org.ecommerce.services.OperationsService;
+import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.OrderJpaService;
-import org.ecommerce.services.jpa.PaymentDetailsI;
 import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
+import org.ecommerce.services.jpa.validators.OrderValidatorService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,27 +35,27 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     private final EntityManager entityManager;
 
     // Micro-services
-    private final OperationsService<Product, Long> productService;
+    private final ProductService productService;
     private final ShippingInformationI shippingInformationService;
-    private final PaymentDetailsI paymentDetailsService;
     private final StockServiceI stockService;
-    private final BillingInformationI billingInformationService;
+
+    // Validators
+    private final OrderValidatorService orderValidatorService;
 
     public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
-                               OperationsService<Product, Long> productService, ShippingInformationI shippingInformationService,
-                               PaymentDetailsI paymentDetailsService, StockServiceI stockService, BillingInformationI billingInformationService) {
+                               ProductService productService, ShippingInformationI shippingInformationI,
+                               StockServiceI stockService, OrderValidatorService orderValidatorService) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
         this.entityManager = entityManager;
 
-
         this.productService = productService;
-        this.shippingInformationService = shippingInformationService;
-        this.paymentDetailsService = paymentDetailsService;
+        this.shippingInformationService = shippingInformationI;
         this.stockService = stockService;
-        this.billingInformationService = billingInformationService;
+
+        this.orderValidatorService = orderValidatorService;
     }
 
     @Override
@@ -64,22 +64,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         OrderRequestDTO order = entity.getData();
         Map<Long, Long> quantityOfEachProductForId = getTotalQuantityOfEachProduct(order.productsIds());
 
-
-        if (!validateBillingInformation(order.fk_billing_information_id())) {
-            throw new BillingInformationException(Error.INVALID_BILLING_INFORMATION.getDescription());
-        }
-
-        if (!validatePaymentDetails(order.fk_payment_details_id())) {
-            throw new PaymentDetailsException(Error.PAYMENT_DECLINED.getDescription());
-        }
-
-        if (!checkStock(order.productsIds(), quantityOfEachProductForId)) {
-            throw new OutOfStockException(Error.OUT_OF_STOCK.getDescription());
-        }
-
-        if (!validateShippingInformation(order.fk_shipping_information_id())) {
-            throw new ShippingInformationException(Error.INVALID_SHIPPING_INFORMATION.getDescription());
-        }
+        orderValidatorService.validateOrder(order, quantityOfEachProductForId);
 
         Order newOrder = buildOrderFromDTORequest.apply(order);
 
@@ -151,50 +136,6 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
     private BigDecimal getTotalOfShipment(Long shipmentId) {
         return shippingInformationService.findById(shipmentId).getShippingCost().getAmount();
-    }
-
-    private boolean validatePaymentDetails(Long paymentDetailsId) {
-        PaymentDetails paymentDetails = paymentDetailsService.findById(paymentDetailsId);
-
-        if (Objects.nonNull(paymentDetails)) {
-            return paymentDetailsService.validatePaymentDetails(paymentDetails);
-        }
-
-        return false;
-    }
-
-    private boolean validateBillingInformation(Long billingInformationId) {
-        BillingInformation billingInformation = billingInformationService.findById(billingInformationId);
-
-        if (Objects.nonNull(billingInformation)) {
-            return billingInformationService.validateBillingInformation();
-        }
-
-        return false;
-    }
-
-    private boolean validateShippingInformation (Long shippingInformationId) {
-        ShippingInformation shippingInformation = shippingInformationService.findById(shippingInformationId);
-
-        if (Objects.nonNull(shippingInformation)) {
-            return shippingInformationService.validateShippingInformation(shippingInformation);
-        }
-
-        return false;
-    }
-
-
-    private boolean checkStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {
-        for (Long productId : productsIds) {
-            Product product = productService.findById(productId);
-            if (Objects.nonNull(product)) {
-                int stockOfProduct = stockService.getStockOfProduct(product);
-                if (stockOfProduct < quantityOfEachProductForId.get(productId))
-                    return false;
-            }
-        }
-
-        return true;
     }
 
     private void reduceStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {
