@@ -2,6 +2,7 @@ package org.ecommerce.services.jpa.impl;
 
 import org.ecommerce.models.Product;
 import org.ecommerce.services.OperationsService;
+import org.ecommerce.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 class OrderJpaServiceImplTest {
 
     @Mock
-    private OperationsService<Product, Long> operationsService;
+    private ProductService operationsService;
 
     @InjectMocks
     private OrderJpaServiceImpl orderJpaService;
