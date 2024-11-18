@@ -3,7 +3,7 @@ package org.ecommerce.validations.handlers;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.ecommerce.exceptions.MappingException;
+import org.ecommerce.exceptions.*;
 import org.ecommerce.validations.ValidationErrorResponse;
 import org.ecommerce.validations.Violation;
 import org.springframework.http.HttpStatus;
@@ -76,5 +76,16 @@ class ErrorHandlingControllerAdvice {
         );
         return error;
     }
+
+    @ExceptionHandler({PaymentDetailsException.class, BillingInformationException.class,
+    OutOfStockException.class, ShippingInformationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ValidationErrorResponse handlePaymentDetailsException(Exception e) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+        error.getViolations().add(new Violation(CLIENT_WRONG_REQUEST, e.getMessage()));
+        return error;
+    }
+
 }
 
