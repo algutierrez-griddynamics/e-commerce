@@ -4,13 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.ecommerce.enums.Error;
 import org.ecommerce.models.ShippingInformation;
 import org.ecommerce.repositories.jpa.ShippingInformationJpaRepository;
-import org.ecommerce.services.OperationsService;
+import org.ecommerce.services.jpa.ShippingInformationI;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ShippingJpaInformationImpl implements OperationsService<ShippingInformation, Long> {
+public class ShippingJpaInformationImpl implements ShippingInformationI {
 
     private final ShippingInformationJpaRepository shippingInformationRepository;
 
@@ -44,5 +44,10 @@ public class ShippingJpaInformationImpl implements OperationsService<ShippingInf
                 .orElseThrow(
                         () -> new EntityNotFoundException(Error.ENTITY_NOT_FOUND.getDescription())
                 );
+    }
+
+    @Override
+    public boolean validateShippingInformation(ShippingInformation shippingInformation) {
+        return true;
     }
 }
