@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class OrderValidatorService {
@@ -60,45 +60,28 @@ public class OrderValidatorService {
     }
 
     private boolean validatePaymentDetails(Long paymentDetailsId) {
-        PaymentDetails paymentDetails = paymentDetailsService.findById(paymentDetailsId);
-
-        if (Objects.nonNull(paymentDetails)) {
-            return paymentDetailsService.validatePaymentDetails(paymentDetails);
-        }
-
-        return false;
+        return Optional.ofNullable(paymentDetailsService.findById(paymentDetailsId))
+                .map(paymentDetailsService::validatePaymentDetails)
+                .orElse(false);
     }
 
     private boolean validateBillingInformation(Long billingInformationId) {
-        BillingInformation billingInformation = billingInformationService.findById(billingInformationId);
-
-        if (Objects.nonNull(billingInformation)) {
-            return billingInformationService.validateBillingInformation();
-        }
-
-        return false;
+        return Optional.ofNullable(billingInformationService.findById(billingInformationId))
+                .map(billingInformation -> billingInformationService.validateBillingInformation())
+                .orElse(false);
     }
 
-    private boolean validateShippingInformation (Long shippingInformationId) {
-        ShippingInformation shippingInformation = shippingInformationService.findById(shippingInformationId);
-
-        if (Objects.nonNull(shippingInformation)) {
-            return shippingInformationService.validateShippingInformation(shippingInformation);
-        }
-
-        return false;
+    private boolean validateShippingInformation(Long shippingInformationId) {
+        return Optional.ofNullable(shippingInformationService.findById(shippingInformationId))
+                .map(shippingInformationService::validateShippingInformation)
+                .orElse(false);
     }
 
     private boolean checkStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {
-        for (Long productId : productsIds) {
-            Product product = productService.findById(productId);
-            if (Objects.nonNull(product)) {
-                int stockOfProduct = stockService.getStockOfProduct(product);
-                if (stockOfProduct < quantityOfEachProductForId.get(productId))
-                    return false;
-            }
-        }
-
-        return true;
+        return productsIds.stream()
+                .allMatch(productId -> Optional.ofNullable(productService.findById(productId))
+                        .map(product -> stockService.getStockOfProduct(product) >= quantityOfEachProductForId.get(productId))
+                        .orElse(false));
     }
+
 }

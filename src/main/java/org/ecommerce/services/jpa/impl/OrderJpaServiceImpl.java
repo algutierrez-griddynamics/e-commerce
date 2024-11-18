@@ -125,8 +125,6 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         );
     }
 
-    // TODO: Should the following methods be performed for a client to distinct microservices?
-
     private BigDecimal getTotalOfProducts(List<Long> productsIds) {
         return productsIds.stream()
                 .map(productService::findById)
