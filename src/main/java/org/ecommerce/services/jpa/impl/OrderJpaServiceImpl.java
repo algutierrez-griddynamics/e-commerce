@@ -128,10 +128,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     public GetAllOrdersResponse findAll() {
         return new GetAllOrdersResponse(
                 orderRepository.findAll().stream()
-                        .map(order -> {
-                            orderDTOMapper.apply(order);
-                            return orderDTOMapper.apply(order);
-                        }).collect(Collectors.toList())
+                        .map(orderDTOMapper).collect(Collectors.toList())
         );
     }
 
