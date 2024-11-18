@@ -162,7 +162,7 @@ public class OrderJpaControllerWebLayerTest {
 
     @DisplayName("Call delete method in the controller and return a 404 status code")
     @Test
-    void testDeleteOrderSuccessfully() throws Exception {
+    void testDeleteOrderUnsuccessfully() throws Exception {
         Long orderId = 999L;
 
         doThrow(EntityNotFound.class).when(orderJpaService).delete(orderId);
@@ -170,5 +170,19 @@ public class OrderJpaControllerWebLayerTest {
         mockMvc.perform(delete("/orders/{orderId}", orderId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @DisplayName("Call delete method in the controller and return a 204 status code")
+    @Test
+    void testDeleteOrderSuccessfully() throws Exception {
+        Long orderId = 1L;
+
+        doNothing().when(orderJpaService).delete(orderId);
+
+        mockMvc.perform(delete("/orders/{orderId}", orderId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        verify(orderJpaService, times(1)).delete(orderId);
     }
 }
