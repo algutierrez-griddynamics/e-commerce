@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
+import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.mappers.*;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.services.jpa.OrderJpaService;
+import org.ecommerce.services.jpa.impl.OrderJpaServiceImpl;
 import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +32,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.Calendar;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @WebMvcTest(controllers = OrderJpaController.class
 //        , excludeAutoConfiguration = SecurityAutoConfiguration.class
@@ -41,7 +43,7 @@ public class OrderJpaControllerWebLayerTest {
     private Order order;
 
     @MockBean
-    private OrderJpaService orderJpaService;
+    private OrderJpaServiceImpl orderJpaService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -156,5 +158,17 @@ public class OrderJpaControllerWebLayerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(orderJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @DisplayName("Call delete method in the controller and return a 404 status code")
+    @Test
+    void testDeleteOrderSuccessfully() throws Exception {
+        Long orderId = 999L;
+
+        doThrow(EntityNotFound.class).when(orderJpaService).delete(orderId);
+
+        mockMvc.perform(delete("/orders/{orderId}", orderId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

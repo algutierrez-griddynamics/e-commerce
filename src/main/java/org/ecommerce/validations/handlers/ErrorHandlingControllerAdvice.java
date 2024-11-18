@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -86,6 +83,16 @@ class ErrorHandlingControllerAdvice {
         error.getViolations().add(new Violation(CLIENT_WRONG_REQUEST, e.getMessage()));
         return error;
     }
+
+    @ExceptionHandler({EntityNotFound.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ValidationErrorResponse handleNotFoundExceptions(EntityNotFound entityNotFound) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+        error.getViolations().add(new Violation(entityNotFound.getEntity(), entityNotFound.getMessage()));
+        return error;
+    }
+
 
 }
 

@@ -88,7 +88,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         OrderDTO existingOrder = findById(id).getOrderDTO();
 
         if (existingOrder == null) {
-            throw new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription());
+            throw new EntityNotFound(Order.class.getSimpleName(), Error.ENTITY_NOT_FOUND.getDescription());
         }
 
         Order updatedOrder = buildOrderFromDTORequest.apply(entity.getData());
@@ -105,7 +105,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         if (Objects.nonNull(findById(id))) {
             orderRepository.deleteById(id);
         } else {
-            throw new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription());
+            throw new EntityNotFound(Order.class.getSimpleName(), Error.ENTITY_NOT_FOUND.getDescription());
         }
     }
 
@@ -121,7 +121,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     public GetOrderResponse findById(Long id) {
         return new GetOrderResponse(
                 orderRepository.findById(id).map(orderDTOMapper)
-                        .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()))
+                        .orElseThrow(() -> new EntityNotFound(Order.class.getSimpleName(), Error.ENTITY_NOT_FOUND.getDescription()))
         );
     }
 
