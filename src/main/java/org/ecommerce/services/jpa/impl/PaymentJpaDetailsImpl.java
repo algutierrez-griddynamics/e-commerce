@@ -36,7 +36,7 @@ public class PaymentJpaDetailsImpl implements PaymentDetailsI {
     }
 
     @Override
-    public boolean validateData(PaymentDetails paymentDetails) {
+    public boolean validatePaymentDetails(PaymentDetails paymentDetails) {
         return true;
     }
 }
