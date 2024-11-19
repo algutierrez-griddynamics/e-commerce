@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
+import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.mappers.*;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
+import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
+import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.impl.OrderJpaServiceImpl;
 import org.ecommerce.util.tests.OrderUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,5 +184,65 @@ public class OrderJpaControllerWebLayerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         verify(orderJpaService, times(1)).delete(orderId);
+    }
+
+    @DisplayName("Call update method in the controller and return a 200 status code")
+    @Test
+    void testUpdateOrderSuccessfully() throws Exception {
+        OrderRequestDTO orderRequestDTO = orderRequestDTOMapper.apply(order);
+        UpdateRequest<OrderRequestDTO, Long> updateRequest
+                = new UpdateRequest<>(orderRequestDTO, order.getId());
+
+        OrderDTO orderDTO = orderDTOMapper.apply(order);
+
+        when(orderJpaService.update(updateRequest))
+                .thenReturn(new UpdateOrderResponse(orderDTO));
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", order.getId())
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updateRequest));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @DisplayName("Call update method in the controller and return a 400 status code")
+    @Test
+    void testUpdateOrderUnsuccessfully_badRequest() throws Exception {
+        order.setCustomer(null);
+        OrderRequestDTO orderRequestDTO = null;
+
+        try {
+            orderRequestDTO = orderRequestDTOMapper.apply(order);
+        } catch (Exception e) {}
+
+        String orderJson = new ObjectMapper().writeValueAsString(orderRequestDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/orders")
+                        .contentType("application/json")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(orderJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
+
+    @DisplayName("Call update method in the controller and return a 404 status code")
+    @Test
+    void testUpdateOrderUnsuccessfully_entityNotFound() throws Exception {
+        Long orderId = 1L;
+        OrderRequestDTO orderRequestDTO = orderRequestDTOMapper.apply(order);
+        UpdateRequest<OrderRequestDTO, Long> updateRequest
+                = new UpdateRequest<>(orderRequestDTO, orderId);
+
+        when(orderJpaService.update(any(UpdateRequest.class))).thenThrow(new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", orderId)
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updateRequest));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

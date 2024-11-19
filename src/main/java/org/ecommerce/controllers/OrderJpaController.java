@@ -43,7 +43,7 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(path = "/orders")
-    public ResponseEntity<UpdateOrderResponse> update(@RequestBody UpdateRequest<OrderRequestDTO, Long> request) {
+    public ResponseEntity<UpdateOrderResponse> update(@RequestBody @Valid UpdateRequest<OrderRequestDTO, Long> request) {
         UpdateOrderResponse response = orderService.update(request);
 
         return new ResponseEntity<UpdateOrderResponse>(response, HttpStatus.OK);
