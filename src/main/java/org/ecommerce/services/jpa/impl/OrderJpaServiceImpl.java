@@ -140,7 +140,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         for(Long productId : productsIds) {
             Product product = productService.findById(productId);
             stockService.setStockOfProduct(product,
-                    (int) (stockService.getStockOfProduct(product) - quantityOfEachProductForId.get(productId)));
+                    (int) (stockService.getStockOfProduct(product) - quantityOfEachProductForId.getOrDefault(productId, 0L)));
         }
     }
 

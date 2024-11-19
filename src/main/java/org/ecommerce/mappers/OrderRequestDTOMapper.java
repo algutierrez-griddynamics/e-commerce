@@ -5,11 +5,13 @@ import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.MappingException;
 import org.ecommerce.models.Identity;
 import org.ecommerce.models.Order;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderRequestDTOMapper implements Function<Order, OrderRequestDTO> {
     private final ProductsDTOMapper productsDTOMapper;
 
