@@ -2,6 +2,7 @@ package org.ecommerce.controllers.unit;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.weaver.ast.Or;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
@@ -12,8 +13,9 @@ import org.ecommerce.models.Order;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
+import org.ecommerce.models.services.responses.GetAllOrdersResponse;
+import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
-import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.impl.OrderJpaServiceImpl;
 import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.*;
@@ -29,11 +31,13 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Calendar;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(controllers = OrderJpaController.class
 //        , excludeAutoConfiguration = SecurityAutoConfiguration.class
@@ -245,4 +249,53 @@ public class OrderJpaControllerWebLayerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @DisplayName("GetOrder endpoint returns 404 when an entity is not found")
+    @Test
+    void testGetOrderUnsuccessfully_entityNotFound() throws Exception {
+        Long notFoundOrderId = 1L;
+
+        when(orderJpaService.findById(notFoundOrderId))
+                .thenThrow(EntityNotFound.class);
+
+        mockMvc.perform(get("/orders/{orderId}", notFoundOrderId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @DisplayName("GetOrder endpoint returns 200 and the entity when performing get Request with a valid id")
+    @Test
+    void testGetOrderSuccessfully() throws Exception {
+        Long foundedOrderId = 1L;
+
+        order.setId(foundedOrderId);
+
+        GetOrderResponse getOrderResponse = new GetOrderResponse(orderDTOMapper.apply(order));
+
+        when(orderJpaService.findById(foundedOrderId)).thenReturn(getOrderResponse);
+
+        mockMvc.perform(get("/orders/{orderId}", order.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @DisplayName("Assert that the getAllOrders endpoint returns an object and a 200 status code")
+    @Test
+    void testGetAllOrdersSuccessfully() throws Exception {
+        OrderDTO expectedOrderDTO = orderDTOMapper.apply(order);
+
+        GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO));
+
+        when(orderJpaService.findAll()).thenReturn(getAllOrdersResponse);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/orders")
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult mvcResult = mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertNotNull(response);
+    }
+
 }
