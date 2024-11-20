@@ -11,9 +11,11 @@ import org.ecommerce.models.Price;
 import org.ecommerce.models.Product;
 import org.ecommerce.models.ShippingInformation;
 import org.ecommerce.models.requests.CreateRequest;
+import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
+import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
@@ -65,6 +67,9 @@ class OrderJpaServiceImplTest {
 
     @Mock
     private CreateRequest<OrderRequestDTO> createRequest;
+
+    @Mock
+    private UpdateRequest<OrderRequestDTO, Long> updateRequest;
 
     @Mock
     private OrderRequestDTO orderRequestDTO;
@@ -134,9 +139,33 @@ class OrderJpaServiceImplTest {
         assertNotNull(createOrderResponse);
     }
 
-    @DisplayName("Assess Update service method implementation")
+    @DisplayName("Assess Update service method implementation when updating successfully")
     @Test
-    void update() {
+    void updateOrderSuccessfully() {
+        Long orderId = 1L;
+        when(updateRequest.getData()).thenReturn(orderRequestDTO);
+        when(updateRequest.getId()).thenReturn(orderId);
+
+        when(orderJpaRepository.findById(anyLong())).thenReturn(Optional.of(order));
+        when(buildOrderFromDTORequest.apply(any(OrderRequestDTO.class))).thenReturn(order);
+
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+        when(orderJpaRepository.saveAndFlush(any(Order.class))).thenReturn(order);
+        doNothing().when(entityManager).clear();
+
+        AtomicReference<UpdateOrderResponse> updateOrderResponse = new AtomicReference<>();
+
+        assertDoesNotThrow(() -> updateOrderResponse.set(orderJpaService.update(updateRequest)));
+        assertNotNull(updateOrderResponse);
+    }
+
+    @DisplayName("Assess Update service method implementation throws EntityNotFoundException when there is not register of the entity")
+    @Test
+    void updateOrderUnsuccessfully() {
+        when(orderJpaRepository.findById(anyLong())).thenThrow(EntityNotFound.class);
+
+        assertThrows(EntityNotFound.class,
+                () -> orderJpaService.update(updateRequest));
     }
 
     @DisplayName("Assess delete service method implementation does not throws anything")
