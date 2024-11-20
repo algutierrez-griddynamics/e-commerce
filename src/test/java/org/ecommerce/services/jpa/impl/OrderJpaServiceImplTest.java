@@ -24,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -94,6 +96,12 @@ class OrderJpaServiceImplTest {
 
     @Mock
     private OrderDTO orderDTO;
+
+    @Mock
+    private Pageable pageable;
+
+    @Mock
+    private Page<Order> page;
 
     @DisplayName("Assess create service method implementation")
     @Test
@@ -192,10 +200,11 @@ class OrderJpaServiceImplTest {
     @DisplayName("Assess findAll service method implementation")
     @Test
     void findAll() {
-        when(orderJpaRepository.findAll()).thenReturn(List.of(order));
+        when(page.getContent()).thenReturn(List.of(order));
+        when(orderJpaRepository.findAll(any(Pageable.class))).thenReturn(page);
         when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
 
-        GetAllOrdersResponse orders = orderJpaService.findAll();
+        GetAllOrdersResponse orders = orderJpaService.findAll(pageable);
         List<OrderDTO> orderDTOs = orders.getOrders();
 
         assertAll(

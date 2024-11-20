@@ -18,6 +18,8 @@ import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -41,11 +43,12 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
     // Validators
     private final OrderValidatorService orderValidatorService;
+    private final Order order;
 
     public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
                                ProductService productService, ShippingInformationI shippingInformationI,
-                               StockServiceI stockService, OrderValidatorService orderValidatorService) {
+                               StockServiceI stockService, OrderValidatorService orderValidatorService, Order order) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
@@ -56,6 +59,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         this.stockService = stockService;
 
         this.orderValidatorService = orderValidatorService;
+        this.order = order;
     }
 
     @Override
@@ -110,11 +114,16 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     }
 
     @Override
-    public GetAllOrdersResponse findAll() {
+    public GetAllOrdersResponse findAll(Pageable pageable) {
+        Page<Order> ordersPage = orderRepository.findAll(pageable);
+
         return new GetAllOrdersResponse(
-                orderRepository.findAll().stream()
+                ordersPage.getContent().stream()
                         .map(orderDTOMapper).collect(Collectors.toList())
-        );
+                , ordersPage.getNumber()
+                , ordersPage.getSize()
+                , ordersPage.getTotalElements()
+                , ordersPage.getTotalPages());
     }
 
     @Override

@@ -2,7 +2,6 @@ package org.ecommerce.controllers.unit;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.weaver.ast.Or;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
@@ -24,6 +23,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -54,6 +55,12 @@ public class OrderJpaControllerWebLayerTest {
 
     @Mock
     private CustomerDTOMapper customerDTOMapper;
+
+    @Mock
+    private Pageable pageable;
+
+    @Mock
+    private Page<Order> page;
 
     // OrderDTOMapper dependencies
     @Mock
@@ -282,9 +289,9 @@ public class OrderJpaControllerWebLayerTest {
     void testGetAllOrdersSuccessfully() throws Exception {
         OrderDTO expectedOrderDTO = orderDTOMapper.apply(order);
 
-        GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO));
+        GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO), 0, 10, 2, 1);
 
-        when(orderJpaService.findAll()).thenReturn(getAllOrdersResponse);
+        when(orderJpaService.findAll(any(Pageable.class))).thenReturn(getAllOrdersResponse);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/orders")
                 .accept(MediaType.APPLICATION_JSON);

@@ -6,6 +6,7 @@ import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface OrderJpaService <REQUEST, ID> {
 
@@ -15,7 +16,7 @@ public interface OrderJpaService <REQUEST, ID> {
 
     void delete(ID id);
 
-    GetAllOrdersResponse findAll();
+    GetAllOrdersResponse findAll(Pageable pageable);
 
     GetOrderResponse findById(ID id);
 }
