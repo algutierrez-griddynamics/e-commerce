@@ -13,6 +13,7 @@ import org.ecommerce.models.ShippingInformation;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
+import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
@@ -177,9 +178,31 @@ class OrderJpaServiceImplTest {
         );
     }
 
-    @DisplayName("Assess create service method implementation")
+    @DisplayName("Assess that an entity is returned when it exists in the database")
     @Test
-    void findById() {
+    void findById_foundedEntity() {
+        Long orderId = 1L;
+        when(order.getId()).thenReturn(orderId);
+
+        when(orderJpaRepository.findById(order.getId())).thenReturn(Optional.of(order));
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+
+        AtomicReference<GetOrderResponse> orderDTOAtomicReference = new AtomicReference<>();
+
+        assertDoesNotThrow(() -> orderDTOAtomicReference.set(orderJpaService.findById(orderId)));
+        assertNotNull(orderDTOAtomicReference);
+    }
+
+    @DisplayName("Assess that an NotFoundException is thrown when it does not exists in the database")
+    @Test
+    void findById_notFoundEntity() {
+        Long orderId = 1L;
+
+        when(orderJpaRepository.findById(orderId)).thenThrow(EntityNotFound.class);
+
+        assertThrows(EntityNotFound.class,
+                () -> orderJpaService.findById(orderId));
+
     }
 
     @DisplayName("Testing private method getTotalOfEachProduct")
