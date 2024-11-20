@@ -10,6 +10,8 @@ import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.OrderJpaService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,8 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/orders")
-    public GetAllOrdersResponse get(Pageable pageable) {
+    public GetAllOrdersResponse get(@PageableDefault(sort = "orderDate"
+            , direction = Sort.Direction.ASC) Pageable pageable) {
         return orderService.findAll(pageable);
     }
 
