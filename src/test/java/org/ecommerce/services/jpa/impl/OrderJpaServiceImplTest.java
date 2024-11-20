@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -214,6 +215,70 @@ class OrderJpaServiceImplTest {
                     assertEquals(1, orderDTOs.size());
                 }
         );
+    }
+
+    @DisplayName("Assess the findAll metadata")
+    @Test
+    void findAllAssesPagination() {
+        final List<Order> mockedList = List.of(order, order, order);
+        when(page.getContent()).thenReturn(mockedList);
+
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+        when(orderJpaRepository.findAll(any(Pageable.class)))
+                .thenReturn(page);
+
+        GetAllOrdersResponse ordersPage = orderJpaService.findAll(pageable);
+        System.out.println(ordersPage.getPageSize());
+        List<OrderDTO> orderDTOs = ordersPage.getOrders();
+        assertAll(
+                () -> {
+                    assertNotNull(orderDTOs);
+                    assertFalse(orderDTOs.isEmpty());
+                    assertEquals(mockedList.size(), orderDTOs.size());
+                    assertEquals(0, ordersPage.getCurrentPage());
+                    assertEquals(0, ordersPage.getPageSize());
+                    assertEquals(0, ordersPage.getTotalPages());
+                }
+        );
+    }
+
+    @DisplayName("Check findAll parameter pageable works as expected")
+    @Test
+    void findAllAssesPageableParameter() {
+        final List<Order> mockedList = List.of(order, order, order);
+        final int pageSize = 2;
+        final int pageNumber = 1;
+        final int totalPages = mockedList.size() / pageSize;
+
+        when(pageable.getPageNumber()).thenReturn(pageNumber);
+        when(pageable.getPageSize()).thenReturn(pageSize);
+        when(pageable.getSort()).thenReturn(Sort.unsorted());
+
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+
+        when(orderJpaRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        when(page.getContent()).thenReturn(mockedList);
+        when(page.getTotalElements()).thenReturn((long) mockedList.size());
+        when(page.getNumber()).thenReturn(pageNumber);
+        when(page.getSize()).thenReturn(pageSize);
+        when(page.getTotalPages()).thenReturn(totalPages);
+
+        GetAllOrdersResponse ordersPage = orderJpaService.findAll(pageable);
+        List<OrderDTO> orderDTOs = ordersPage.getOrders();
+
+
+        assertAll(
+                () -> {
+                    assertNotNull(orderDTOs);
+                    assertFalse(orderDTOs.isEmpty());
+                    assertEquals(mockedList.size(), ordersPage.getTotalElements());
+                    assertEquals(pageNumber, ordersPage.getCurrentPage());
+                    assertEquals(pageSize, ordersPage.getPageSize());
+                    assertEquals(totalPages, ordersPage.getTotalPages());
+                }
+        );
+
     }
 
     @DisplayName("Assess that an entity is returned when it exists in the database")
