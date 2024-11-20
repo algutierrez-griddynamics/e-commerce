@@ -3,6 +3,7 @@ package org.ecommerce.services.jpa.impl;
 import jakarta.persistence.EntityManager;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
+import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.Order;
@@ -136,9 +137,25 @@ class OrderJpaServiceImplTest {
     void update() {
     }
 
-    @DisplayName("Assess delete service method implementation")
+    @DisplayName("Assess delete service method implementation does not throws anything")
     @Test
-    void delete() {
+    void deleteDoesNotThrow() {
+        Long orderId = 1L;
+        when(orderJpaRepository.findById(orderId)).thenReturn(Optional.of(order));
+        doNothing().when(orderJpaRepository).deleteById(orderId);
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+
+        assertDoesNotThrow(() -> orderJpaService.delete(orderId));
+    }
+
+    @DisplayName("Assess delete service method implementation throws EntityNotFoundException")
+    @Test
+    void deleteThrowsEntityNotFoundException() {
+        Long orderId = 1L;
+        when(orderJpaRepository.findById(orderId)).thenThrow(EntityNotFound.class);
+
+        assertThrows(EntityNotFound.class,
+                () -> orderJpaService.delete(orderId));
     }
 
     @DisplayName("Assess findAll service method implementation")
