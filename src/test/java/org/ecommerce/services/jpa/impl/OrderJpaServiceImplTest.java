@@ -12,6 +12,7 @@ import org.ecommerce.models.Product;
 import org.ecommerce.models.ShippingInformation;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
+import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
@@ -161,6 +162,19 @@ class OrderJpaServiceImplTest {
     @DisplayName("Assess findAll service method implementation")
     @Test
     void findAll() {
+        when(orderJpaRepository.findAll()).thenReturn(List.of(order));
+        when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
+
+        GetAllOrdersResponse orders = orderJpaService.findAll();
+        List<OrderDTO> orderDTOs = orders.getOrders();
+
+        assertAll(
+                () -> {
+                    assertNotNull(orderDTOs);
+                    assertFalse(orderDTOs.isEmpty());
+                    assertEquals(1, orderDTOs.size());
+                }
+        );
     }
 
     @DisplayName("Assess create service method implementation")
