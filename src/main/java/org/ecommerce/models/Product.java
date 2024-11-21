@@ -24,7 +24,7 @@ public class Product extends Identity {
     @NotNull @Column(nullable = false)
     private String name;
     @NotNull @PrimaryKeyJoinColumn
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fk_price_id")
     private Price price;
     private String description;
