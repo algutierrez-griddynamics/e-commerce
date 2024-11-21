@@ -1,12 +1,12 @@
 package org.ecommerce.controllers;
 
 import jakarta.validation.Valid;
+import org.ecommerce.enums.AvailableOrderByFields;
+import org.ecommerce.enums.AvailableOrderByOptions;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +25,13 @@ public interface ControllerJpaOperations <REQUEST, ID> {
                 @RequestParam(required = false) String city,
                 @RequestParam(required = false) Long customerId,
                 @RequestParam(required = false) String orderStatus,
-                @RequestParam(required = false) LocalDateTime startDate,
-                @RequestParam(required = false) LocalDateTime endDate,
-                @PageableDefault(sort = "orderDate", direction = Sort.Direction.ASC) Pageable pageable);
+                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
+                @RequestParam(required = false) Integer page,
+                @RequestParam(required = false) Integer size,
+                @RequestParam(required = false) AvailableOrderByOptions direction,
+                @RequestParam(required = false) AvailableOrderByFields sort
+        );
 
         ResponseEntity<?> get(@PathVariable ID orderId);
 }

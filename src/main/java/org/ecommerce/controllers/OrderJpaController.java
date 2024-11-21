@@ -2,6 +2,8 @@ package org.ecommerce.controllers;
 
 import jakarta.validation.Valid;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
+import org.ecommerce.enums.AvailableOrderByFields;
+import org.ecommerce.enums.AvailableOrderByOptions;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.requests.*;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
@@ -10,9 +12,9 @@ import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,6 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     }
 
     @Override
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/orders")
     public GetAllOrdersResponse get(
             @RequestParam(required = false) String firstName,
@@ -65,8 +66,25 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
             @RequestParam(required = false) String orderStatus,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
-            @PageableDefault(sort = "orderDate"
-                    , direction = Sort.Direction.ASC) Pageable pageable) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) AvailableOrderByOptions direction,
+            @RequestParam(required = false) AvailableOrderByFields sort
+    ) {
+        Sort.Direction selectedDirection = direction == null
+                || direction.name().equals(AvailableOrderByOptions.ASCENDING.name())
+                ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        String selectedSort = sort == null
+                ? AvailableOrderByFields.DATE.getFieldName() : sort.getFieldName();
+
+        Pageable pageable = PageRequest.of(
+                  page == null ? 0 : page
+                , size == null ? 10 : size
+                , selectedDirection
+                , selectedSort
+        );
+
         SpecificationParameters specs = SpecificationParameters.builder()
                 .firstName(firstName)
                 .city(city)
