@@ -7,8 +7,9 @@ import org.ecommerce.models.*;
 import org.ecommerce.repositories.inmemory.impl.CrudInMemoryOperationsImpl;
 import org.ecommerce.util.database.Operations;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class OrderRepository extends CrudInMemoryOperationsImpl<Order> {
         try {
             operations.execute(sqlQuery,
                     entity.getCustomer().getId(), entity.getPaymentDetails().getId(), entity.getBillingInformation().getId(),
-                    entity.getShippingInformation().getId(), new Date(entity.getOrderDate().getTime()),
+                    entity.getShippingInformation().getId(), entity.getOrderDate(),
                     entity.getShippingInformation().getShippingCost().getAmount()
                             .add(entity.getBillingInformation().getAmount().getAmount()),
                     entity.getStatus().toString());
@@ -50,7 +51,7 @@ public class OrderRepository extends CrudInMemoryOperationsImpl<Order> {
                                     .billingInformation(new BillingInformation())
                                     .paymentDetails(new PaymentDetails())
                                     .customer(new Customer())
-                                    .orderDate(new java.util.Date(resultSet.getDate(6).getTime()))
+                                    .orderDate(LocalDateTime.of(resultSet.getDate(6).toLocalDate(), LocalTime.now()))
                                     .status(OrderStatus.valueOf(resultSet.getString(7).toUpperCase()))
                                     .build();
                         } catch (SQLException e) {
@@ -102,7 +103,7 @@ public class OrderRepository extends CrudInMemoryOperationsImpl<Order> {
                             .billingInformation(new BillingInformation())
                             .paymentDetails(new PaymentDetails())
                             .customer(new Customer())
-                            .orderDate(new java.util.Date(resultSet.getDate(6).getTime()))
+                            .orderDate(LocalDateTime.of(resultSet.getDate(6).toLocalDate(), LocalTime.now()))
                             .status(OrderStatus.valueOf(resultSet.getString(7).toUpperCase()))
                             .build();
                 } catch (SQLException e) {

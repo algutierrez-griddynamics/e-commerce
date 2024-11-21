@@ -4,13 +4,13 @@ import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.models.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class OrderUtils {
     public static Order buildOrder() {
         return Order.builder()
-                .orderDate(new Date())
+                .orderDate(LocalDateTime.now())
                 .status(OrderStatus.PLACED)
                 .totalUsd(new BigDecimal("999999"))
                 .products(new ArrayList<>())
