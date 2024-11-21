@@ -8,14 +8,17 @@ import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.OrderJpaService;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 
 @Profile("local")
 @RestController
@@ -55,9 +58,24 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/orders")
-    public GetAllOrdersResponse get(@PageableDefault(sort = "orderDate"
-            , direction = Sort.Direction.ASC) Pageable pageable) {
-        return orderService.findAll(pageable);
+    public GetAllOrdersResponse get(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) String orderStatus,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
+            @PageableDefault(sort = "orderDate"
+                    , direction = Sort.Direction.ASC) Pageable pageable) {
+        SpecificationParameters specs = SpecificationParameters.builder()
+                .firstName(firstName)
+                .city(city)
+                .customerId(customerId)
+                .orderStatus(orderStatus)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
+        return orderService.findAll(specs, pageable);
     }
 
     @Override

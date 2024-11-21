@@ -18,10 +18,13 @@ import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
+import org.ecommerce.util.database.specifications.OrderSpecifications;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -114,8 +117,12 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     }
 
     @Override
-    public GetAllOrdersResponse findAll(Pageable pageable) {
-        Page<Order> ordersPage = orderRepository.findAll(pageable);
+    public GetAllOrdersResponse findAll(@NotNull SpecificationParameters specificationParameters, Pageable pageable) {
+        Page<Order> ordersPage = orderRepository
+                .findAll(
+                        OrderSpecifications.allSpecifications(specificationParameters)
+                        , pageable
+                );
 
         return new GetAllOrdersResponse(
                 ordersPage.getContent().stream()
