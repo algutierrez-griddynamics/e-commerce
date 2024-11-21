@@ -1,5 +1,6 @@
 package org.ecommerce.services.jpa.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
@@ -18,9 +19,11 @@ import org.ecommerce.services.jpa.OrderJpaService;
 import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
+import org.ecommerce.util.money.operations.UsdConverter;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,6 +31,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Long> {
+
+    private final String DESTINATION_CURRENCY_CODE = "USD";
 
     private final OrderJpaRepository orderRepository;
     private final OrderDTOMapper orderDTOMapper;
@@ -128,12 +133,26 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     private BigDecimal getTotalOfProducts(List<Long> productsIds) {
         return productsIds.stream()
                 .map(productService::findById)
-                .map(product -> product.getPrice().getAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(product -> {
+                    try {
+                        return UsdConverter.convertAmountFromTo(product.getPrice().getCurrencyCode().toString(), DESTINATION_CURRENCY_CODE,
+                                product.getPrice().getAmount());
+                    } catch (JsonProcessingException e) {
+                        throw new JsonParserException(e.getMessage(), e);
+                    }
+                }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private BigDecimal getTotalOfShipment(Long shipmentId) {
-        return shippingInformationService.findById(shipmentId).getShippingCost().getAmount();
+        ShippingInformation shippingInformation = shippingInformationService.findById(shipmentId);
+        String from = shippingInformation.getShippingCost().getCurrencyCode().toString();
+        BigDecimal amount  = shippingInformation.getShippingCost().getAmount();
+
+        try {
+            return UsdConverter.convertAmountFromTo(from, DESTINATION_CURRENCY_CODE, amount);
+        } catch (JsonProcessingException e) {
+            throw new JsonParserException(e.getMessage(), e);
+        }
     }
 
     private void reduceStock(List<Long> productsIds, Map<Long, Long> quantityOfEachProductForId) {

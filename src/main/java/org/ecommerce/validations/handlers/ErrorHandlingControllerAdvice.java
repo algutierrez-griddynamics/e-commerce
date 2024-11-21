@@ -3,6 +3,7 @@ package org.ecommerce.validations.handlers;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ecommerce.exceptions.*;
 import org.ecommerce.validations.ValidationErrorResponse;
 import org.ecommerce.validations.Violation;
@@ -19,13 +20,13 @@ import java.util.Objects;
 class ErrorHandlingControllerAdvice {
 
     final String CLIENT_WRONG_REQUEST = "The client request is invalid";
+    static ValidationErrorResponse error = new ValidationErrorResponse();
 
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
-        ValidationErrorResponse error = new ValidationErrorResponse();
         for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
             error.getViolations()
                     .add(new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
@@ -37,7 +38,6 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ValidationErrorResponse error = new ValidationErrorResponse();
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             int dot = fieldError.getField().indexOf('.') + 1;
             int defaultMessageLength = Objects.requireNonNull(fieldError.getField()).length();
@@ -55,8 +55,6 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-
-        ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations()
                 .add(new Violation(CLIENT_WRONG_REQUEST, e.getCause() != null ?
                         e.getCause().getMessage() : "" ));
@@ -67,7 +65,6 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse onConstraintViolation(MappingException mpe) {
-        ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations().add(
                 new Violation(mpe.getMapperClass(), mpe.getMessage())
         );
@@ -79,7 +76,6 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorResponse handlePaymentDetailsException(Exception e) {
-        ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations().add(new Violation(CLIENT_WRONG_REQUEST, e.getMessage()));
         return error;
     }
@@ -88,8 +84,15 @@ class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ValidationErrorResponse handleNotFoundExceptions(EntityNotFound entityNotFound) {
-        ValidationErrorResponse error = new ValidationErrorResponse();
         error.getViolations().add(new Violation(entityNotFound.getEntity(), entityNotFound.getMessage()));
+        return error;
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public ValidationErrorResponse handleJsonProcessingException(JsonProcessingException jsonProcessingException) {
+        error.getViolations().add(new Violation(JsonProcessingException.class.getName(), jsonProcessingException.getMessage()));
         return error;
     }
 
