@@ -2,6 +2,7 @@ package org.ecommerce.controllers.unit;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
@@ -48,6 +49,8 @@ public class OrderJpaControllerWebLayerTest {
 
     private Order order;
 
+    private static ObjectMapper objectMapper;
+
     @MockBean
     private OrderJpaServiceImpl orderJpaService;
 
@@ -82,6 +85,12 @@ public class OrderJpaControllerWebLayerTest {
     @InjectMocks
     private OrderRequestDTOMapper orderRequestDTOMapper;
 
+    @BeforeAll
+    public static void setUpClass() {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
     @BeforeEach
     void setup() {
         order = OrderUtils.buildOrder();
@@ -96,7 +105,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(orderRequestDTO));
+                .content(objectMapper.writeValueAsString(orderRequestDTO));
 
         OrderDTO orderDTO = orderDTOMapper.apply(order);
 
@@ -110,7 +119,7 @@ public class OrderJpaControllerWebLayerTest {
 
 
         CreateOrderResponse createdOrderResponse
-                = new ObjectMapper().readValue(responseBody, CreateOrderResponse.class);
+                = objectMapper.readValue(responseBody, CreateOrderResponse.class);
 
         OrderDTO createdOrder = createdOrderResponse.getOrderDTO();
 
@@ -135,7 +144,7 @@ public class OrderJpaControllerWebLayerTest {
     @Test
     void testOrderCreatedSuccessfully_assertResponse() throws Exception {
 
-        String orderJson = new ObjectMapper().writeValueAsString(order);
+        String orderJson = objectMapper.writeValueAsString(order);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -147,7 +156,7 @@ public class OrderJpaControllerWebLayerTest {
     @DisplayName("Call Post /orders endpoint and assert invalid code status (400) when sending null in the for the Data in the request")
     @Test
     void testOrderCreatedUnsuccessfullyNullRequest_assertResponse() throws Exception {
-        String orderJson = new ObjectMapper().writeValueAsString(null);
+        String orderJson = objectMapper.writeValueAsString(null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -166,7 +175,7 @@ public class OrderJpaControllerWebLayerTest {
             orderRequestDTO = orderRequestDTOMapper.apply(order);
         } catch (Exception e) {}
 
-        String orderJson = new ObjectMapper().writeValueAsString(orderRequestDTO);
+        String orderJson = objectMapper.writeValueAsString(orderRequestDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -216,7 +225,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", order.getId())
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updateRequest));
+                .content(objectMapper.writeValueAsString(updateRequest));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -232,7 +241,7 @@ public class OrderJpaControllerWebLayerTest {
             orderRequestDTO = orderRequestDTOMapper.apply(order);
         } catch (Exception e) {}
 
-        String orderJson = new ObjectMapper().writeValueAsString(orderRequestDTO);
+        String orderJson = objectMapper.writeValueAsString(orderRequestDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/orders")
                         .contentType("application/json")
@@ -255,7 +264,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", orderId)
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updateRequest));
+                .content(objectMapper.writeValueAsString(updateRequest));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

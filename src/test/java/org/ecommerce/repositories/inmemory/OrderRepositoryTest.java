@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,7 @@ class OrderRepositoryTest {
     void setUp() {
         BigDecimal amount = new BigDecimal("100.00");
 
-        lenient().when(order.getOrderDate()).thenReturn(new Date());
+        lenient().when(order.getOrderDate()).thenReturn(LocalDateTime.now());
 
         lenient().when(order.getCustomer()).thenReturn(customer);
         lenient().when(order.getCustomer().getId()).thenReturn(1L);

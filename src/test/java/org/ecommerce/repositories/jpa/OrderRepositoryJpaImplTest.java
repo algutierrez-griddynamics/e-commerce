@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,7 @@ class OrderJpaRepositoryTest {
     void setUp() {
         BigDecimal amount = new BigDecimal("100.00");
 
-        lenient().when(order.getOrderDate()).thenReturn(new Date());
+        lenient().when(order.getOrderDate()).thenReturn(LocalDateTime.now());
 
         lenient().when(order.getTotalUsd()).thenReturn(amount);
 
