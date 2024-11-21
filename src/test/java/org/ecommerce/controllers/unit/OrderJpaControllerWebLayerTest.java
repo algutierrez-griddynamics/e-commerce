@@ -16,6 +16,7 @@ import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.impl.OrderJpaServiceImpl;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -61,6 +62,9 @@ public class OrderJpaControllerWebLayerTest {
 
     @Mock
     private Page<Order> page;
+
+    @Mock
+    private SpecificationParameters specificationParameters;
 
     // OrderDTOMapper dependencies
     @Mock
@@ -291,7 +295,8 @@ public class OrderJpaControllerWebLayerTest {
 
         GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO), 0, 10, 2, 1);
 
-        when(orderJpaService.findAll(any(Pageable.class))).thenReturn(getAllOrdersResponse);
+        when(orderJpaService.findAll(any(SpecificationParameters.class),
+                any(Pageable.class))).thenReturn(getAllOrdersResponse);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/orders")
                 .accept(MediaType.APPLICATION_JSON);

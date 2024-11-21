@@ -19,6 +19,7 @@ import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -103,6 +105,9 @@ class OrderJpaServiceImplTest {
 
     @Mock
     private Page<Order> page;
+
+    @Mock
+    private SpecificationParameters specificationParameters;
 
     @DisplayName("Assess create service method implementation")
     @Test
@@ -202,10 +207,10 @@ class OrderJpaServiceImplTest {
     @Test
     void findAll() {
         when(page.getContent()).thenReturn(List.of(order));
-        when(orderJpaRepository.findAll(any(Pageable.class))).thenReturn(page);
+        when(orderJpaRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
         when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
 
-        GetAllOrdersResponse orders = orderJpaService.findAll(pageable);
+        GetAllOrdersResponse orders = orderJpaService.findAll(specificationParameters, pageable);
         List<OrderDTO> orderDTOs = orders.getOrders();
 
         assertAll(
@@ -224,10 +229,10 @@ class OrderJpaServiceImplTest {
         when(page.getContent()).thenReturn(mockedList);
 
         when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
-        when(orderJpaRepository.findAll(any(Pageable.class)))
+        when(orderJpaRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(page);
 
-        GetAllOrdersResponse ordersPage = orderJpaService.findAll(pageable);
+        GetAllOrdersResponse ordersPage = orderJpaService.findAll(specificationParameters, pageable);
         System.out.println(ordersPage.getPageSize());
         List<OrderDTO> orderDTOs = ordersPage.getOrders();
         assertAll(
@@ -256,7 +261,7 @@ class OrderJpaServiceImplTest {
 
         when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
 
-        when(orderJpaRepository.findAll(any(Pageable.class))).thenReturn(page);
+        when(orderJpaRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
         when(page.getContent()).thenReturn(mockedList);
         when(page.getTotalElements()).thenReturn((long) mockedList.size());
@@ -264,7 +269,7 @@ class OrderJpaServiceImplTest {
         when(page.getSize()).thenReturn(pageSize);
         when(page.getTotalPages()).thenReturn(totalPages);
 
-        GetAllOrdersResponse ordersPage = orderJpaService.findAll(pageable);
+        GetAllOrdersResponse ordersPage = orderJpaService.findAll(specificationParameters, pageable);
         List<OrderDTO> orderDTOs = ordersPage.getOrders();
 
 
