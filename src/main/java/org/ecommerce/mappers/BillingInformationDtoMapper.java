@@ -18,7 +18,7 @@ public class BillingInformationDtoMapper implements Function<BillingInformation,
                         bi.getBillingDate(),
                         bi.getAmount()
                 )).orElseThrow(
-                        () -> new MappingException(Error.MAPPING_EXCEPTION.getDescription())
+                        () -> new MappingException(getClass().getSimpleName() , Error.MAPPING_EXCEPTION.getDescription())
                 );
     }
 }

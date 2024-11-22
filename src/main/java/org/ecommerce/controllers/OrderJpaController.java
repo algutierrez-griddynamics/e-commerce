@@ -1,12 +1,13 @@
 package org.ecommerce.controllers;
 
+import jakarta.validation.Valid;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.models.services.responses.CreateOrderResponse;
 import org.ecommerce.models.requests.*;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
-import org.ecommerce.services.jpa.impl.OrderJpaService;
+import org.ecommerce.services.jpa.OrderJpaService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,14 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/orders")
-    public ResponseEntity<CreateOrderResponse> create(@RequestBody CreateRequest<OrderRequestDTO> request) {
+    public ResponseEntity<CreateOrderResponse> create(@RequestBody @Valid CreateRequest<OrderRequestDTO> request) {
         CreateOrderResponse response = orderService.create(request);
 
         return new ResponseEntity<CreateOrderResponse>(response, HttpStatus.CREATED);
     }
 
     @Override
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/orders/{orderId}")
     public void delete(@PathVariable Long orderId) {
         orderService.delete(orderId);
@@ -42,7 +43,7 @@ public class OrderJpaController implements ControllerJpaOperations <OrderRequest
     @Override
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(path = "/orders")
-    public ResponseEntity<UpdateOrderResponse> update(@RequestBody UpdateRequest<OrderRequestDTO, Long> request) {
+    public ResponseEntity<UpdateOrderResponse> update(@RequestBody @Valid UpdateRequest<OrderRequestDTO, Long> request) {
         UpdateOrderResponse response = orderService.update(request);
 
         return new ResponseEntity<UpdateOrderResponse>(response, HttpStatus.OK);

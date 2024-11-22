@@ -24,7 +24,7 @@ public class PaymentDetailsDTOMapper implements Function<PaymentDetails, Payment
                                     pd.getCardHolderName());
                         }
                 ).orElseThrow(
-                        () -> new MappingException(Error.MAPPING_EXCEPTION.getDescription())
+                        () -> new MappingException(getClass().getSimpleName(), Error.MAPPING_EXCEPTION.getDescription())
                 );
     }
 }

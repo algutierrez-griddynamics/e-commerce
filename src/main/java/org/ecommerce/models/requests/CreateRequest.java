@@ -1,5 +1,6 @@
 package org.ecommerce.models.requests;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CreateRequest <T> {
+    @Valid
     private T data;
 }

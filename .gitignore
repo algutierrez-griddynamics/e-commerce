@@ -39,3 +39,5 @@ build/
 
 ### Environment ###
 .env
+testdb.trace.db
+testdb.mv.db

@@ -1,5 +1,6 @@
 package org.ecommerce.controllers;
 
+import jakarta.validation.Valid;
 import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.models.requests.UpdateRequest;
 import org.ecommerce.models.services.responses.GetAllOrdersResponse;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ControllerJpaOperations <REQUEST, ID> {
 
-        ResponseEntity<?> create(@RequestBody CreateRequest<REQUEST> request);
+        ResponseEntity<?> create(@Valid @RequestBody CreateRequest<REQUEST> request);
 
         void delete(@PathVariable ID orderId);
 

@@ -25,14 +25,21 @@ Create a .env file in the root directory with the following content:
    DB_NAME=<Database name>
    DB_PORT=5432
     ```
-3. **Start the Database Container**  
+3. **(Optional) Cleanup previous container setup**  
+   Run Docker Compose to delete previous container:
+
+    ```bash
+    docker-compose down -v
+    ```   
+
+4. **Start the Database Container**  
 Run Docker Compose to start the database container:
 
     ```bash
     docker-compose up -d
     ```
 
-4. **Connect to the Database**
+5. **Connect to the Database**
 <img width="795" alt="image" src="https://github.com/user-attachments/assets/f6939504-65fd-43b1-a3a7-2462834e6d07">
 
 
