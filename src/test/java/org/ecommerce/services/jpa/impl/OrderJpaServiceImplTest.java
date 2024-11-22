@@ -1,5 +1,6 @@
 package org.ecommerce.services.jpa.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
@@ -20,6 +21,7 @@ import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
 import org.ecommerce.util.database.specifications.SpecificationParameters;
+import org.ecommerce.util.money.operations.UsdConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -109,6 +111,10 @@ class OrderJpaServiceImplTest {
     @Mock
     private SpecificationParameters specificationParameters;
 
+    Currency gbpCurrency = Currency.getInstance("GBP");
+    Currency mxnCurrency = Currency.getInstance("MXN");
+    final String DESTINATION_CURRENCY_CODE = "USD";
+
     @DisplayName("Assess create service method implementation")
     @Test
     void create() {
@@ -145,6 +151,9 @@ class OrderJpaServiceImplTest {
 
         when(stockService.getStockOfProduct(any(Product.class))).thenReturn(1);
         doNothing().when(stockService).setStockOfProduct(any(Product.class), anyInt());
+
+        when(price1.getCurrencyCode()).thenReturn(gbpCurrency);
+        when(price2.getCurrencyCode()).thenReturn(mxnCurrency);
 
 
         AtomicReference<CreateOrderResponse> createOrderResponse = new AtomicReference<>();
@@ -335,7 +344,12 @@ class OrderJpaServiceImplTest {
 
     @DisplayName("Testing private method getTotalOfProducts using reflection")
     @Test
-    void getTotalOfProducts() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    void getTotalOfProducts() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, JsonProcessingException {
+        BigDecimal gbpTotal = UsdConverter.convertAmountFromTo(gbpCurrency.getCurrencyCode()
+                , DESTINATION_CURRENCY_CODE, BigDecimal.valueOf(500));
+        BigDecimal expectedTotal = gbpTotal.add(UsdConverter.convertAmountFromTo(mxnCurrency.getCurrencyCode()
+                , DESTINATION_CURRENCY_CODE, BigDecimal.valueOf(400)));
+
         when(productRepository.findById(2001L)).thenReturn(product1);
         when(productRepository.findById(2002L)).thenReturn(product2);
 
@@ -345,6 +359,9 @@ class OrderJpaServiceImplTest {
         when(product1.getPrice()).thenReturn(price1);
         when(product2.getPrice()).thenReturn(price2);
 
+        when(price1.getCurrencyCode()).thenReturn(gbpCurrency);
+        when(price2.getCurrencyCode()).thenReturn(mxnCurrency);
+
         List<Long> productIds = Arrays.asList(2001L, 2002L, 2001L, 2001L, 2001L, 2001L, 2002L);
 
         Method method = OrderJpaServiceImpl.class.getDeclaredMethod("getTotalOfProducts", List.class);
@@ -353,19 +370,22 @@ class OrderJpaServiceImplTest {
         BigDecimal result = (BigDecimal) method.invoke(orderJpaService, productIds);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal(900), result);
+        assertTrue(Math.abs(result.subtract(expectedTotal).doubleValue()) < 1);
     }
 
 
     @DisplayName("Test private method getTotalOfShipment using reflection")
     @Test
-    void getTotalOfShipmentTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void getTotalOfShipmentTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, JsonProcessingException {
         Long shipmentId = 1L;
+        BigDecimal expectedValue = UsdConverter.convertAmountFromTo(gbpCurrency.getCurrencyCode(), DESTINATION_CURRENCY_CODE, BigDecimal.valueOf(100));
 
         when(shippingInformationService.findById(shipmentId))
                 .thenReturn(shippingInformation);
         when(shippingInformation.getShippingCost()).thenReturn(price1);
         when(price1.getAmount()).thenReturn(BigDecimal.valueOf(100));
+
+        when(price1.getCurrencyCode()).thenReturn(gbpCurrency);
 
         Method method = OrderJpaServiceImpl.class.getDeclaredMethod("getTotalOfShipment", Long.class);
         method.setAccessible(true);
@@ -373,7 +393,7 @@ class OrderJpaServiceImplTest {
         BigDecimal result = (BigDecimal) method.invoke(orderJpaService, shipmentId);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal(100), result);
+        assertEquals(expectedValue, result);
     }
 
 }
