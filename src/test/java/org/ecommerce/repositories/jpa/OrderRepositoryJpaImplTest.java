@@ -23,7 +23,7 @@ import static org.mockito.Mockito.lenient;
 
 @ActiveProfiles("local")
 @SpringBootTest
-class OrderJpaRepositoryTest {
+class OrderRepositoryJpaImplTest {
 
     @Autowired
     private OrderJpaRepository orderJpaRepository;
