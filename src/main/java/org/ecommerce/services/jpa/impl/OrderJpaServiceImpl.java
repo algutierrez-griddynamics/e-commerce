@@ -1,5 +1,6 @@
 package org.ecommerce.services.jpa.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -20,8 +21,13 @@ import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
 import org.ecommerce.util.money.operations.UsdConverter;
+import org.ecommerce.util.database.specifications.OrderSpecifications;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
@@ -46,11 +52,12 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
     // Validators
     private final OrderValidatorService orderValidatorService;
+    private final Order order;
 
     public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
                                ProductService productService, ShippingInformationI shippingInformationI,
-                               StockServiceI stockService, OrderValidatorService orderValidatorService) {
+                               StockServiceI stockService, OrderValidatorService orderValidatorService, Order order) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
@@ -61,6 +68,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         this.stockService = stockService;
 
         this.orderValidatorService = orderValidatorService;
+        this.order = order;
     }
 
     @Override
@@ -115,11 +123,20 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     }
 
     @Override
-    public GetAllOrdersResponse findAll() {
+    public GetAllOrdersResponse findAll(@NotNull SpecificationParameters specificationParameters, Pageable pageable) {
+        Page<Order> ordersPage = orderRepository
+                .findAll(
+                        OrderSpecifications.allSpecifications(specificationParameters)
+                        , pageable
+                );
+
         return new GetAllOrdersResponse(
-                orderRepository.findAll().stream()
+                ordersPage.getContent().stream()
                         .map(orderDTOMapper).collect(Collectors.toList())
-        );
+                , ordersPage.getNumber()
+                , ordersPage.getSize()
+                , ordersPage.getTotalElements()
+                , ordersPage.getTotalPages());
     }
 
     @Override

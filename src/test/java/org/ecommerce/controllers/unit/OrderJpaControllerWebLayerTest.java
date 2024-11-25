@@ -2,7 +2,7 @@ package org.ecommerce.controllers.unit;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.weaver.ast.Or;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.ecommerce.controllers.OrderJpaController;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
@@ -17,6 +17,7 @@ import org.ecommerce.models.services.responses.GetAllOrdersResponse;
 import org.ecommerce.models.services.responses.GetOrderResponse;
 import org.ecommerce.models.services.responses.UpdateOrderResponse;
 import org.ecommerce.services.jpa.impl.OrderJpaServiceImpl;
+import org.ecommerce.util.database.specifications.SpecificationParameters;
 import org.ecommerce.util.tests.OrderUtils;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -24,6 +25,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -46,6 +49,8 @@ public class OrderJpaControllerWebLayerTest {
 
     private Order order;
 
+    private static ObjectMapper objectMapper;
+
     @MockBean
     private OrderJpaServiceImpl orderJpaService;
 
@@ -54,6 +59,15 @@ public class OrderJpaControllerWebLayerTest {
 
     @Mock
     private CustomerDTOMapper customerDTOMapper;
+
+    @Mock
+    private Pageable pageable;
+
+    @Mock
+    private Page<Order> page;
+
+    @Mock
+    private SpecificationParameters specificationParameters;
 
     // OrderDTOMapper dependencies
     @Mock
@@ -71,6 +85,12 @@ public class OrderJpaControllerWebLayerTest {
     @InjectMocks
     private OrderRequestDTOMapper orderRequestDTOMapper;
 
+    @BeforeAll
+    public static void setUpClass() {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
     @BeforeEach
     void setup() {
         order = OrderUtils.buildOrder();
@@ -85,7 +105,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(orderRequestDTO));
+                .content(objectMapper.writeValueAsString(orderRequestDTO));
 
         OrderDTO orderDTO = orderDTOMapper.apply(order);
 
@@ -99,7 +119,7 @@ public class OrderJpaControllerWebLayerTest {
 
 
         CreateOrderResponse createdOrderResponse
-                = new ObjectMapper().readValue(responseBody, CreateOrderResponse.class);
+                = objectMapper.readValue(responseBody, CreateOrderResponse.class);
 
         OrderDTO createdOrder = createdOrderResponse.getOrderDTO();
 
@@ -124,7 +144,7 @@ public class OrderJpaControllerWebLayerTest {
     @Test
     void testOrderCreatedSuccessfully_assertResponse() throws Exception {
 
-        String orderJson = new ObjectMapper().writeValueAsString(order);
+        String orderJson = objectMapper.writeValueAsString(order);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -136,7 +156,7 @@ public class OrderJpaControllerWebLayerTest {
     @DisplayName("Call Post /orders endpoint and assert invalid code status (400) when sending null in the for the Data in the request")
     @Test
     void testOrderCreatedUnsuccessfullyNullRequest_assertResponse() throws Exception {
-        String orderJson = new ObjectMapper().writeValueAsString(null);
+        String orderJson = objectMapper.writeValueAsString(null);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -155,7 +175,7 @@ public class OrderJpaControllerWebLayerTest {
             orderRequestDTO = orderRequestDTOMapper.apply(order);
         } catch (Exception e) {}
 
-        String orderJson = new ObjectMapper().writeValueAsString(orderRequestDTO);
+        String orderJson = objectMapper.writeValueAsString(orderRequestDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
                         .contentType("application/json")
@@ -205,7 +225,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", order.getId())
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updateRequest));
+                .content(objectMapper.writeValueAsString(updateRequest));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -221,7 +241,7 @@ public class OrderJpaControllerWebLayerTest {
             orderRequestDTO = orderRequestDTOMapper.apply(order);
         } catch (Exception e) {}
 
-        String orderJson = new ObjectMapper().writeValueAsString(orderRequestDTO);
+        String orderJson = objectMapper.writeValueAsString(orderRequestDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/orders")
                         .contentType("application/json")
@@ -244,7 +264,7 @@ public class OrderJpaControllerWebLayerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/orders", orderId)
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updateRequest));
+                .content(objectMapper.writeValueAsString(updateRequest));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -282,9 +302,10 @@ public class OrderJpaControllerWebLayerTest {
     void testGetAllOrdersSuccessfully() throws Exception {
         OrderDTO expectedOrderDTO = orderDTOMapper.apply(order);
 
-        GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO));
+        GetAllOrdersResponse getAllOrdersResponse = new GetAllOrdersResponse(List.of(expectedOrderDTO), 0, 10, 2, 1);
 
-        when(orderJpaService.findAll()).thenReturn(getAllOrdersResponse);
+        when(orderJpaService.findAll(any(SpecificationParameters.class),
+                any(Pageable.class))).thenReturn(getAllOrdersResponse);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/orders")
                 .accept(MediaType.APPLICATION_JSON);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -29,7 +29,7 @@ public class Order extends Identity {
 
     @Column(name = "date", nullable = true)
     @NotNull
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     @Column(name = "total_usd", nullable = true)
     @NotNull
