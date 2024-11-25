@@ -242,7 +242,6 @@ class OrderJpaServiceImplTest {
                 .thenReturn(page);
 
         GetAllOrdersResponse ordersPage = orderJpaService.findAll(specificationParameters, pageable);
-        System.out.println(ordersPage.getPageSize());
         List<OrderDTO> orderDTOs = ordersPage.getOrders();
         assertAll(
                 () -> {
