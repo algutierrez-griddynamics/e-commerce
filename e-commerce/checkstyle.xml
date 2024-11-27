@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <module name="FileTabCharacter"/>
+
+    <!-- Coding Standards -->
+    <module name="TreeWalker">
+        <!-- Naming Conventions -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+<!--        &lt;!&ndash; Javadoc Comments &ndash;&gt;-->
+<!--        <module name="JavadocMethod">-->
+<!--            &lt;!&ndash; Ensure Javadoc is present for methods &ndash;&gt;-->
+<!--            <property name="tokens" value="METHOD_DEF"/>-->
+<!--        </module>-->
+
+<!--        &lt;!&ndash; Code Quality &ndash;&gt;-->
+<!--        <module name="UnusedImports"/>-->
+
+<!--        &lt;!&ndash; Import Management &ndash;&gt;-->
+<!--        <module name="ImportOrder"/>-->
+<!--        <module name="AvoidStarImport"/>-->
+
+<!--        &lt;!&ndash; Miscellaneous &ndash;&gt;-->
+<!--        <module name="ModifierOrder"/>-->
+<!--        <module name="MagicNumber"/>-->
+    </module>
+</module>
