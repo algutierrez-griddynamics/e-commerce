@@ -2,19 +2,18 @@ package org.ecommerce.validations.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.time.DateUtils;
 import org.ecommerce.validations.constraints.CurrentDay;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public class CurrentDayValidator implements ConstraintValidator<CurrentDay, Date> {
+public class CurrentDayValidator implements ConstraintValidator<CurrentDay, LocalDateTime> {
     @Override
-    public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(LocalDateTime date, ConstraintValidatorContext constraintValidatorContext) {
         if (date == null) {
             return false;
         }
-        Date now = Calendar.getInstance().getTime();
-        return DateUtils.isSameDay(date, now);
+        LocalDateTime now = LocalDateTime.now();
+
+        return date.toLocalDate().equals(now.toLocalDate());
     }
 }
