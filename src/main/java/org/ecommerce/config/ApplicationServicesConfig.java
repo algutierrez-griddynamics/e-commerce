@@ -5,6 +5,7 @@ import org.ecommerce.models.Manager;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.User;
 import org.ecommerce.repositories.inmemory.*;
+import org.ecommerce.repositories.jpa.ProductJpaRepository;
 import org.ecommerce.services.*;
 import org.ecommerce.services.impl.*;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -38,8 +39,8 @@ public class ApplicationServicesConfig {
     }
 
     @Bean
-    ProductService productService(ProductRepository productRepository) {
-        return new ProductServiceImpl();
+    ProductService productService(ProductJpaRepository productJpaRepository) {
+        return new ProductServiceImpl(productJpaRepository);
     }
 
     @Bean
