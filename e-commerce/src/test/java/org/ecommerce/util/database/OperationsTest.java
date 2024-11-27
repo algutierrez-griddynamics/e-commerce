@@ -27,8 +27,8 @@ class OperationsTest {
     @DisplayName("This BeforeAll method creates a web server in the 8082 port so we can connect to the h2 database")
     @BeforeAll
     public static void initTest() throws SQLException {
-        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
-                .start();
+//        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082")
+//                .start();
     }
 
     @Autowired
