@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  eureka-server:
+    build:
+      context: .
+    ports:
+      - "8761:8761"
+    networks:
+      - service-discovery-network
+#    environment:
+
+networks:
+  service-discovery-network:
+    driver: bridge
