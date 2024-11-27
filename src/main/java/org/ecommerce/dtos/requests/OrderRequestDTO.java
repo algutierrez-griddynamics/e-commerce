@@ -26,10 +26,6 @@ public record OrderRequestDTO (
         @NotNull
         LocalDateTime date,
 
-        @PositiveOrZero
-        @NotNull
-        BigDecimal totalUsd,
-
         @NotNull
         List<Long> productsIds,
 

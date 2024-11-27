@@ -25,7 +25,6 @@ public class OrderRequestDTOMapper implements Function<Order, OrderRequestDTO> {
                 .map((o) -> new OrderRequestDTO(
                         o.getStatus(),
                         o.getOrderDate(),
-                        o.getTotalUsd(),
                         o.getProducts().stream().map(Identity::getId).collect(Collectors.toList()),
                         o.getCustomer().getId(),
                         o.getBillingInformation().getId(),

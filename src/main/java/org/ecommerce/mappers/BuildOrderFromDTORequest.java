@@ -14,7 +14,6 @@ public class BuildOrderFromDTORequest implements Function<OrderRequestDTO, Order
         return Order.builder()
             .status(order.status())
             .orderDate(order.date())
-            .totalUsd(order.totalUsd())
             .customer(Customer.builder()
                     .id(order.fk_customer_id()).build())
             .billingInformation(BillingInformation.builder()
