@@ -1,5 +1,7 @@
 package org.ecommerce.services.jpa.impl;
 
+import org.ecommerce.enums.MeasurementUnits;
+import org.ecommerce.models.Location;
 import org.ecommerce.models.Product;
 import org.ecommerce.models.StockEntry;
 import org.ecommerce.repositories.jpa.StockJpaRepository;
@@ -50,9 +52,12 @@ public class StockJpaServiceImpl implements StockServiceI {
 
     @Override
     public void setStockOfProduct(Product product, int stock) {
-        StockEntry stockEntry = new StockEntry();
-        stockEntry.setProduct(product);
-        stockEntry.setStock(stock);
+        StockEntry stockEntry = StockEntry.builder()
+                        .product(product)
+                        .stock(stock)
+                        .location(Location.builder().id(1L).build())
+                        .measurement_unit(MeasurementUnits.PIECES.name())
+                        .build();
         stockJpaRepository.save(stockEntry);
     }
 }
