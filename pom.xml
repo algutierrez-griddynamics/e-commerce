@@ -16,6 +16,7 @@
         <maven-checkstyle.version>3.4.0</maven-checkstyle.version>
         <junit-platform.version>5.7.0</junit-platform.version>
         <mockito-version>5.11.0</mockito-version>
+        <eureka_version>4.1.3</eureka_version>
     </properties>
 
     <parent>
@@ -42,7 +43,13 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>4.1.3</version>
+            <version>${eureka_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${eureka_version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
