@@ -8,6 +8,7 @@ import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.enums.Error;
 import org.ecommerce.exceptions.*;
+import org.ecommerce.feign.ShippingInformationInterface;
 import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.*;
@@ -45,10 +46,12 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     private final BuildOrderFromDTORequest buildOrderFromDTORequest;
     private final EntityManager entityManager;
 
-    // Micro-services
+    // Embedded services
     private final ProductService productService;
-    private final ShippingInformationI shippingInformationService;
     private final StockServiceI stockService;
+
+    // Micro-services
+    private final ShippingInformationInterface shippingInformationInterface;
 
     // Validators
     private final OrderValidatorService orderValidatorService;
@@ -56,16 +59,18 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
     public OrderJpaServiceImpl(OrderJpaRepository orderRepository, OrderDTOMapper orderDTOMapper,
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
-                               ProductService productService, ShippingInformationI shippingInformationI,
-                               StockServiceI stockService, OrderValidatorService orderValidatorService, Order order) {
+                               ProductService productService, StockServiceI stockService,
+                               ShippingInformationInterface shippingInformationInterface,
+                               OrderValidatorService orderValidatorService, Order order) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
         this.entityManager = entityManager;
 
         this.productService = productService;
-        this.shippingInformationService = shippingInformationI;
         this.stockService = stockService;
+
+        this.shippingInformationInterface = shippingInformationInterface;
 
         this.orderValidatorService = orderValidatorService;
         this.order = order;
@@ -161,7 +166,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     }
 
     private BigDecimal getTotalOfShipment(Long shipmentId) {
-        ShippingInformation shippingInformation = shippingInformationService.findById(shipmentId);
+        ShippingInformation shippingInformation = shippingInformationInterface.getShippingInformation(shipmentId);
         String from = shippingInformation.getShippingCost().getCurrencyCode().toString();
         BigDecimal amount  = shippingInformation.getShippingCost().getAmount();
 

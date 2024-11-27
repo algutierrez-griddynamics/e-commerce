@@ -6,11 +6,11 @@ import org.ecommerce.exceptions.BillingInformationException;
 import org.ecommerce.exceptions.OutOfStockException;
 import org.ecommerce.exceptions.PaymentDetailsException;
 import org.ecommerce.exceptions.ShippingInformationException;
+import org.ecommerce.feign.BillingInformationInterface;
+import org.ecommerce.feign.PaymentInformationInterface;
+import org.ecommerce.feign.ShippingInformationInterface;
 import org.ecommerce.services.ProductService;
-import org.ecommerce.services.jpa.PaymentDetailsI;
-import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
-import org.ecommerce.services.jpa.impl.BillingInformationI;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,20 +22,20 @@ public class OrderValidatorService {
 
     private final ProductService productService;
 
-    private final BillingInformationI billingInformationService;
-    private final PaymentDetailsI paymentDetailsService;
+    private final BillingInformationInterface billingInformationService;
+    private final PaymentInformationInterface paymentInformationService;
+    private final ShippingInformationInterface shippingInformationService;
+
     private final StockServiceI stockService;
-    private final ShippingInformationI shippingInformationService;
 
-
-    public OrderValidatorService(ProductService productService, BillingInformationI billingInformationService,
-                                  PaymentDetailsI paymentDetailsService,
+    public OrderValidatorService(ProductService productService, BillingInformationInterface billingInformationService,
+                                  PaymentInformationInterface paymentInformationService,
                                   StockServiceI stockService,
-                                  ShippingInformationI shippingInformationService) {
+                                  ShippingInformationInterface shippingInformationService) {
         this.productService = productService;
 
         this.billingInformationService = billingInformationService;
-        this.paymentDetailsService = paymentDetailsService;
+        this.paymentInformationService = paymentInformationService;
         this.stockService = stockService;
         this.shippingInformationService = shippingInformationService;
     }
@@ -56,20 +56,20 @@ public class OrderValidatorService {
     }
 
     private boolean validatePaymentDetails(Long paymentDetailsId) {
-        return Optional.ofNullable(paymentDetailsService.findById(paymentDetailsId))
-                .map(paymentDetailsService::validatePaymentDetails)
+        return Optional.ofNullable(paymentInformationService.getPaymentDetails(paymentDetailsId))
+                .map(paymentDetails -> paymentInformationService.validatePaymentDetails(paymentDetails.getId()))
                 .orElse(false);
     }
 
     private boolean validateBillingInformation(Long billingInformationId) {
-        return Optional.ofNullable(billingInformationService.findById(billingInformationId))
-                .map(billingInformation -> billingInformationService.validateBillingInformation())
+        return Optional.ofNullable(billingInformationService.getBillingInformation(billingInformationId))
+                .map(billingInformation -> billingInformationService.validateBillingInformation(billingInformation.getId()))
                 .orElse(false);
     }
 
     private boolean validateShippingInformation(Long shippingInformationId) {
-        return Optional.ofNullable(shippingInformationService.findById(shippingInformationId))
-                .map(shippingInformationService::validateShippingInformation)
+        return Optional.ofNullable(shippingInformationService.getShippingInformation(shippingInformationId))
+                .map(shippingInformation -> shippingInformationService.validateShippingInformation(shippingInformation.getId()))
                 .orElse(false);
     }
 
