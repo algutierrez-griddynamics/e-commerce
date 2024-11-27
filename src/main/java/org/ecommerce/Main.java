@@ -15,12 +15,14 @@ import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 
 import java.sql.SQLException;
 
 @SpringBootApplication//(exclude = {ApplicationControllersConfig.class, ApplicationServicesConfig.class, ApplicationRepositoriesConfig.class})
 @EnableConfigurationProperties(DataSourceProperties.class)
+@EnableFeignClients
 public class Main {
     public static void main (String[] args) throws SQLException, InterruptedException {
 //        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
