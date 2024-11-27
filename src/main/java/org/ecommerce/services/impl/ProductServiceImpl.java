@@ -1,11 +1,21 @@
 package org.ecommerce.services.impl;
 
+import org.ecommerce.enums.Error;
+import org.ecommerce.exceptions.EntityNotFound;
 import org.ecommerce.models.Product;
+import org.ecommerce.repositories.inmemory.ProductRepository;
+import org.ecommerce.repositories.jpa.ProductJpaRepository;
 import org.ecommerce.services.ProductService;
 
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
+
+    private final ProductJpaRepository productJpaRepository;
+
+    public ProductServiceImpl(ProductJpaRepository productJpaRepository) {
+        this.productJpaRepository = productJpaRepository;
+    }
 
     @Override
     public Product create(Product entity) {
@@ -29,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return productJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
 }
