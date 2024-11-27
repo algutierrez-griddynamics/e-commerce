@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.exceptions.EntityNotFound;
+import org.ecommerce.feign.ShippingInformationInterface;
 import org.ecommerce.mappers.BuildOrderFromDTORequest;
 import org.ecommerce.mappers.OrderDTOMapper;
 import org.ecommerce.models.Order;
@@ -52,7 +53,7 @@ class OrderJpaServiceImplTest {
     private ProductService productRepository;
 
     @Mock
-    private ShippingJpaInformationImpl shippingInformationService;
+    private ShippingInformationInterface shippingInformationService;
 
     @InjectMocks
     private OrderJpaServiceImpl orderJpaService;
@@ -142,7 +143,7 @@ class OrderJpaServiceImplTest {
         when(buildOrderFromDTORequest.apply(any(OrderRequestDTO.class))).thenReturn(order);
         when(orderDTOMapper.apply(any(Order.class))).thenReturn(orderDTO);
 
-        when(shippingInformationService.findById(anyLong())).thenReturn(shippingInformation);
+        when(shippingInformationService.getShippingInformation(anyLong())).thenReturn(shippingInformation);
 
         when(orderJpaRepository.save(any(Order.class))).thenReturn(order);
         when(orderJpaRepository.findById(orderId)).thenReturn(Optional.of(order));
@@ -379,7 +380,7 @@ class OrderJpaServiceImplTest {
         Long shipmentId = 1L;
         BigDecimal expectedValue = UsdConverter.convertAmountFromTo(gbpCurrency.getCurrencyCode(), DESTINATION_CURRENCY_CODE, BigDecimal.valueOf(100));
 
-        when(shippingInformationService.findById(shipmentId))
+        when(shippingInformationService.getShippingInformation(shipmentId))
                 .thenReturn(shippingInformation);
         when(shippingInformation.getShippingCost()).thenReturn(price1);
         when(price1.getAmount()).thenReturn(BigDecimal.valueOf(100));
