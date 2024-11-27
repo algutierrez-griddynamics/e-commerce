@@ -2,12 +2,14 @@ package org.ecommerce.util.money.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ecommerce.util.JsonParser;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
+@Lazy
 public class UsdConverter {
 
     private static ApiCurrencyConverterService apiCurrencyConverterService;
