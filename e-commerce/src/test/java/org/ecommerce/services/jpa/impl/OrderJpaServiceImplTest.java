@@ -2,6 +2,7 @@ package org.ecommerce.services.jpa.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
+import org.ecommerce.config.ApplicationServicesConfig;
 import org.ecommerce.dtos.requests.OrderRequestDTO;
 import org.ecommerce.dtos.responses.OrderDTO;
 import org.ecommerce.exceptions.EntityNotFound;
@@ -22,16 +23,23 @@ import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
 import org.ecommerce.util.database.specifications.SpecificationParameters;
+import org.ecommerce.util.money.operations.ApiCurrencyConverterService;
 import org.ecommerce.util.money.operations.UsdConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,6 +52,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@Import(ApplicationServicesConfig.class)
 class OrderJpaServiceImplTest {
 
     @Mock
@@ -115,6 +124,20 @@ class OrderJpaServiceImplTest {
     Currency gbpCurrency = Currency.getInstance("GBP");
     Currency mxnCurrency = Currency.getInstance("MXN");
     final String DESTINATION_CURRENCY_CODE = "USD";
+
+    @TestConfiguration
+    public static class TestConfig {
+
+        @Bean
+        public ApiCurrencyConverterService apiCurrencyConverterService(RestTemplate restTemplate) {
+            return new ApiCurrencyConverterService(restTemplate);
+        }
+
+        @Bean
+        public UsdConverter usdConverter(ApiCurrencyConverterService apiCurrencyConverterService) {
+            return new UsdConverter(apiCurrencyConverterService);
+        }
+    }
 
     @DisplayName("Assess create service method implementation")
     @Test

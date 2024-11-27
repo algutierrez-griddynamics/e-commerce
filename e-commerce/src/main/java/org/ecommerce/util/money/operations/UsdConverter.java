@@ -14,7 +14,7 @@ public class UsdConverter {
 
     private static ApiCurrencyConverterService apiCurrencyConverterService;
 
-    UsdConverter(ApiCurrencyConverterService apiCurrencyConverterService) {
+    public UsdConverter(ApiCurrencyConverterService apiCurrencyConverterService) {
         UsdConverter.apiCurrencyConverterService = apiCurrencyConverterService;
     }
 
