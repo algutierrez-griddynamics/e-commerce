@@ -2,20 +2,18 @@ package org.ecommerce.util.money.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.ecommerce.util.JsonParser;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-@Service
-@Lazy
+@Component
 public class UsdConverter {
 
-    private static ApiCurrencyConverterService apiCurrencyConverterService;
+    private final ApiCurrencyConverterService apiCurrencyConverterService;
 
     public UsdConverter(ApiCurrencyConverterService apiCurrencyConverterService) {
-        UsdConverter.apiCurrencyConverterService = apiCurrencyConverterService;
+        this.apiCurrencyConverterService = apiCurrencyConverterService;
     }
 
     /**
@@ -26,16 +24,15 @@ public class UsdConverter {
      * @throws JsonProcessingException If {@link #apiCurrencyConverterService} fails while parsing
      * the response to {@link ApiCurrencyConverterResponse} inside of {@link JsonParser}
      */
-
-    public static BigDecimal convertAmountFromTo(String from, String to, BigDecimal amount) throws JsonProcessingException {
+    public BigDecimal convertAmountFromTo(String from, String to, BigDecimal amount) throws JsonProcessingException {
         final String EUR_CODE = "EUR";
 
-        Map<String, Double> currenciesMap = UsdConverter.apiCurrencyConverterService.fetchCurrenciesMapFromApi();
+        Map<String, Double> currenciesMap = apiCurrencyConverterService.fetchCurrenciesMapFromApi();
 
         double amountInEuros = (amount.doubleValue() * currenciesMap.get(EUR_CODE)) / currenciesMap.get(from);
         double amountInTo = amountInEuros * currenciesMap.get(to);
 
-        return new BigDecimal(amountInTo);
+        return BigDecimal.valueOf(amountInTo);
     }
 
 }

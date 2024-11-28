@@ -15,6 +15,8 @@ class UsdConverterTest {
 
     @Autowired
     private ApiCurrencyConverterService apiCurrencyConverterService;
+    @Autowired
+    private UsdConverter usdConverter;
 
     @Disabled("Since the number of API calls is settled as 100 per month," +
             "this test has been disabled to use the 100 calls in specific scenarios")
@@ -25,7 +27,7 @@ class UsdConverterTest {
 
         double valueOfAnEuroInMxn = apiCurrencyConverterService.fetchCurrenciesMapFromApi().get(MXN_CODE);
 
-        double valueOfAnMxnInEuro = UsdConverter.convertAmountFromTo(MXN_CODE, EUR_CODE
+        double valueOfAnMxnInEuro = usdConverter.convertAmountFromTo(MXN_CODE, EUR_CODE
                 , new BigDecimal(valueOfAnEuroInMxn)).doubleValue();
 
         assertEquals(valueOfAnMxnInEuro, 1d);

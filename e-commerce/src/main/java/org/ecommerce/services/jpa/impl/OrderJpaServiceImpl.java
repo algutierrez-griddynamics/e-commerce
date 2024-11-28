@@ -49,6 +49,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
     // Embedded services
     private final ProductService productService;
     private final StockServiceI stockService;
+    private final UsdConverter usdConverter;
 
     // Micro-services
     private final ShippingInformationInterface shippingInformationInterface;
@@ -61,7 +62,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
                                BuildOrderFromDTORequest buildOrderFromDTORequest, EntityManager entityManager,
                                ProductService productService, StockServiceI stockService,
                                ShippingInformationInterface shippingInformationInterface,
-                               OrderValidatorService orderValidatorService, Order order) {
+                               OrderValidatorService orderValidatorService, Order order, UsdConverter usdConverter) {
         this.orderRepository = orderRepository;
         this.orderDTOMapper = orderDTOMapper;
         this.buildOrderFromDTORequest = buildOrderFromDTORequest;
@@ -74,6 +75,8 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
 
         this.orderValidatorService = orderValidatorService;
         this.order = order;
+
+        this.usdConverter = usdConverter;
     }
 
     @Override
@@ -157,7 +160,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
                 .map(productService::findById)
                 .map(product -> {
                     try {
-                        return UsdConverter.convertAmountFromTo(product.getPrice().getCurrencyCode().toString(), DESTINATION_CURRENCY_CODE,
+                        return usdConverter.convertAmountFromTo(product.getPrice().getCurrencyCode().toString(), DESTINATION_CURRENCY_CODE,
                                 product.getPrice().getAmount());
                     } catch (JsonProcessingException e) {
                         throw new JsonParserException(e.getMessage(), e);
@@ -171,7 +174,7 @@ public class OrderJpaServiceImpl implements OrderJpaService <OrderRequestDTO, Lo
         BigDecimal amount  = shippingInformation.getShippingCost().getAmount();
 
         try {
-            return UsdConverter.convertAmountFromTo(from, DESTINATION_CURRENCY_CODE, amount);
+            return usdConverter.convertAmountFromTo(from, DESTINATION_CURRENCY_CODE, amount);
         } catch (JsonProcessingException e) {
             throw new JsonParserException(e.getMessage(), e);
         }
