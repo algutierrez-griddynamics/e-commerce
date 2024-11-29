@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
@@ -63,6 +64,12 @@ class OrderJpaServiceImplTest {
 
     @Mock
     private ShippingInformationInterface shippingInformationService;
+
+    @Mock
+    private UsdConverter usdConverter;
+
+    @Mock
+    private ApiCurrencyConverterService apiCurrencyConverterService;
 
     @InjectMocks
     private OrderJpaServiceImpl orderJpaService;
@@ -124,26 +131,10 @@ class OrderJpaServiceImplTest {
     Currency gbpCurrency = Currency.getInstance("GBP");
     Currency mxnCurrency = Currency.getInstance("MXN");
     final String DESTINATION_CURRENCY_CODE = "USD";
-    @Autowired
-    private UsdConverter usdConverter;
-
-    @TestConfiguration
-    public static class TestConfig {
-
-        @Bean
-        public ApiCurrencyConverterService apiCurrencyConverterService(RestTemplate restTemplate) {
-            return new ApiCurrencyConverterService(restTemplate);
-        }
-
-        @Bean
-        public UsdConverter usdConverter(ApiCurrencyConverterService apiCurrencyConverterService) {
-            return new UsdConverter(apiCurrencyConverterService);
-        }
-    }
 
     @DisplayName("Assess create service method implementation")
     @Test
-    void create() {
+    void create() throws JsonProcessingException {
         List<Long> productIds = Arrays.asList(2001L, 2002L, 2001L, 2001L, 2001L, 2001L, 2002L);
         Long orderId = 1L;
 
@@ -181,6 +172,7 @@ class OrderJpaServiceImplTest {
         when(price1.getCurrencyCode()).thenReturn(gbpCurrency);
         when(price2.getCurrencyCode()).thenReturn(mxnCurrency);
 
+        when(usdConverter.convertAmountFromTo(anyString(), anyString(), any(BigDecimal.class))).thenReturn(new BigDecimal(1));
 
         AtomicReference<CreateOrderResponse> createOrderResponse = new AtomicReference<>();
 
