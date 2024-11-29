@@ -14,5 +14,5 @@ public interface BillingInformationInterface {
     boolean validateBillingInformation(@PathVariable @NotNull Long billingId);
 
     @GetMapping("billing-information/get/{billingId}")
-    BillingInformation getBillingInformation(@PathVariable @NotNull long billingId);
+    BillingInformation getBillingInformation(@PathVariable @NotNull Long billingId);
 }
