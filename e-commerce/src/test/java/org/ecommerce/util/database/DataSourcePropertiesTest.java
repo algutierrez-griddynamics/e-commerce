@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
 
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("dev") // -> Profile settled as dev
+@TestPropertySource("classpath:application-test.properties")
 class DataSourcePropertiesTest {
 
     @DynamicPropertySource

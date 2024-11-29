@@ -40,6 +40,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,6 +55,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Import(ApplicationServicesConfig.class)
+@TestPropertySource("classpath:application-test.properties")
 class OrderJpaServiceImplTest {
 
     @Mock

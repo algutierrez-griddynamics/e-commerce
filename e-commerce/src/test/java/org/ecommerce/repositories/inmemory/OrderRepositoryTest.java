@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.lenient;
 
 @ActiveProfiles("dev")
 @SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
 class OrderRepositoryTest {
 
     @Autowired

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.sql.Array;
 import java.sql.Connection;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DisplayName("Tests for Operations class")
-//@Import("some.other.config.bean.files")
+@TestPropertySource("classpath:application-test.properties")
 class OperationsTest {
     @DisplayName("This BeforeAll method creates a web server in the 8082 port so we can connect to the h2 database")
     @BeforeAll
