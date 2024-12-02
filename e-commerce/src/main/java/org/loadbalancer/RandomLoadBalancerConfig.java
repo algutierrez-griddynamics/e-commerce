@@ -1,4 +1,4 @@
-package org.ecommerce.config.load.balancer;
+package org.loadbalancer;
 
 import org.springframework.cloud.loadbalancer.core.RandomLoadBalancer;
 import org.springframework.cloud.client.ServiceInstance;
