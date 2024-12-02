@@ -95,5 +95,6 @@
     <module>payment-details-service</module>
     <module>shipping-information-service</module>
     <module>spring-cloud-config-server</module>
+    <module>api-gateway</module>
   </modules>
 </project>
