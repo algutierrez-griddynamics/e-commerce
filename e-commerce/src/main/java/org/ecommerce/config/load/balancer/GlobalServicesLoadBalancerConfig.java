@@ -1,9 +1,10 @@
 package org.ecommerce.config.load.balancer;
 
-import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
+import org.loadbalancer.RandomLoadBalancerConfig;
+import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@LoadBalancerClient(name = "*", configuration = RandomLoadBalancerConfig.class)
+@LoadBalancerClients(defaultConfiguration = RandomLoadBalancerConfig.class)
 public class GlobalServicesLoadBalancerConfig {
 }
