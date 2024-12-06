@@ -1,6 +1,7 @@
 package org.ecommerce.util.money.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.ecommerce.util.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ public class ApiCurrencyConverterService {
         this.restTemplate = restTemplate;
     }
 
+    @Retry(name = "default")
     public Map<String, Double> fetchCurrenciesMapFromApi() throws JsonProcessingException {
         final String URL_WITH_PARAMETERS = API_URL + "?access_key=" + API_KEY;
 
