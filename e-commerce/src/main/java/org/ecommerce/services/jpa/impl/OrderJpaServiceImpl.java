@@ -1,6 +1,5 @@
 package org.ecommerce.services.jpa.impl;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -18,7 +17,6 @@ import org.ecommerce.models.services.responses.*;
 import org.ecommerce.repositories.jpa.OrderJpaRepository;
 import org.ecommerce.services.ProductService;
 import org.ecommerce.services.jpa.OrderJpaService;
-import org.ecommerce.services.jpa.ShippingInformationI;
 import org.ecommerce.services.jpa.StockServiceI;
 import org.ecommerce.services.jpa.validators.OrderValidatorService;
 import org.ecommerce.util.money.operations.UsdConverter;
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
