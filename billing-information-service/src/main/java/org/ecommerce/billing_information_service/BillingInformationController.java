@@ -19,7 +19,7 @@ public class BillingInformationController {
     private Environment environment;
 
     @GetMapping(path = "/validate/{billingId}")
-    @CircuitBreaker(name = "default", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "default", fallbackMethod = "fallbackBooleanMethod")
     @RateLimiter(name = "default")
     @Bulkhead(name = "default")
     public boolean validateBillingInformation(@PathVariable @NonNull String billingId) {
@@ -27,7 +27,7 @@ public class BillingInformationController {
     }
 
     @GetMapping(path = "/get/{billingId}")
-    @CircuitBreaker(name = "default", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "default", fallbackMethod = "fallbackObjectMethod")
     @RateLimiter(name = "default")
     @Bulkhead(name = "default")
     public BillingInformation getBillingInformation(@PathVariable @NonNull Long billingId) {
@@ -37,7 +37,7 @@ public class BillingInformationController {
     }
 
     @GetMapping(path = "test-resilience")
-    @CircuitBreaker(name = "default", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "default", fallbackMethod = "fallbackStringMethod")
     @RateLimiter(name = "default")
     @Bulkhead(name = "default")
     public String unavailableMethod() {
@@ -45,7 +45,17 @@ public class BillingInformationController {
         throw new RuntimeException("Method called");
     }
 
-    public String fallbackMethod(Throwable throwable) {
+    public boolean fallbackBooleanMethod() {
+        System.out.println("Hit fallback method");
+        return false;
+    }
+
+    public BillingInformation fallbackObjectMethod() {
+        System.out.println("Hit fallback method");
+        return null;
+    }
+
+    public String fallbackStringMethod(Throwable throwable) {
         System.out.println("Hit fallback method");
         return "Service unavailable";
     }
