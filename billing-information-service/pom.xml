@@ -91,6 +91,24 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<image>
+					<name>
+						brianvega/${project.artifactId}:${project.version}
+					</name>
+					<env>
+						<BP_JVM_VERSION>22</BP_JVM_VERSION>
+					</env>
+					<buildpacks>
+						<buildpack>paketobuildpacks/azul-zulu</buildpack>
+						<buildpack>urn:cnb:builder:paketo-buildpacks/syft</buildpack>
+						<buildpack>urn:cnb:builder:paketo-buildpacks/executable-jar</buildpack>
+						<buildpack>urn:cnb:builder:paketo-buildpacks/spring-boot</buildpack>
+					</buildpacks>
+					<builder>paketobuildpacks/builder-jammy-base</builder>
+				</image>
+				<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+			</configuration>
 			</plugin>
 		</plugins>
 	</build>
