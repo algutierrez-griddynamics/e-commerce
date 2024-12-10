@@ -3,7 +3,7 @@
 services:
   database:
     image: postgres:latest
-    container_name: orders
+    container_name: orders-db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}

@@ -1,0 +1,17 @@
+# version: '1.0'
+
+services:
+  spring-cloud-config-server:
+    image: brianvega/spring-cloud-config-server:0.0.1-SNAPSHOT
+    mem_limit: 500m
+    ports:
+      - "8761:8761"
+    depends_on:
+      - database
+    networks:
+      - ecommerce-network
+
+
+
+networks:
+  ecommerce-network
