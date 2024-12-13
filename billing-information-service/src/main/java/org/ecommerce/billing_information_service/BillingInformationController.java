@@ -45,12 +45,12 @@ public class BillingInformationController {
         throw new RuntimeException("Method called");
     }
 
-    public boolean fallbackBooleanMethod() {
+    public boolean fallbackBooleanMethod(Throwable throwable) {
         System.out.println("Hit fallback method");
         return false;
     }
 
-    public BillingInformation fallbackObjectMethod() {
+    public BillingInformation fallbackObjectMethod(Throwable throwable) {
         System.out.println("Hit fallback method");
         return null;
     }
