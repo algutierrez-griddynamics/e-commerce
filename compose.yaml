@@ -16,6 +16,17 @@ services:
     networks:
       - ecommerce-network
 
+  authorization-service:
+    image: brianvega/authorization-server:0.0.1-SNAPSHOT
+    ports:
+      - "8089:8089"
+    depends_on:
+      - database
+    networks:
+      - ecommerce-network
+    env_file:
+      - '.env'
+
   spring-cloud-config-server:
     image: brianvega/spring-cloud-config-server:0.0.1-SNAPSHOT
     ports:

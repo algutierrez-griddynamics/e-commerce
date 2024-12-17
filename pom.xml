@@ -96,5 +96,6 @@
     <module>shipping-information-service</module>
     <module>spring-cloud-config-server</module>
     <module>api-gateway</module>
+    <module>authorization-server</module>
   </modules>
 </project>
