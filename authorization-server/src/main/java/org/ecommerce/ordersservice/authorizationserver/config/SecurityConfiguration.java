@@ -31,4 +31,17 @@ public class SecurityConfiguration {
 
         return httpSecurity.build();
     }
+
+    @Bean
+    UserDetailsService userDetailsService() {
+        UserDetails user = User.withUsername("user").password("{noop}password").authorities("read").build();
+        UserDetails admin = User.withUsername("admin").password("{noop}1234").authorities("read", "write").build();
+
+        return new InMemoryUserDetailsManager(user, admin);
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 }
