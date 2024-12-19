@@ -4,7 +4,7 @@ import org.ecommerce.controllers.AdminController;
 import org.ecommerce.controllers.CustomerController;
 import org.ecommerce.controllers.ManagerController;
 import org.ecommerce.controllers.OrderController;
-import org.ecommerce.models.Manager;
+import org.ecommerce.models.Employee;
 import org.ecommerce.services.OrderService;
 import org.ecommerce.services.PasswordService;
 import org.ecommerce.services.UserService;
@@ -27,7 +27,7 @@ public class ApplicationControllersConfig {
     }
 
     @Bean
-    ManagerController managerController(UserService<Manager> managerService, PasswordService passwordService) {
+    ManagerController managerController(UserService<Employee> managerService, PasswordService passwordService) {
         return new ManagerController(managerService, passwordService);
     }
 

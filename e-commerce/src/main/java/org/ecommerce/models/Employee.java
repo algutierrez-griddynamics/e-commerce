@@ -16,9 +16,11 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "managers")
+@Table(name = "employees")
 @AttributeOverride(name="id", column=@Column(name="pk_manager_id"))
-public class Manager extends User {
+public class Employee extends User {
     @NotNull @Column(nullable = false)
     private int employeeNumber;
+    @NotNull @Column(nullable = false)
+    private String role;
 }

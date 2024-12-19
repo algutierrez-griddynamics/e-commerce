@@ -1,7 +1,7 @@
 package org.ecommerce.config;
 
 import org.ecommerce.message.broker.MessageQueue;
-import org.ecommerce.models.Manager;
+import org.ecommerce.models.Employee;
 import org.ecommerce.models.Order;
 import org.ecommerce.models.Product;
 import org.ecommerce.models.User;
@@ -21,7 +21,7 @@ public class ApplicationRepositoriesConfig {
     }
 
     @Bean
-    ManagerRepository managerRepository(Operations<Manager> operations) {
+    ManagerRepository managerRepository(Operations<Employee> operations) {
         return new ManagerRepository(operations);
     }
 

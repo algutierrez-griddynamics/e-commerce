@@ -158,5 +158,3 @@ INSERT INTO payment_details (payment_method_type, card_number, card_expiration_d
                                                                                                                                         ('Credit Card', '4888888888888888', '2025-05-31', 'Fiona Davis', '505', '2024-09-08'),
                                                                                                                                         ('Debit Card', '4999999999999999', '2025-04-30', 'George Martinez', '606', '2024-09-09'),
                                                                                                                                         ('Credit Card', '5000000000000000', '2025-03-31', 'Hannah Garcia', '707', '2024-09-10');
-
-

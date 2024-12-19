@@ -12,20 +12,20 @@ import org.ecommerce.util.JsonParser;
 import java.util.List;
 import java.util.Optional;
 
-public class ManagerController extends AbstractUserController implements ControllerOperations<Manager, Long> {
+public class ManagerController extends AbstractUserController implements ControllerOperations<Employee, Long> {
 
-    private final UserService<Manager> managerService;
+    private final UserService<Employee> managerService;
 
-    public ManagerController(UserService<Manager> managerService, PasswordService passwordService) {
+    public ManagerController(UserService<Employee> managerService, PasswordService passwordService) {
         super(passwordService);
         this.managerService = managerService;
     }
 
     @Override
-    public Response<Manager> create(CreateRequest<Manager> request) {
-        Manager manager = request.getData();
+    public Response<Employee> create(CreateRequest<Employee> request) {
+        Employee manager = request.getData();
 
-        Manager createdManager = managerService.create(manager);
+        Employee createdManager = managerService.create(manager);
 
         return new Response<>(true
         , "Successfully created manager"
@@ -34,7 +34,7 @@ public class ManagerController extends AbstractUserController implements Control
     }
 
     @Override
-    public Response<Manager> delete(DeleteRequest<Long> request) {
+    public Response<Employee> delete(DeleteRequest<Long> request) {
         Long id = request.getId();
 
         managerService.delete(id);
@@ -47,11 +47,11 @@ public class ManagerController extends AbstractUserController implements Control
     }
 
     @Override
-    public Response<Manager> update(UpdateRequest<Manager, Long> request) {
-        Manager manager = request.getData();
+    public Response<Employee> update(UpdateRequest<Employee, Long> request) {
+        Employee manager = request.getData();
         Long id = request.getId();
 
-        Manager updatedManagerResponse = managerService.update(manager, id);
+        Employee updatedManagerResponse = managerService.update(manager, id);
 
         return new Response<>(
                 true,
@@ -62,10 +62,10 @@ public class ManagerController extends AbstractUserController implements Control
     }
 
     @Override
-    public Response<Manager> get(GetRequest<Long> request) {
+    public Response<Employee> get(GetRequest<Long> request) {
         Long id = request.getId();
 
-        Manager retrievedManager = managerService.findById(id);
+        Employee retrievedManager = managerService.findById(id);
 
         return new Response<>(
                 true
@@ -76,9 +76,9 @@ public class ManagerController extends AbstractUserController implements Control
     }
 
     @Override
-    public Response<List<Manager>> getAll(GetAllRequest request) {
-        List<Manager> managersList = managerService.findAll();
-        return new Response<List<Manager>>(
+    public Response<List<Employee>> getAll(GetAllRequest request) {
+        List<Employee> managersList = managerService.findAll();
+        return new Response<List<Employee>>(
                 true
                 , "Successfully retrieved managers list"
                 , managersList
@@ -86,9 +86,9 @@ public class ManagerController extends AbstractUserController implements Control
         );
     }
 
-    public Optional<Manager> parseJson(String json) {
+    public Optional<Employee> parseJson(String json) {
         try {
-            return Optional.of(JsonParser.parseJson(json, Manager.class));
+            return Optional.of(JsonParser.parseJson(json, Employee.class));
         } catch (JsonProcessingException jsonProcessingException) {
             Log.error(jsonProcessingException.getMessage());
             return Optional.empty();

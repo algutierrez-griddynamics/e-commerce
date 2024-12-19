@@ -71,3 +71,11 @@ INSERT INTO ORDERS (TOTAL_USD, DATE, FK_BILLING_INFORMATION_ID, FK_CUSTOMER_ID, 
 VALUES
     (79.98, '2024-10-15 10:00:00', 1, 1, 1, 1, 'CONFIRMED'),
     (49.99, '2024-10-16 09:00:00', 2, 2, 2, 2, 'SHIPPED');
+
+INSERT INTO employees (first_name, last_name, email, password, employee_number, role)
+VALUES
+    ('John', 'Doe', 'john.doe@example.com', 'password123', 101, 'Manager'),
+    ('Jane', 'Smith', 'jane.smith@example.com', 'password456', 102, 'Manager'),
+    ('Bob', 'Johnson', 'bob.johnson@example.com', 'password789', 103, 'Cashier'),
+    ('Alice', 'Williams', 'alice.williams@example.com', 'password012', 104, 'Cashier'),
+    ('Mike', 'Brown', 'mike.brown@example.com', 'password345', 105, 'Salesperson');
