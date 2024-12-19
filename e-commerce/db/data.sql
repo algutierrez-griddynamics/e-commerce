@@ -74,8 +74,8 @@ VALUES
 
 INSERT INTO employees (first_name, last_name, email, password, employee_number, role)
 VALUES
-    ('John', 'Doe', 'john.doe@example.com', 'password123', 101, 'Manager'),
-    ('Jane', 'Smith', 'jane.smith@example.com', 'password456', 102, 'Manager'),
-    ('Bob', 'Johnson', 'bob.johnson@example.com', 'password789', 103, 'Cashier'),
-    ('Alice', 'Williams', 'alice.williams@example.com', 'password012', 104, 'Cashier'),
-    ('Mike', 'Brown', 'mike.brown@example.com', 'password345', 105, 'Salesperson');
+    ('John', 'Doe', 'john.doe@example.com', '{bcrypt}$2y$10$UV8FU61mtiPvAXAt2nij3.wkmxLHvjy8TNiZsf.mcd6vz54mnErzm', 101, 'Manager'),
+    ('Jane', 'Smith', 'jane.smith@example.com', '{bcrypt}$2y$10$HgeWcZZ/rSea9zBv8/kle.Wpia5lg/54md8H3ocLAnfwGBc4BdcPm', 102, 'Manager'),
+    ('Bob', 'Johnson', 'bob.johnson@example.com', '{noop}password789', 103, 'Cashier'),
+    ('Alice', 'Williams', 'alice.williams@example.com', '{noop}password012', 104, 'Cashier'),
+    ('Mike', 'Brown', 'mike.brown@example.com', '{noop}password345', 105, 'Salesperson');
