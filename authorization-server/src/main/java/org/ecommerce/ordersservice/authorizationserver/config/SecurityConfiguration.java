@@ -6,12 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -22,23 +18,23 @@ public class SecurityConfiguration {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(
-                (request) -> request.requestMatchers("/test").authenticated()
-                        .requestMatchers("/login", "/error").permitAll()
-        );
+        httpSecurity.csrf((csrf) -> csrf.ignoringRequestMatchers("/error", "/auth/login"))
+                .authorizeHttpRequests((request)
+                        -> request.requestMatchers("/test").authenticated()
+                        .requestMatchers("/error", "/auth/login", "/auth/keys").permitAll());
         httpSecurity.formLogin(withDefaults());
         httpSecurity.httpBasic(withDefaults());
 
         return httpSecurity.build();
     }
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user").password("{noop}password").authorities("read").build();
-        UserDetails admin = User.withUsername("admin").password("{noop}1234").authorities("read", "write").build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+//    @Bean
+//    UserDetailsService userDetailsService() {
+//        UserDetails user = User.withUsername("user").password("{noop}password").authorities("read").build();
+//        UserDetails admin = User.withUsername("admin").password("{noop}1234").authorities("read", "write").build();
+//
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
