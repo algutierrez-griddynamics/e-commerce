@@ -10,20 +10,26 @@ import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.ecommerce.ordersservice.authorizationserver.models.AuthRequest;
-import org.springframework.beans.factory.annotation.Value;
+import org.ecommerce.ordersservice.authorizationserver.models.JwkSet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.interfaces.RSAPrivateKey;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Set;
 
 @Service
-public class AuthControllerService {
+public class AuthService {
 
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private final JwkSet jwkSet;
+
+    public AuthService(JwkSet jwkSet) {
+        this.jwkSet = jwkSet;
+    }
 
 
     public ResponseEntity<String> validateCredentials(AuthRequest authRequest) {
@@ -42,18 +48,15 @@ public class AuthControllerService {
         }
     }
 
-    private String generateToken(String role) throws JOSEException {
+    private String generateToken(String role) throws JOSEException, ParseException {
         Date issueTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         Date expirationTime = Date.from(LocalDateTime.now().plusHours(1L).atZone(ZoneId.systemDefault()).toInstant());
 
-
         RSAKey rsaJWK = new RSAKeyGenerator(2048)
-                .keyID(SECRET_KEY)
+                .keyID(jwkSet.getKidString())
                 .generate();
 
-        //RSAKey rsaPublicJWK = rsaJWK.toPublicJWK();
-
-        JWSSigner signer = new RSASSASigner(rsaJWK);
+        RSAPrivateKey rsaPrivateKey = rsaJWK.toRSAPrivateKey();
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject("user")
@@ -62,12 +65,20 @@ public class AuthControllerService {
                 .expirationTime(expirationTime)
                 .build();
 
+        JWSSigner signer = new RSASSASigner(rsaPrivateKey);
+
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(rsaJWK.getKeyID()).build(),
                 claimsSet);
 
         signedJWT.sign(signer);
 
+        jwkSet.addJwk(rsaJWK.toPublicJWK().toJSONString());
+
         return signedJWT.serialize();
+    }
+
+    public ResponseEntity<Set<String>> getKeys() {
+        return ResponseEntity.ok(jwkSet.getJwkSet());
     }
 }
