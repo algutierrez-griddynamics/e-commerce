@@ -60,9 +60,9 @@ public class RoleBasedFilter extends AbstractGatewayFilterFactory<InMemoryRoles>
     private boolean isSignatureCorrect(String token) throws JOSEException, ParseException, JsonProcessingException {
         final String authServiceUrlJwks = authServiceUrl + "/auth/keys";
 
-        SignedJWT signedJWTOG = SignedJWT.parse(token);
+        SignedJWT signedJWT = SignedJWT.parse(token);
 
-        String kid = signedJWTOG.getHeader().getKeyID();
+        String kid = signedJWT.getHeader().getKeyID();
 
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(authServiceUrlJwks, String.class);
@@ -75,9 +75,7 @@ public class RoleBasedFilter extends AbstractGatewayFilterFactory<InMemoryRoles>
 
         JWSVerifier verifier = new RSASSAVerifier(rsaPublicJWK);
 
-        var x = signedJWTOG.verify(verifier);
-
-        return x;
+        return signedJWT.verify(verifier);
     }
 
 

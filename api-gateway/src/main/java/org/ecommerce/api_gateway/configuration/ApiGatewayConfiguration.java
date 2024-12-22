@@ -15,6 +15,8 @@ public class ApiGatewayConfiguration {
     @Bean
     public RouteLocator apiGatewayRouteLocator(RouteLocatorBuilder builder, RoleBasedFilter roleBasedFilter) {
         return builder.routes()
+                .route(p -> p.path("/auth/**")
+                        .uri("lb://authorization-service"))
                 .route(p -> p.path("/orders/**")
                         .filters(f -> f.filter(roleBasedFilter.apply(new InMemoryRoles(List.of("MANAGER")))))
                         .uri("lb://orders"))

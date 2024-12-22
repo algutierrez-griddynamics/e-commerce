@@ -14,16 +14,14 @@ services:
       - db_data:/var/lib/postgresql/data
       - ./e-commerce/db:/docker-entrypoint-initdb.d
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
 
   authorization-service:
     image: brianvega/authorization-server:0.0.1-SNAPSHOT
-    ports:
-      - "8089:8089"
     depends_on:
       - database
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file:
       - '.env'
 
@@ -34,52 +32,42 @@ services:
     depends_on:
       - database
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
 
   billing-information-service:
     image: brianvega/billing-information-service:0.0.1-SNAPSHOT
-    ports:
-      - "8081:8081"
     depends_on:
       - spring-cloud-config-server
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
 
   billing-information-service_2:
     image: brianvega/billing-information-service:0.0.1-SNAPSHOT
-    ports:
-      - "8082:8082"
     depends_on:
       - spring-cloud-config-server
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
 
   payment-details-service:
     image: brianvega/payment-details-service:0.0.1-SNAPSHOT
-    ports:
-      - "8083:8083"
     depends_on:
       - spring-cloud-config-server
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
 
   shipping-information-service:
     image: brianvega/shipping-information-service:0.0.1-SNAPSHOT
-    ports:
-      - "8084:8084"
     depends_on:
       - spring-cloud-config-server
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
 
   orders-service:
     image: brianvega/orders-service:0.0.1-SNAPSHOT
-    ports:
-      - "8080:8080"
     depends_on:
       - spring-cloud-config-server
       - billing-information-service
@@ -87,7 +75,7 @@ services:
       - payment-details-service
       - shipping-information-service
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
     volumes:
       - order-data:/workspace/data
@@ -99,11 +87,11 @@ services:
     depends_on:
       - orders-service
     networks:
-      - ecommerce-network
+      - ecommerce-private-network
     env_file: '.env'
 
 networks:
-  ecommerce-network:
+  ecommerce-private-network:
     driver: bridge
 volumes:
   order-data:
