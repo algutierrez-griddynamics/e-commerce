@@ -207,6 +207,12 @@
         <!--			<groupId>com.fasterxml.jackson.dataformat</groupId>-->
         <!--			<artifactId>jackson-dataformat-xml</artifactId>-->
         <!--		</dependency>-->
+<!--        Logger -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.4</version>
+        </dependency>
     </dependencies>
 
     <build>
