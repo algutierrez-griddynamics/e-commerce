@@ -49,3 +49,6 @@ misc.xml
 jarRepositories.xml
 encodings.xml
 compiler.xml
+
+# elk-stack logs
+/logs/*.log

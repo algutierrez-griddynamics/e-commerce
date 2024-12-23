@@ -21,12 +21,13 @@ services:
       - LOGSTASH_JAVA_OPTS=-Xmx1g -Xms1g
     ports:
       - "5044:5044"
-    networks:
-      - ecommerce-private-network
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logs:/tmp/logstash/logs
     depends_on:
       - elasticsearch
+    networks:
+      - ecommerce-private-network
   kibana:
     image: docker.elastic.co/kibana/kibana:8.6.2
     container_name: kibana
@@ -117,6 +118,7 @@ services:
     env_file: '.env'
     volumes:
       - order-data:/workspace/data
+      - ./logs:/tmp/logstash/logs
 
   api-gateway:
     image: brianvega/api-gateway:0.0.1-SNAPSHOT
