@@ -40,6 +40,15 @@ services:
     environment:
       - elasticsearch.hosts=["http://elasticsearch:9200"]
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - ecommerce-private-network
+
+
   database:
     image: postgres:latest
     container_name: orders-db
@@ -113,6 +122,7 @@ services:
       - billing-information-service_2
       - payment-details-service
       - shipping-information-service
+      - zipkin
     networks:
       - ecommerce-private-network
     env_file: '.env'
