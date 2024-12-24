@@ -51,4 +51,4 @@ encodings.xml
 compiler.xml
 
 # elk-stack logs
-/logs/*.log
+/logs/*.log*
