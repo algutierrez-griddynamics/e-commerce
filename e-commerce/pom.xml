@@ -173,6 +173,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <!--		Accesible via localhost:8080 -->
 <!--        explore HAL and HAL-FORMS based HTTP responses-->
         <dependency>

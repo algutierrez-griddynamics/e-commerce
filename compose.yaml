@@ -130,6 +130,31 @@ services:
       - ecommerce-private-network
     env_file: '.env'
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    networks:
+      - ecommerce-private-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - ecommerce-private-network
+
 networks:
   ecommerce-private-network:
     driver: bridge
@@ -137,3 +162,5 @@ volumes:
   es_data:
   order-data:
   db_data:
+  prometheus_data:
+  grafana_data:
