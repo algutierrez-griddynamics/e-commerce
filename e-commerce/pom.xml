@@ -234,6 +234,25 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <configuration>
+                <release>${java.version}</release> <annotationProcessorPaths>
+                <path>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>1.18.34</version> </path>
+                <path>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-configuration-processor</artifactId>
+                    <version>${project.parent.version}</version> </path>
+            </annotationProcessorPaths>
+                <compilerArgs>
+                    <arg>-parameters</arg>
+                </compilerArgs>
+            </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -242,14 +261,15 @@
                             brianvega/${project.artifactId}:${project.version}
                         </name>
                         <env>
-                            <BP_JVM_VERSION>22</BP_JVM_VERSION>
+                            <BP_JVM_VERSION>21</BP_JVM_VERSION>
                         </env>
-                        <buildpacks>
-                            <buildpack>paketobuildpacks/azul-zulu</buildpack>
-                            <buildpack>urn:cnb:builder:paketo-buildpacks/syft</buildpack>
-                            <buildpack>urn:cnb:builder:paketo-buildpacks/executable-jar</buildpack>
-                            <buildpack>urn:cnb:builder:paketo-buildpacks/spring-boot</buildpack>
-                        </buildpacks>
+                        <pullPolicy>ALWAYS</pullPolicy>
+<!--                        <buildpacks>-->
+<!--                            <buildpack>paketobuildpacks/azul-zulu</buildpack>-->
+<!--                            <buildpack>urn:cnb:builder:paketo-buildpacks/syft</buildpack>-->
+<!--                            <buildpack>urn:cnb:builder:paketo-buildpacks/executable-jar</buildpack>-->
+<!--                            <buildpack>urn:cnb:builder:paketo-buildpacks/spring-boot</buildpack>-->
+<!--                        </buildpacks>-->
                         <builder>paketobuildpacks/builder-jammy-base</builder>
                     </image>
                     <pullPolicy>IF_NOT_PRESENT</pullPolicy>
