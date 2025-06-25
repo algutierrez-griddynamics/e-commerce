@@ -50,7 +50,7 @@ jarRepositories.xml
 encodings.xml
 compiler.xml
 
-# Use build-multiplatform-docker.sh for dynamic generation instead
+# Use run.sh for dynamic generation instead
 Dockerfile
 
 # elk-stack logs
