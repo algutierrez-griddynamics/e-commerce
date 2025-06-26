@@ -1,67 +1,163 @@
+# E-commerce Microservices - Setup and Deployment
 
-# Local Database Setup task
-This task involves creating a Docker Compose manifest to set up a database container using the latest PostgreSQL image.
+This repository contains a multi-module e-commerce application built with Spring Boot microservices, designed to run in a Dockerized environment. This guide walks through the steps to set up, build, and run all services using Docker and Docker Compose.
 
-## Prerequisites
+---
 
-- Docker
-- Docker Compose
+## 📑 Table of Contents
 
-## Setup Instructions
+1. [Prerequisites](#1-prerequisites)
+2. [Setup Workflow](#2-setup-workflow)
+   - [Clone the Repository](#clone-the-repository)
+   - [Create Environment Variables File (.env)](#create-environment-variables-file-env)
+   - [Optional: Cleanup Previous Container Setup](#optional-cleanup-previous-container-setup)
+   - [Run the Setup and Deployment Script](#run-the-setup-and-deployment-script)
+   - [Terminate All Services](#terminate-all-services)
+3. [Local Database Setup Details](#3-local-database-setup-details)
+   - [Persistent Data](#persistent-data)
+   - [Tables Creation](#tables-creation)
+4. [Application Environments](#4-application-environments)
+5. [Consuming Endpoints with Postman](#5-consuming-endpoints-with-postman)
+6. [Monitoring and Tracing](#6-monitoring-and-tracing)
 
-1. **Clone the Repository**
+---
 
-   ```bash
-   git clone https://github.com/algutierrez-griddynamics/e-commerce.git
-   cd e-commerce
-   ```
-2. **Create Environment Variables File**  
-Create a .env file in the root directory with the following content:
-  
-    ```bash
-   DB_URL=<Database URL>
-   DB_USER=<Database user>
-   DB_PASSWORD=<Database password>
-   DB_NAME=<Database name>
-   DB_PORT=5432
-    ```
-3. **(Optional) Cleanup previous container setup**  
-   Run Docker Compose to delete previous container:
+## 1. Prerequisites
 
-    ```bash
-    docker-compose down -v
-    ```   
+Ensure the following tools are installed:
 
-4. **Start the Database Container**  
-Run Docker Compose to start the database container:
+- **Git**: For cloning the repository
+- **Docker Desktop / Docker Engine & Compose**
+- **Apache Maven 3.x**
+- **JDK 21**: Set `JAVA_HOME` accordingly
+- **Postman** or similar API client
 
-    ```bash
-    docker-compose up -d
-    ```
+---
 
-5. **Connect to the Database**
-<img width="795" alt="image" src="https://github.com/user-attachments/assets/f6939504-65fd-43b1-a3a7-2462834e6d07">
+## 2. Setup Workflow
 
+### Clone the Repository
 
-**Persistent Data**  
-The database data is persisted using Docker volumes, so it remains intact even if the container is recreated.  
-You can find the volume named db_data which is used to store the database files.
+```bash
+git clone https://github.com/BrianVega/multi-module--e-commerce.git
+cd multi-module--e-commerce
+```
 
-**Tables creation**  
-The ```init_db.sql``` file located in the ```./db``` directory is mounted to ```/docker-entrypoint-initdb.d``` 
-in the container. This setup ensures that tables are created and any previous data is reloaded when the container is initialized.
-![img.png](https://github.com/user-attachments/assets/461f4cdb-e507-465e-b355-c2721095fae2)
+### Create Environment Variables File (.env)
 
-## Environments
-There are some `.properties` files included in the project, these file included some configurations that enables certain profile environments
-### application.properties
+Create a `.env` file in the root of the project:
+
+```bash
+touch .env
+```
+
+Then add:
+
+```env
+# Eureka URI
+EUREKA_URI=http://spring-cloud-config-server:8761/eureka
+
+# PostgreSQL DB
+DB_URL=jdbc:postgresql://database:5432/<your_database_name>
+DB_USER=<your_database_user>
+DB_PASSWORD=<your_database_password>
+DB_NAME=<your_database_name>
+DB_PORT=5432
+
+# Currency Converter API
+CURRENCY_CONVERTER_API_KEY=<Generated API Key>
+CURRENCY_CONVERTER_URL=http://data.fixer.io/api/latest
+
+# JWT Secret
+JWT_SECRET=<Your_Strong_JWT_Secret_Here>
+```
+
+> **Note**: `database` is the hostname used inside Docker Compose network.
+
+### Optional: Cleanup Previous Container Setup
+
+```bash
+docker-compose down -v
+```
+
+Removes containers, volumes, and networks for a clean start.
+
+### Run the Setup and Deployment Script
+
+```bash
+./run.sh
+```
+
+This script will:
+
+- Authenticate to Docker Hub if necessary
+- Build each microservice with Maven
+- Generate or use existing Dockerfiles
+- Create multi-platform images (amd64, arm64)
+- Push images to Docker Hub
+- Deploy all services using `docker-compose up -Vd`
+
+### Terminate All Services
+
+Stop and remove all running services:
+
+```bash
+docker-compose down
+```
+
+With volume removal:
+
+```bash
+docker-compose down -v
+```
+
+---
+
+## 3. Local Database Setup Details
+
+PostgreSQL container defined in `docker-compose.yml`:
+
+```yaml
+database:
+  image: postgres:latest
+  container_name: orders-db
+  environment:
+    POSTGRES_USER: ${DB_USER}
+    POSTGRES_PASSWORD: ${DB_PASSWORD}
+    POSTGRES_DB: ${DB_NAME}
+  ports:
+    - "${DB_PORT}:5432"
+  volumes:
+    - db_data:/var/lib/postgresql/data
+    - ./e-commerce/db:/docker-entrypoint-initdb.d
+  networks:
+    - ecommerce-private-network
+```
+
+### Persistent Data
+
+- Volume `db_data` persists PostgreSQL data.
+
+### Tables Creation
+
+- SQL scripts in `./e-commerce/db/init_db.sql` are automatically executed on first container init if data is empty.
+
+---
+
+## 4. Application Environments
+
+Spring profiles are used for config separation:
+
+### `application.properties`
+
 ```properties
 spring.profiles.active=dev
 ```
-This file indicates to Spring which profile to choose when executing the application, in this case, the `dev` profile has been selected.
 
-### application-local.properties
-This `.properties` file is the one in charge of provide an in-memory database for test all the application features but in a local environment without the needing of an external setup.
+### `application-local.properties`
+
+For local development with H2:
+
 ```properties
 gd.datasource.url=jdbc:h2:mem:localdb
 gd.datasource.username=sa
@@ -69,23 +165,73 @@ gd.datasource.password=password
 gd.datasource.driverClassName=org.h2.Driver
 gd.jpa.hibernate.ddl-auto=create
 ```
-This configuration sets up an H2 database in memory, and the schema will be created automatically upon application startup (`ddl-auto=create`).
-### application-dev.properties
-This `.properties` file is the one in charge of provide the development database. In order to connect to such database is mandatory to define the `URL`, `USERNAME` and `PASSWORD`.
+
+### `application-dev.properties`
+
+Connects to Docker-managed PostgreSQL:
+
 ```properties
 gd.datasource.url=${DB_URL}
 gd.datasource.username=${DB_USER}
 gd.datasource.password=${DB_PASSWORD}
 ```
-We can define a `.env` file with all the necessary data to successfully connect to the database instance
-```properties
-DB_URL=DB_URL
-DB_USER=DB_USER
-DB_PASSWORD=DB_PASSWORD
+
+---
+
+## 5. Consuming Endpoints with Postman
+
+Access microservices via API Gateway on `http://localhost:8765`.
+
+Example:
+
+### Login Request
+
+```http
+POST http://localhost:8765/auth/login
 ```
-then we can load all those environment variables before running the application
-```bash
-source .env
+
+**Body (JSON)**:
+```json
+{
+  "username": "manager",
+  "password": "password"
+}
 ```
-### Running the Application
-Once the environment variables are set, we can run the application using our preferred method. Spring will automatically use the development profile's properties.
+
+### Get Payment Details
+
+```http
+GET http://localhost:8765/payment-details/get/1
+```
+
+> Make sure to use `http://` (not `https://`) to avoid SSL issues.
+
+### Postman Workspace Setup
+
+#### Import Workspace JSON
+
+1. Open Postman
+2. Click "Workspaces" → "Import"
+3. Upload `GD-P_e-commerce-api.postman_collection.json`
+
+#### Import Environment JSON
+
+1. Go to "Environments" in sidebar
+2. Click "Import" → Upload `GD-P_e-commerce-env.postman_environment.json`
+
+#### Usage
+Use endpoints under Gateway directory, or their correspondent endpoints based on root directory
+
+---
+
+## 6. Monitoring and Tracing
+
+The stack includes observability tools:
+
+| Tool       | URL                        | Purpose                              |
+|------------|----------------------------|--------------------------------------|
+| **Zipkin** | http://localhost:9411      | Distributed tracing                  |
+| **Prometheus** | http://localhost:9090  | Metrics collection & querying        |
+| **Grafana** | http://localhost:3000     | Dashboard for Prometheus data        |
+
+> Grafana default credentials: `admin` / `admin`

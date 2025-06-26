@@ -1,0 +1,623 @@
+{
+	"info": {
+		"_postman_id": "ceccb101-3943-4f17-958a-867063f8e6de",
+		"name": "GD-P | e-commerce-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34144992",
+		"_collection_link": "https://www.postman.com/internship-inventory/workspace/internship-e-commerce/collection/34144992-ceccb101-3943-4f17-958a-867063f8e6de?action=share&source=collection_link&creator=34144992"
+	},
+	"item": [
+		{
+			"name": "Billing information service",
+			"item": [
+				{
+					"name": "Billing Information by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bi-url}}/billing-information/get/1",
+							"host": [
+								"{{bi-url}}"
+							],
+							"path": [
+								"billing-information",
+								"get",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bi-url}}/billing-information/validate/1",
+							"host": [
+								"{{bi-url}}"
+							],
+							"path": [
+								"billing-information",
+								"validate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders service",
+			"item": [
+				{
+					"name": "Add Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"status\": \"REQUESTED\",\n    \"date\": \"2024-12-02T17:13:44.672Z\",\n    \"productsIds\": [\n      2001\n    ],\n    \"fk_customer_id\": 1,\n    \"fk_billing_information_id\": 1,\n    \"fk_shipping_information_id\": 1,\n    \"fk_payment_details_id\": 1\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{o-url}}/orders",
+							"host": [
+								"{{o-url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{o-url}}/orders/1",
+							"host": [
+								"{{o-url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{o-url}}/orders",
+							"host": [
+								"{{o-url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{o-url}}/orders/3",
+							"host": [
+								"{{o-url}}"
+							],
+							"path": [
+								"orders",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order by Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"status\": \"REQUESTED\",\n    \"date\": \"2024-12-04T18:12:22.425Z\",\n    \"productsIds\": [\n      0\n    ],\n    \"fk_customer_id\": 0,\n    \"fk_billing_information_id\": 0,\n    \"fk_shipping_information_id\": 0,\n    \"fk_payment_details_id\": 0\n  },\n  \"id\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{o-url}}/orders",
+							"host": [
+								"{{o-url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gateway",
+			"item": [
+				{
+					"name": "Payment Information service",
+					"item": [
+						{
+							"name": "Payment Information by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/payment-details/get/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"payment-details",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validate by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/payment-details/validate/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"payment-details",
+										"validate",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Billing information service",
+					"item": [
+						{
+							"name": "Billing Information by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/billing-information/get/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"billing-information",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validate by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/billing-information/validate/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"billing-information",
+										"validate",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Shipping information service",
+					"item": [
+						{
+							"name": "Shipping Information by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/shipping-information/get/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"shipping-information",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validate by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/shipping-information/validate/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"shipping-information",
+										"validate",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders service",
+					"item": [
+						{
+							"name": "Add Order",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"data\": {\n    \"status\": \"REQUESTED\",\n    \"date\": \"2025-06-25T17:13:44.672Z\",\n    \"productsIds\": [\n      2001\n    ],\n    \"fk_customer_id\": 1,\n    \"fk_billing_information_id\": 1,\n    \"fk_shipping_information_id\": 1,\n    \"fk_payment_details_id\": 1\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gw-url}}/orders",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/orders/1",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Orders",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/orders",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order by Id",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gw-url}}/orders/3",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"orders",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order by Id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"data\": {\n    \"status\": \"REQUESTED\",\n    \"date\": \"2025-06-25T18:12:22.425Z\",\n    \"productsIds\": [\n      0\n    ],\n    \"fk_customer_id\": 0,\n    \"fk_billing_information_id\": 0,\n    \"fk_shipping_information_id\": 0,\n    \"fk_payment_details_id\": 0\n  },\n  \"id\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gw-url}}/orders",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Security Service",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"manager\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gw-url}}/auth/login",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Keys",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gw-url}}/auth/keys",
+									"host": [
+										"{{gw-url}}"
+									],
+									"path": [
+										"auth",
+										"keys"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Shipping information service",
+			"item": [
+				{
+					"name": "Shipping Information by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{si-url}}/shipping-information/get/1",
+							"host": [
+								"{{si-url}}"
+							],
+							"path": [
+								"shipping-information",
+								"get",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{si-url}}/shipping-information/validate/1",
+							"host": [
+								"{{si-url}}"
+							],
+							"path": [
+								"shipping-information",
+								"validate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Information service",
+			"item": [
+				{
+					"name": "Payment Information by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pd-url}}/payment-details/get/1",
+							"host": [
+								"{{pd-url}}"
+							],
+							"path": [
+								"payment-details",
+								"get",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pd-url}}/payment-details/validate/1",
+							"host": [
+								"{{pd-url}}"
+							],
+							"path": [
+								"payment-details",
+								"validate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "gw-url",
+			"value": "https://localhost:8765"
+		},
+		{
+			"key": "o-url",
+			"value": "http://localhost:8080"
+		}
+	]
+}

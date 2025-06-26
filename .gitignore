@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -41,3 +42,16 @@ build/
 .env
 testdb.trace.db
 testdb.mv.db
+
+vcs.xml
+uiDesigner.xml
+misc.xml
+jarRepositories.xml
+encodings.xml
+compiler.xml
+
+# Use run.sh for dynamic generation instead
+Dockerfile
+
+# elk-stack logs
+/logs/*.log*

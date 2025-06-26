@@ -1,9 +1,62 @@
 # version: '1.0'
 
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    pull_policy: missing
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - "xpack.security.enabled=false"
+    ports:
+      - "9200:9200"
+    networks:
+      - ecommerce-private-network
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.6.2
+    pull_policy: missing
+    container_name: logstash
+    environment:
+      - LOGSTASH_JAVA_OPTS=-Xmx1g -Xms1g
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logs:/tmp/logstash/logs
+    depends_on:
+      - elasticsearch
+    networks:
+      - ecommerce-private-network
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.6.2
+    pull_policy: missing
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    networks:
+      - ecommerce-private-network
+    depends_on:
+      - elasticsearch
+    environment:
+      - elasticsearch.hosts=["http://elasticsearch:9200"]
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    pull_policy: missing
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - ecommerce-private-network
+
+
   database:
     image: postgres:latest
-    container_name: orders
+    pull_policy: missing
+    container_name: orders-db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -12,7 +65,127 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./db:/docker-entrypoint-initdb.d
-volumes:
-  db_data:
+      - ./e-commerce/db:/docker-entrypoint-initdb.d
+    networks:
+      - ecommerce-private-network
 
+  authorization-service:
+    image: brianvega/authorization-server:latest
+    pull_policy: missing
+    depends_on:
+      - database
+    networks:
+      - ecommerce-private-network
+    env_file:
+      - '.env'
+
+  spring-cloud-config-server:
+    image: brianvega/spring-cloud-config-server:latest
+    pull_policy: missing
+    ports:
+      - "8761:8761"
+    depends_on:
+      - database
+    networks:
+      - ecommerce-private-network
+
+  billing-information-service:
+    image: brianvega/billing-information-service:latest
+    pull_policy: missing
+    depends_on:
+      - spring-cloud-config-server
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+
+  billing-information-service_2:
+    image: brianvega/billing-information-service:latest
+    pull_policy: missing
+    depends_on:
+      - spring-cloud-config-server
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+
+  payment-details-service:
+    image: brianvega/payment-details-service:latest
+    pull_policy: missing
+    depends_on:
+      - spring-cloud-config-server
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+
+  shipping-information-service:
+    image: brianvega/shipping-information-service:latest
+    pull_policy: missing
+    depends_on:
+      - spring-cloud-config-server
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+
+  orders-service:
+    image: brianvega/e-commerce:latest
+    pull_policy: missing
+    depends_on:
+      - spring-cloud-config-server
+      - billing-information-service
+      - billing-information-service_2
+      - payment-details-service
+      - shipping-information-service
+      - zipkin
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+    volumes:
+      - order-data:/workspace/data
+      - ./logs:/tmp/logstash/logs
+
+  api-gateway:
+    image: brianvega/api-gateway:latest
+    pull_policy: missing
+    ports:
+      - "8765:8765"
+    depends_on:
+      - orders-service
+    networks:
+      - ecommerce-private-network
+    env_file: '.env'
+
+  prometheus:
+    image: prom/prometheus:latest
+    pull_policy: missing
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    networks:
+      - ecommerce-private-network
+
+  grafana:
+    image: grafana/grafana:latest
+    pull_policy: missing
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - ecommerce-private-network
+
+networks:
+  ecommerce-private-network:
+    driver: bridge
+volumes:
+  es_data:
+  order-data:
+  db_data:
+  prometheus_data:
+  grafana_data:
